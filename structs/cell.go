@@ -27,7 +27,7 @@ type Cell struct {
 	 * 6: end
 	 * 7: dead
 	 */
-	Flag uint8 
+	Flag uint8
 }
 
 func (c *Cell) SetBit(pos FlagPosition) {
@@ -39,5 +39,5 @@ func (c *Cell) ClearBit(pos FlagPosition) {
 }
 
 func (c *Cell) IsSet(pos FlagPosition) bool {
-	return c.Flag & (1 << pos) != 0
+	return c.Flag&(1<<pos) != 0
 }

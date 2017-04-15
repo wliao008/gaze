@@ -62,7 +62,7 @@ func TestClearBit(t *testing.T) {
 
 func TestIsSet(t *testing.T) {
 	c := Cell{Flag: 255}
-	if !c.IsSet(EAST){
+	if !c.IsSet(EAST) {
 		t.Errorf("IsSet(%q), Flag = %v, want %v", "EAST", c.Flag, true)
 	}
 }
