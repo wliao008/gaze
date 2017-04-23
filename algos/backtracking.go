@@ -21,17 +21,19 @@ func (b *BackTracking) Generate() error {
 		b.Cells[i] = make([]structs.Cell, b.Height)
 	}
 
-	//init
+	//init the flag value to have the bits of 4 directions set.
 	for i := 0; i < b.Width; i++ {
 		for j := 0; j < b.Height; j++ {
 			b.Cells[i][j].Flag = 15
 		}
 	}
 
+	//start at cell 0,0
 	b.doWork(0, 0)
 	return nil
 }
 
+//Write displays the maze
 func (b *BackTracking) Write(w io.Writer) {
 	w.Write([]byte("  "))
 	for i := 1; i < b.Width; i++ {
@@ -63,6 +65,7 @@ func (b *BackTracking) Write(w io.Writer) {
 	}
 }
 
+//doWork: the recrusive backtracking algorithm
 func (b *BackTracking) doWork(x, y int) {
 	rand.Seed(time.Now().UTC().UnixNano())
 	var directions []interface{}
