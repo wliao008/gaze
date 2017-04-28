@@ -3,8 +3,6 @@ package algos
 import (
 	"github.com/wliao008/mazing/structs"
 	"github.com/wliao008/mazing/util"
-	"math/rand"
-	"time"
 	"io"
 )
 
@@ -12,6 +10,12 @@ type BackTracking struct {
 	Width  int
 	Height int
 	Cells [][]structs.Cell
+}
+
+var directions []interface{}
+
+func init() {
+	directions = append(directions, structs.NORTH, structs.SOUTH, structs.EAST, structs.WEST)
 }
 
 func (b *BackTracking) Generate() error {
@@ -67,12 +71,6 @@ func (b *BackTracking) Write(w io.Writer) {
 
 //doWork: the recrusive backtracking algorithm
 func (b *BackTracking) doWork(x, y int) {
-	rand.Seed(time.Now().UTC().UnixNano())
-	var directions []interface{}
-	directions = append(directions, structs.NORTH)
-	directions = append(directions, structs.SOUTH)
-	directions = append(directions, structs.EAST)
-	directions = append(directions, structs.WEST)
 	d := structs.Direction{}
 	util.Shuffle(directions)
 	for _, direction := range directions {
