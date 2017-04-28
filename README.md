@@ -17,7 +17,7 @@ $ go run main.go
 
 ## Algorithm Benchmarks
 
-Recursive backtracking is a pretty brute force algorithm, a maze of 50 x 25 takes about 25 milliseconds to generate. After some optimzation, it's reduced to roughly 12 milliseconds. As the size increase though, the time increases drastically.
+Recursive backtracking is a pretty brute force algorithm, a maze of 50 x 25 takes about 25 milliseconds to generate. After some optimzation, it's reduced to roughly 12 milliseconds. 
 
 50 x 25
 ```
