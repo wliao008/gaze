@@ -1,4 +1,5 @@
 ## Usage
+
 ```
 $ go run main.go
    _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
@@ -12,4 +13,13 @@ $ go run main.go
 |   |_ _ _ _|  _ _|_  | |_ _ _  |  _| | |  _ _ _|_ _|  _ _ _ _|  _ _|_ _ _ _ _| |
 | |_   _ _ _| |   |_ _ _ _|  _ _| |_ _ _| |_    |   |_ _ _ _  | |_   _ _ _ _  | |
 |_ _|_ _ _ _ _ _|_ _ _ _ _ _|_ _ _ _ _ _ _ _ _|_ _|_ _ _ _ _ _|_ _ _|_ _ _ _ _  |
+```
+
+## Algorithm Benchmarks
+
+Recursive backtracking is pretty brute force, a maze of the above size takes about 25 milliseconds to generate.
+
+```
+$ go test -v ./... -bench=.
+BenchmarkBackTrackingAlgo-4           50          25409148 ns/op
 ```
