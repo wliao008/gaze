@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	bt := algos.BackTracking{40, 10, nil}
+	bt := algos.Kruskal{5, 5, nil}
 	err := bt.Generate()
 	if err != nil {
 		fmt.Println("ERROR")

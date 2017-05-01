@@ -23,4 +23,14 @@ func (stack *Stack) Pop() interface{} {
 	return item
 }
 
+func (stack *Stack) Peek() interface{} {
+	if len(stack.Items) == 0 {
+		return nil
+	}
 
+	return stack.Items[0]
+}
+
+func (stack *Stack) IsEmpty() bool {
+	return stack.Count == 0
+}
