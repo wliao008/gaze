@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"github.com/wliao008/mazing/structs"
 	"github.com/wliao008/mazing/util"
-	"math/rand"
 	"io"
+	"math/rand"
 	"time"
 )
 
@@ -45,7 +45,6 @@ func (k *Kruskal) Write2(w io.Writer) {
 		w.Write([]byte("\n"))
 	}
 }
-
 
 func (k *Kruskal) Write(w io.Writer) {
 	w.Write([]byte("  "))
@@ -105,8 +104,8 @@ func (k *Kruskal) neighbors(c *structs.Cell) []*structs.Cell {
 }
 
 func (k *Kruskal) getNeighborPos(x, y uint16) (uint16, uint16, bool) {
-	if x >= 0 && x < k.Width && 
-		y >= 0 && y < k.Height && 
+	if x >= 0 && x < k.Width &&
+		y >= 0 && y < k.Height &&
 		!k.Cells[x][y].IsSet(structs.VISITED) {
 		return x, y, true
 	}
@@ -123,32 +122,32 @@ func (k *Kruskal) Generate() error {
 		item := stack.Peek()
 		cell := item.(*structs.Cell)
 		neighbors := k.neighbors(cell)
-		fmt.Println(neighbors)
+		//fmt.Println(neighbors)
 		if len(neighbors) > 0 {
 			var idx int = rand.Intn(len(neighbors))
 			to := neighbors[idx]
 			dir := k.getDirection(cell, to)
 			k.carvePassage(dir, &k.Cells[cell.X][cell.Y], &k.Cells[to.X][to.Y])
-			fmt.Println("%v from %v to %v, stack count: %d", dir, cell, to, stack.Count)
+			//fmt.Println("%v from %v to %v, stack count: %d", dir, cell, to, stack.Count)
 			//toNeighbors := k.neighbors(&to)
 			//fmt.Println("to neighbors: %v", toNeighbors)
 			stack.Push(&k.Cells[to.X][to.Y])
-			fmt.Println("pushed %v, count=%d", k.Cells[to.X][to.Y], stack.Count)
+			//fmt.Println("pushed %v, count=%d", k.Cells[to.X][to.Y], stack.Count)
 			i -= 1
 		} else {
-			poppedItem := stack.Pop()
-			fmt.Println("popped %v, count=%d", poppedItem, stack.Count)
+			_ = stack.Pop()
+			//fmt.Println("popped %v, count=%d", poppedItem, stack.Count)
 		}
 		//fmt.Println(cell)
 	}
-	fmt.Println(i)
+	//fmt.Println(i)
 	return nil
 }
 
 func (k *Kruskal) getDirection(from, to *structs.Cell) structs.FlagPosition {
 	if from.X < to.X {
 		return structs.EAST
-	} 
+	}
 	if from.X > to.X {
 		return structs.WEST
 	}
