@@ -40,79 +40,76 @@ func (k *Kruskal) initCells() {
 func (k *Kruskal) Write(w io.Writer) {
 	for i := uint16(0); i < k.Width; i++ {
 		for j := uint16(0); j < k.Height; j++ {
-			w.Write([]byte(fmt.Sprintf("[%d, %d] ", i, j)))
+			w.Write([]byte(fmt.Sprintf("[%d, %d, %t] ", i, j, k.Cells[i][j].IsSet(structs.VISITED))))
 		}
 		w.Write([]byte("\n"))
-	}
-
-	//test neighbor of a cell
-	cells := k.neighbors(&k.Cells[0][0])
-	fmt.Println("cells: %v", cells)
-	fmt.Println(cells[0])
-	for _, cell := range cells {
-		w.Write([]byte(fmt.Sprintf("[%d, %d]", cell.X, cell.Y)))
 	}
 }
 
 //neighbors return the neighboring unvisted cells of a cell
-func (k *Kruskal) neighbors(c *structs.Cell) []structs.Cell {
-	cells := []structs.Cell{}
-	cell := &structs.Cell{}
-	cell = k.getNeighbor(c.X+1, c.Y)
-	if cell != nil {
+func (k *Kruskal) neighbors(c *structs.Cell) []*structs.Cell {
+	cells := []*structs.Cell{}
+	x, y, ok := k.getNeighborPos(c.X+1, c.Y)
+	if ok {
 		//fmt.Println("south: %v", *cell)
-		cells = append(cells, *cell)
+		cells = append(cells, &k.Cells[x][y])
 	}
-	cell = k.getNeighbor(c.X-1, c.Y)
-	if cell != nil {
-		//fmt.Println("north: %v", *cell)
-		cells = append(cells, *cell)
+	x, y, ok = k.getNeighborPos(c.X-1, c.Y)
+	if ok {
+		//fmt.Println("south: %v", *cell)
+		cells = append(cells, &k.Cells[x][y])
 	}
-	cell = k.getNeighbor(c.X, c.Y+1)
-	if cell != nil {
-		//fmt.Println("east: %v", *cell)
-		cells = append(cells, *cell)
+	x, y, ok = k.getNeighborPos(c.X, c.Y+1)
+	if ok {
+		//fmt.Println("south: %v", *cell)
+		cells = append(cells, &k.Cells[x][y])
 	}
-	cell = k.getNeighbor(c.X, c.Y-1)
-	if cell != nil {
-		//fmt.Println("west: %v", *cell)
-		cells = append(cells, *cell)
+	x, y, ok = k.getNeighborPos(c.X, c.Y-1)
+	if ok {
+		//fmt.Println("south: %v", *cell)
+		cells = append(cells, &k.Cells[x][y])
 	}
 	return cells
 }
 
-func (k *Kruskal) getNeighbor(x, y uint16) *structs.Cell {
-	if x >= 0 && x < k.Width && y >= 0 && y < k.Height && !k.Cells[x][y].IsSet(structs.VISITED) {
-		return &k.Cells[x][y]
+func (k *Kruskal) getNeighborPos(x, y uint16) (uint16, uint16, bool) {
+	if x >= 0 && x < k.Width && 
+		y >= 0 && y < k.Height && 
+		!k.Cells[x][y].IsSet(structs.VISITED) {
+		return x, y, true
 	}
-	return nil
+	return 0, 0, false
 }
 
 func (k *Kruskal) Generate() error {
 	stack := util.Stack{}
 	k.initCells()
-	stack.Push(k.Cells[0][0])
+	stack.Push(&k.Cells[0][0])
 	k.Cells[0][0].SetBit(structs.VISITED)
 	i := 25
-	for !stack.IsEmpty() && i != 0 {
+	for !stack.IsEmpty() {
 		item := stack.Peek()
-		cell := item.(structs.Cell)
-		neighbors := k.neighbors(&cell)
+		cell := item.(*structs.Cell)
+		neighbors := k.neighbors(cell)
+		fmt.Println(neighbors)
 		if len(neighbors) > 0 {
 			var idx int = rand.Intn(len(neighbors))
 			to := neighbors[idx]
-			dir := k.getDirection(&cell, &to)
-			k.carvePassage(dir, &cell, &to)
+			dir := k.getDirection(cell, to)
+			k.carvePassage(dir, &k.Cells[cell.X][cell.Y], &k.Cells[to.X][to.Y])
 			fmt.Println("%v from %v to %v, stack count: %d", dir, cell, to, stack.Count)
 			//toNeighbors := k.neighbors(&to)
 			//fmt.Println("to neighbors: %v", toNeighbors)
-			stack.Push(to)
+			stack.Push(&k.Cells[to.X][to.Y])
+			fmt.Println("pushed %v, count=%d", k.Cells[to.X][to.Y], stack.Count)
 			i -= 1
 		} else {
-			stack.Pop()
+			poppedItem := stack.Pop()
+			fmt.Println("popped %v, count=%d", poppedItem, stack.Count)
 		}
 		//fmt.Println(cell)
 	}
+	fmt.Println(i)
 	return nil
 }
 

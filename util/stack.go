@@ -13,22 +13,22 @@ func (stack *Stack) Push(item interface{}) {
 }
 
 func (stack *Stack) Pop() interface{} {
-	if len(stack.Items) == 0 {
+	if stack.Count == 0 {
 		return nil
 	}
 
-	item := stack.Items[0]
-	stack.Items = append(stack.Items[:0], stack.Items[1:]...)
+	item := stack.Items[stack.Count - 1]
+	stack.Items = stack.Items[:stack.Count - 1]
 	stack.Count -= 1
 	return item
 }
 
 func (stack *Stack) Peek() interface{} {
-	if len(stack.Items) == 0 {
+	if stack.Count == 0 {
 		return nil
 	}
 
-	return stack.Items[0]
+	return stack.Items[stack.Count - 1]
 }
 
 func (stack *Stack) IsEmpty() bool {

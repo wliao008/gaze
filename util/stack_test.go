@@ -29,6 +29,25 @@ func TestPop2(t *testing.T) {
 	}
 }
 
+func TestPop3(t *testing.T) {
+	stack := Stack{}
+	stack.Push(1)
+	stack.Push(2)
+	item := stack.Pop()
+	if item != 2 {
+		t.Errorf("Pop(), should get 2, got %v", item)
+	}
+
+	item2 := stack.Pop()
+	if item2 != 1 {
+		t.Errorf("Pop(), should get 1, got %v", item2)
+	}
+
+	if stack.Count != 0 {
+		t.Errorf("Pop(), count should be 0, go %d", stack.Count)
+	}
+}
+
 func TestIsEmpty(t *testing.T) {
 	stack, _ := createStack()
 	for stack.Count > 0 {
@@ -46,6 +65,16 @@ func TestPeek(t *testing.T) {
 	stack.Peek()
 	if stack.Count != num {
 		t.Errorf("Peek() should not remove item. Had %d, now %d", num, stack.Count)
+	}
+}
+
+func TestPeek2(t *testing.T) {
+	stack := Stack{}
+	stack.Push(1)
+	stack.Push(2)
+	item := stack.Peek()
+	if item != 2 {
+		t.Errorf("Pop(), should get 2, got %v", item)
 	}
 }
 
