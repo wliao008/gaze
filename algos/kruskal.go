@@ -37,10 +37,42 @@ func (k *Kruskal) initCells() {
 	}
 }
 
-func (k *Kruskal) Write(w io.Writer) {
+func (k *Kruskal) Write2(w io.Writer) {
 	for i := uint16(0); i < k.Width; i++ {
 		for j := uint16(0); j < k.Height; j++ {
 			w.Write([]byte(fmt.Sprintf("[%d, %d, %t] ", i, j, k.Cells[i][j].IsSet(structs.VISITED))))
+		}
+		w.Write([]byte("\n"))
+	}
+}
+
+
+func (k *Kruskal) Write(w io.Writer) {
+	w.Write([]byte("  "))
+	for i := uint16(1); i < k.Width; i++ {
+		w.Write([]byte(" _"))
+	}
+	w.Write([]byte("\n"))
+
+	for j := uint16(0); j < k.Height; j++ {
+		w.Write([]byte("|"))
+		for h := uint16(0); h < k.Width; h++ {
+			c := k.Cells[h][j]
+			if h == k.Width-1 && j == k.Height-1 {
+				w.Write([]byte(" |"))
+				break
+			}
+			if c.IsSet(structs.SOUTH) {
+				w.Write([]byte("_"))
+			} else {
+				w.Write([]byte(" "))
+			}
+
+			if c.IsSet(structs.EAST) {
+				w.Write([]byte("|"))
+			} else {
+				w.Write([]byte(" "))
+			}
 		}
 		w.Write([]byte("\n"))
 	}
