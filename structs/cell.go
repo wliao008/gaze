@@ -28,6 +28,8 @@ type Cell struct {
 	 * 7: dead
 	 */
 	Flag uint8
+	X uint16
+	Y uint16
 }
 
 func (c *Cell) SetBit(pos FlagPosition) {

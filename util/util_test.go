@@ -19,6 +19,6 @@ func BenchmarkShuffle(b *testing.B) {
 	data = append(data, 2)
 	data = append(data, 3)
 	for i := 0; i < b.N; i++ {
-	Shuffle(data)
+		Shuffle(data)
 	}
 }
