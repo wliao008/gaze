@@ -23,8 +23,22 @@ func TestKruskalAlgo_AllCellsVisited(t *testing.T) {
 	}
 }
 
-func BenchmarkKruskalAlgo(b *testing.B) {
+func BenchmarkKruskalAlgo50x25(b *testing.B) {
+	k := Kruskal{50, 25, nil}
+	for i := 0; i < b.N; i++ {
+		k.Generate()
+	}
+}
+
+func BenchmarkKruskalAlgo100x50(b *testing.B) {
 	k := Kruskal{100, 50, nil}
+	for i := 0; i < b.N; i++ {
+		k.Generate()
+	}
+}
+
+func BenchmarkKruskalAlgo1000x500(b *testing.B) {
+	k := Kruskal{1000, 500, nil}
 	for i := 0; i < b.N; i++ {
 		k.Generate()
 	}
