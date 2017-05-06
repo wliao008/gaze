@@ -1,10 +1,8 @@
 package algos
 
 import (
-	"fmt"
 	"github.com/wliao008/mazing/structs"
 	"github.com/wliao008/mazing/util"
-	"io"
 	"math/rand"
 	"time"
 )
@@ -46,45 +44,10 @@ func init() {
 	rand.Seed(time.Now().UTC().UnixNano())
 }
 
-func (k *Kruskal) Write(w io.Writer) {
-	w.Write([]byte("  "))
-	for i := uint16(1); i < k.Board.Width; i++ {
-		w.Write([]byte(" _"))
-	}
-	w.Write([]byte("\n"))
-
-	for j := uint16(0); j < k.Board.Height; j++ {
-		w.Write([]byte("|"))
-		for h := uint16(0); h < k.Board.Width; h++ {
-			c := k.Board.Cells[h][j]
-			if h == k.Board.Width-1 && j == k.Board.Height-1 {
-				w.Write([]byte(" |"))
-				break
-			}
-			if c.IsSet(structs.SOUTH) {
-				w.Write([]byte("_"))
-			} else {
-				w.Write([]byte(" "))
-			}
-
-			if c.IsSet(structs.EAST) {
-				w.Write([]byte("|"))
-			} else {
-				w.Write([]byte(" "))
-			}
-		}
-		w.Write([]byte("\n"))
-	}
-}
-
 func (k *Kruskal) Generate() error {
 	stack := util.Stack{}
 	stack.Push(&k.Board.Cells[0][0])
 	k.Board.Cells[0][0].SetBit(structs.VISITED)
-	fmt.Println(k.Board)
-	c := &k.Board.Cells[0][0]
-	got := k.Board.Neighbors(c)
-	fmt.Println(got)
 
 	for !stack.IsEmpty() {
 		item := stack.Peek()

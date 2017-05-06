@@ -12,5 +12,5 @@ func main() {
 	if err != nil {
 		fmt.Println("ERROR")
 	}
-	bt.Write(os.Stdout)
+	bt.Board.Write(os.Stdout)
 }
