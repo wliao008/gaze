@@ -9,6 +9,30 @@ type Board struct {
 	Cells         [][]Cell
 }
 
+func (b *Board) Init() {
+	b.Cells = make([][]Cell, b.Width)
+	for i := uint16(0); i < b.Width; i++ {
+		b.Cells[i] = make([]Cell, b.Height)
+	}
+
+	for i := uint16(0); i < b.Width; i++ {
+		for j := uint16(0); j < b.Height; j++ {
+			// set the flag field with 15, which in binary will be 0b00001111,
+			// the 4 bits indicates that all 4 walls are up, so the cells are
+			// isolated/sealed from each other initially. ex:
+			//  _ _ 
+			// |_|_| 
+			// |_|_|  
+			// 
+			b.Cells[i][j].Flag = 15
+
+			// set the relative [x,y] position of the cell on the board
+			b.Cells[i][j].X = i 
+			b.Cells[i][j].Y = j
+		}
+	}
+}
+
 // Neighbors find the neighboring cells of the current cell
 func (b *Board) Neighbors(c *Cell) []*Cell {
 	result := []*Cell{}
