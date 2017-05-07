@@ -15,7 +15,7 @@ $ go run main.go
 |_ _|_ _ _ _ _ _|_ _ _ _ _ _|_ _ _ _ _ _ _ _ _|_ _|_ _ _ _ _ _|_ _ _|_ _ _ _ _  |
 ```
 
-## Algorithm Benchmarks
+## Benchmarks
 
 Benchmarks are ran on the following hardwares:
 
