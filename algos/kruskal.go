@@ -13,27 +13,7 @@ type Kruskal struct {
 
 func NewKruskal(width, height uint16) *Kruskal {
 	k := &Kruskal{Board: structs.Board{width, height, nil}}
-	k.Board.Cells = make([][]structs.Cell, width)
-	for i := uint16(0); i < width; i++ {
-		k.Board.Cells[i] = make([]structs.Cell, height)
-	}
-
-	for i := uint16(0); i < width; i++ {
-		for j := uint16(0); j < height; j++ {
-			// set the flag field with 15, which in binary will be 0b00001111,
-			// the 4 bits indicates that all 4 walls are up, so the cells are
-			// isolated/sealed from each other initially. ex:
-			//  _ _
-			// |_|_|
-			// |_|_|
-			//
-			k.Board.Cells[i][j].Flag = 15
-
-			// set the relative [x,y] position of the cell on the board
-			k.Board.Cells[i][j].X = i
-			k.Board.Cells[i][j].Y = j
-		}
-	}
+	k.Board.Init()
 	return k
 }
 

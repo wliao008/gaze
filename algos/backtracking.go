@@ -13,18 +13,7 @@ var directions []interface{}
 
 func NewBackTracking(width, height uint16) *BackTracking {
 	bt := &BackTracking{Board: structs.Board{width, height, nil}}
-	bt.Board.Cells = make([][]structs.Cell, width)
-	for i := uint16(0); i < width; i++ {
-		bt.Board.Cells[i] = make([]structs.Cell, height)
-	}
-
-	for i := uint16(0); i < width; i++ {
-		for j := uint16(0); j < height; j++ {
-			bt.Board.Cells[i][j].Flag = 15
-			bt.Board.Cells[i][j].X = i
-			bt.Board.Cells[i][j].Y = j
-		}
-	}
+	bt.Board.Init()
 	return bt
 }
 
