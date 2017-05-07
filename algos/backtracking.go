@@ -3,105 +3,54 @@ package algos
 import (
 	"github.com/wliao008/mazing/structs"
 	"github.com/wliao008/mazing/util"
-	"io"
 )
 
 type BackTracking struct {
-	Width  int
-	Height int
-	Cells [][]structs.Cell
+	Board structs.Board
 }
 
 var directions []interface{}
+
+func NewBackTracking(width, height uint16) *BackTracking {
+	bt := &BackTracking{Board: structs.Board{width, height, nil}}
+	bt.Board.Cells = make([][]structs.Cell, width)
+	for i := uint16(0); i < width; i++ {
+		bt.Board.Cells[i] = make([]structs.Cell, height)
+	}
+
+	for i := uint16(0); i < width; i++ {
+		for j := uint16(0); j < height; j++ {
+			bt.Board.Cells[i][j].Flag = 15
+			bt.Board.Cells[i][j].X = i
+			bt.Board.Cells[i][j].Y = j
+		}
+	}
+	return bt
+}
 
 func init() {
 	directions = append(directions, structs.NORTH, structs.SOUTH, structs.EAST, structs.WEST)
 }
 
-func (b *BackTracking) Generate() error {
-	//fmt.Println("generating %d x %d", b.Width, b.Height)
-	b.Cells = make([][]structs.Cell, b.Width)
-	for i := 0; i < b.Width; i++ {
-		b.Cells[i] = make([]structs.Cell, b.Height)
-	}
-
-	//init the flag value to have the bits of 4 directions set.
-	for i := 0; i < b.Width; i++ {
-		for j := 0; j < b.Height; j++ {
-			b.Cells[i][j].Flag = 15
-		}
-	}
-
+func (bt *BackTracking) Generate() error {
 	//start at cell 0,0
-	b.doWork(0, 0)
+	bt.doWork(0, 0)
 	return nil
 }
 
-//Write displays the maze
-func (b *BackTracking) Write(w io.Writer) {
-	w.Write([]byte("  "))
-	for i := 1; i < b.Width; i++ {
-		w.Write([]byte(" _"))
-	}
-	w.Write([]byte("\n"))
-
-	for j := int(0); j < b.Height; j++ {
-		w.Write([]byte("|"))
-		for h := int(0); h < b.Width; h++ {
-			c := b.Cells[h][j]
-			if h == b.Width-1 && j == b.Height-1 {
-				w.Write([]byte(" |"))
-				break
-			}
-			if c.IsSet(structs.SOUTH) {
-				w.Write([]byte("_"))
-			} else {
-				w.Write([]byte(" "))
-			}
-
-			if c.IsSet(structs.EAST) {
-				w.Write([]byte("|"))
-			} else {
-				w.Write([]byte(" "))
-			}
-		}
-		w.Write([]byte("\n"))
-	}
-}
-
 //doWork: the recrusive backtracking algorithm
-func (b *BackTracking) doWork(x, y int) {
+func (bt *BackTracking) doWork(x, y int) {
 	d := structs.Direction{}
 	util.Shuffle(directions)
 	for _, direction := range directions {
 		dir := direction.(structs.FlagPosition)
 		var nextX int = x + d.XDirection(dir)
 		var nextY int = y + d.YDirection(dir)
-		if nextX >= 0 && nextX < b.Width &&
-			nextY >= 0 && nextY < b.Height &&
-			!b.Cells[nextX][nextY].IsSet(structs.VISITED) {
-			b.carvePassage(dir, &b.Cells[x][y], &b.Cells[nextX][nextY])
-			b.doWork(nextX, nextY)
+		if nextX >= 0 && nextX < int(bt.Board.Width) &&
+			nextY >= 0 && nextY < int(bt.Board.Height) &&
+			!bt.Board.Cells[nextX][nextY].IsSet(structs.VISITED) {
+			bt.Board.BreakWall(&bt.Board.Cells[x][y], &bt.Board.Cells[nextX][nextY], dir)
+			bt.doWork(nextX, nextY)
 		}
-	}
-}
-
-func (b *BackTracking) carvePassage(dir structs.FlagPosition, from, to *structs.Cell) {
-	from.SetBit(structs.VISITED)
-	to.SetBit(structs.VISITED)
-
-	switch dir {
-	case structs.NORTH:
-		from.ClearBit(structs.NORTH)
-		to.ClearBit(structs.SOUTH)
-	case structs.SOUTH:
-		from.ClearBit(structs.SOUTH)
-		to.ClearBit(structs.NORTH)
-	case structs.EAST:
-		from.ClearBit(structs.EAST)
-		to.ClearBit(structs.WEST)
-	case structs.WEST:
-		from.ClearBit(structs.WEST)
-		to.ClearBit(structs.EAST)
 	}
 }

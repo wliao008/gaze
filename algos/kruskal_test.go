@@ -13,9 +13,9 @@ func TestKruskalAlgo_AllCellsVisited(t *testing.T) {
 	for c := 0; c < count; c++ {
 		k := NewKruskal(uint16(rand.Intn(100)+1), uint16(rand.Intn(100)+1))
 		k.Generate()
-		for i := uint16(0); i < k.Width; i++ {
-			for j := uint16(0); j < k.Height; j++ {
-				if !k.Cells[i][j].IsSet(structs.VISITED) {
+		for i := uint16(0); i < k.Board.Width; i++ {
+			for j := uint16(0); j < k.Board.Height; j++ {
+				if !k.Board.Cells[i][j].IsSet(structs.VISITED) {
 					t.Errorf("Every cell should be visited, but not [%d,%d]", i, j)
 				}
 			}

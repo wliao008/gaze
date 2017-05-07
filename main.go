@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	bt := algos.NewKruskal(40, 20)
+	bt := algos.NewBackTracking(40, 20)
 	err := bt.Generate()
 	if err != nil {
 		fmt.Println("ERROR")

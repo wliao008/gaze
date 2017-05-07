@@ -8,9 +8,6 @@ import (
 )
 
 type Kruskal struct {
-	Width  uint16
-	Height uint16
-	Cells  [][]structs.Cell
 	Board structs.Board
 }
 
