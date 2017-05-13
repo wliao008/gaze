@@ -2,11 +2,24 @@ package structs
 
 import (
 	"testing"
-	"fmt"
+	"bytes"
+	"strings"
 )
 
+func TestInit(t *testing.T) {
+	b := &Board{10,10,nil}
+	for _, row := range b.Cells {
+		for _, cell := range row {
+			if cell.Flag != 15 {
+				t.Errorf("Init() should init all Flag to 15, got %d for %+v", cell.Flag, cell)
+			}
+		}
+	}
+}
+
 func TestNeighbors(t *testing.T) {
-	b := initBoard()
+	b := &Board{3,3,nil}
+	b.Init()
 	var tests = []struct{
 		x uint16
 		y uint16
@@ -76,17 +89,14 @@ func TestBreakWall(t *testing.T) {
 	}
 }
 
-func initBoard() *Board {
-	b := Board{3, 3, nil}
+func TestWrite(t *testing.T) {
+	b := &Board{3,3,nil}
 	b.Init()
-	return &b
-}
-
-func print(b *Board) {
-	for i:=uint16(0); i<b.Width; i++ {
-		for j:=uint16(0);j<b.Height;j++{
-			fmt.Printf("[%d,%d,%d] ", i,j,b.Cells[i][j].Flag)
-		}
-		fmt.Println("")
+	var buf bytes.Buffer
+	b.Write(&buf)
+	got := strings.TrimRight(buf.String(), string(10)) // remove trailing line feed
+	want := "   _ _\n|_|_|_|\n|_|_|_|\n|_|_| |"
+	if got != want {
+		t.Errorf("Write(), \nwant \n%s \ngot \n%s", want, got)
 	}
 }
