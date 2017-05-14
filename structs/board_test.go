@@ -2,11 +2,24 @@ package structs
 
 import (
 	"testing"
-	"fmt"
+	"bytes"
+	"strings"
 )
 
+func TestInit(t *testing.T) {
+	b := &Board{10,10,nil}
+	for _, row := range b.Cells {
+		for _, cell := range row {
+			if cell.Flag != 15 {
+				t.Errorf("Init() should init all Flag to 15, got %d for %+v", cell.Flag, cell)
+			}
+		}
+	}
+}
+
 func TestNeighbors(t *testing.T) {
-	b := initBoard()
+	b := &Board{3,3,nil}
+	b.Init()
 	var tests = []struct{
 		x uint16
 		y uint16
@@ -31,17 +44,59 @@ func TestNeighbors(t *testing.T) {
 	}
 }
 
-func initBoard() *Board {
-	b := Board{3, 3, nil}
+func TestGetDirection(t *testing.T) {
+	b := &Board{10,10,nil}
 	b.Init()
-	return &b
+	var tests = []struct{
+		from *Cell
+		to *Cell
+		want FlagPosition
+	}{
+		{&b.Cells[1][1], &b.Cells[0][1], WEST},
+		{&b.Cells[1][1], &b.Cells[1][0], NORTH},
+		{&b.Cells[1][1], &b.Cells[1][2], SOUTH},
+		{&b.Cells[1][1], &b.Cells[2][1], EAST},
+	}
+
+	for _, test := range tests {
+		dir := b.GetDirection(test.from, test.to)
+		if dir != test.want {
+			t.Errorf("GetDirection(%v, %v), should be %v, got %v", test.from, test.to, dir, test.want)
+		}
+	}
 }
 
-func print(b *Board) {
-	for i:=uint16(0); i<b.Width; i++ {
-		for j:=uint16(0);j<b.Height;j++{
-			fmt.Printf("[%d,%d,%d] ", i,j,b.Cells[i][j].Flag)
+func TestBreakWall(t *testing.T) {
+	b := &Board{10,10,nil}
+	b.Init()
+	var tests = []struct{
+		from, to *Cell
+		dir FlagPosition
+		want1, want2 uint8
+	}{
+		{&b.Cells[1][1], &b.Cells[0][1], WEST, 23, 27},
+		{&b.Cells[1][1], &b.Cells[1][0], NORTH, 30, 29},
+		{&b.Cells[1][1], &b.Cells[1][2], SOUTH, 29, 30},
+		{&b.Cells[1][1], &b.Cells[2][1], EAST, 27, 23},
+	}
+
+	for _, test := range tests {
+		b.BreakWall(test.from, test.to, test.dir)
+		if test.from.Flag != test.want1 && test.to.Flag != test.want2 {
+			t.Error("BreakWall(%v, %v), flags should be %d, %d, got %d, %d", 
+				test.want1, test.want2, test.from.Flag, test.to.Flag)
 		}
-		fmt.Println("")
+	}
+}
+
+func TestWrite(t *testing.T) {
+	b := &Board{3,3,nil}
+	b.Init()
+	var buf bytes.Buffer
+	b.Write(&buf)
+	got := strings.TrimRight(buf.String(), string(10)) // remove trailing line feed
+	want := "   _ _\n|_|_|_|\n|_|_|_|\n|_|_| |"
+	if got != want {
+		t.Errorf("Write(), \nwant \n%s \ngot \n%s", want, got)
 	}
 }

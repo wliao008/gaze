@@ -17,16 +17,15 @@ $ go run main.go
 
 ## Benchmarks
 
-Benchmarks are ran on the following hardwares:
+Benchmarks are ran on the following hardware: 
 
-1. Intel(R) Core(TM)2 Quad CPU    Q6600  @ 2.40GHz
-2. Macbook Pro
+MacBook Pro 2014, OS X 10.9, 2.6 GHz Intel Core i5, 16 GB 1600 MHz DDR3.
 
-Hardware | Algorithm | Size | Iterations | ns/ops | ms/op
--------------|------------------|-------|------|-----------|----------
-1| Backtracking | 50x25 | 50 | 22865910 |22.86 
-1| Backtracking | 100x50 | 20 | 91300763 | 91.30
-1| Backtracking | 1000x500 | 1 | 9776425846 | 9776.42 
-1| Kruskal | 50x25 | 2000 | 783913 | 0.78
-1| Kruskal | 100x50 | 500 | 3147580 | 3.14
-1| Kruskal | 1000x500 | 3 | 3147580 | 363.81
+Algorithm | Size | Iterations | ns/ops | ms/op
+----------|-------|------|-----------|----------
+Backtracking | 50x25 | 50 | 12935311 | 12.93 
+Backtracking | 100x50 | 20 | 51892698 | 51.89
+Backtracking | 1000x500 | 1 | 5309771223 | 5309.77
+Kruskal | 50x25 | 2000 | 288071 | 0.28
+Kruskal | 100x50 | 500 | 1147424| 1.14
+Kruskal | 1000x500 | 3 | 145765352 | 145.76
