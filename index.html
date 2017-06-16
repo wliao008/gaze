@@ -2,42 +2,32 @@
 <html>
 <head>
 <style>
-var w=window.innerWidth/{{Kruskal.width}};
-var h=window.innerHeight/{{Kruskal.height}};
 .north { 
-	border-top: solid;
-    width:w;
-    height:h;
+	border-style: solid;
+  border-top: thick double #ff0000;
 }
 .south {
-   	border-bottom: solid;
-    width:w;
-    height:h;
+  border-style: solid;
+  border-bottom: thick double #ff0000;
 }
 .east {
-   	border-right: solid;
-    width:w;
-    height:h;
+  border-style: solid;
+  border-right: thick double #ff0000;
 }
 .west {
-   	border-left: solid;
-    width:w;
-    height:h;
+  border-style: solid;
+  border-left: thick double #ff0000;
 }
+
+td {
+  width: 50px;
+  height: 50px;
+}
+
 </style>
 </head>
 <body>
-
-<table>
-	{{ range row := cells}}
-  <tr>
-  		{{ range cell := row}}
-		<td class="{{cell.CssClasses}}"></td>
-		<td class="{{cell.North}} {{cell.East}} {{cell.South}} {{cell.West}}"></td>
-		{{ end }}
-  </tr>
-  	{{ end}}
-</table>
+test
 
 </body>
 </html>

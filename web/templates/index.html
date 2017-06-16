@@ -1,1 +1,41 @@
-{{ .Algo.Board }}
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+.north { 
+  border-top: solid;
+}
+.south {
+  border-bottom: solid;
+}
+.east {
+  border-right: solid;
+}
+.west {
+  border-left: solid;
+}
+
+td {
+  width: 50px;
+  height: 50px;
+}
+
+</style>
+</head>
+<body>
+
+{{ .RawCells }}
+
+
+<table>
+	{{ range $row := .Cells}}
+  <tr>
+  		{{ range $cell := $row}}
+		<td class="{{$cell.CssClasses}}"></td>
+		{{ end }}
+  </tr>
+  	{{ end}}
+</table>
+
+</body>
+</html>
