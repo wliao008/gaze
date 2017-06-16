@@ -9,4 +9,6 @@ type BoardModel struct {
 type CellModel struct {
 	X, Y     uint16
 	CssClasses string
+	Note string
+	Flag string
 }

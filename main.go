@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"github.com/wliao008/mazing/algos"
 	"github.com/wliao008/mazing/models"
-	"github.com/wliao008/mazing/structs"
+	_ "github.com/wliao008/mazing/structs"
 )
 
 var tpl *template.Template
@@ -21,7 +21,7 @@ func main() {
 }
 
 func index(w http.ResponseWriter, req *http.Request){
-	bt := algos.NewKruskal(5, 5)
+	bt := algos.NewKruskal(5, 4)
 	err := bt.Generate()
 	if err != nil {
 		fmt.Println("ERROR")
@@ -29,31 +29,53 @@ func index(w http.ResponseWriter, req *http.Request){
 
 	// create model
 	model := &models.BoardModel{}
-	model.Cells = make([][]models.CellModel, bt.Board.Width)
+	model.Cells = make([][]models.CellModel, bt.Board.Height)
 	model.RawCells = bt.Board.Cells
-	for i := uint16(0); i < bt.Board.Width; i++ {
-		model.Cells[i] = make([]models.CellModel, bt.Board.Height)
+	for i := uint16(0); i < bt.Board.Height; i++ {
+		model.Cells[i] = make([]models.CellModel, bt.Board.Width)
 	}
 	// initialize model
-	for i := uint16(0); i < bt.Board.Height; i++ {
-		for j := uint16(0); j < bt.Board.Width; j++ {
-			model.Cells[j][i].X = i;
-			model.Cells[j][i].Y = j
-			/*if j==0{
-				model.Cells[j][i].CssClasses +="north "
+	for w := uint16(0); w < bt.Board.Width; w++ {
+		model.Cells[0][w].CssClasses += "north "
+		model.Cells[bt.Board.Height-1][w].CssClasses += "south "
+	}
+
+	for h := uint16(0); h < bt.Board.Height; h++ {
+		model.Cells[h][0].CssClasses +="west "
+		for w := uint16(0); w < bt.Board.Width; w++ {
+			model.Cells[h][w].X = w;
+			model.Cells[h][w].Y = h
+			if w == bt.Board.Width - 1 {
+				model.Cells[h][w].CssClasses +="east "
+			}
+			//cell := bt.Board.Cells[j][i]
+			/*
+			model.Cells[i][j].X = i;
+			model.Cells[i][j].Y = j
+			
+			if i==0 {
+				model.Cells[0][j].CssClasses +="north "
+				model.Cells[0][j].Note += "north "
+			}
+
+			model.Cells[i][j].Flag = fmt.Sprint(bt.Board.Cells[i][j].Flag)
+
+			if bt.Board.Cells[i][j].IsSet(structs.EAST) {
+				model.Cells[i][j].CssClasses += "east "
+				model.Cells[i][j].Note += "east "
+			}
+			if bt.Board.Cells[i][j].IsSet(structs.WEST) {
+				model.Cells[i][j].CssClasses += "west "
+				model.Cells[i][j].Note += "west "
+			}
+			if bt.Board.Cells[i][j].IsSet(structs.NORTH) {
+				model.Cells[i][j].CssClasses += "north "
+				model.Cells[i][j].Note += "north "
+			}
+			if bt.Board.Cells[i][j].IsSet(structs.SOUTH) {
+				model.Cells[i][j].CssClasses += "south "
+				model.Cells[i][j].Note += "south "
 			}*/
-			if bt.Board.Cells[j][i].IsSet(structs.EAST) {
-				model.Cells[j][i].CssClasses += "east "
-			}
-			if bt.Board.Cells[j][i].IsSet(structs.WEST) {
-				model.Cells[j][i].CssClasses += "west "
-			}
-			if bt.Board.Cells[j][i].IsSet(structs.NORTH) {
-				model.Cells[j][i].CssClasses += "north "
-			}
-			if bt.Board.Cells[j][i].IsSet(structs.SOUTH) {
-				model.Cells[j][i].CssClasses += "south "
-			}
 		}
 	}
 
