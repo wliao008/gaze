@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+var w=window.innerWidth/{{Kruskal.width}};
+var h=window.innerHeight/{{Kruskal.height}};
+.north { 
+	border-top: solid;
+    width:w;
+    height:h;
+}
+.south {
+   	border-bottom: solid;
+    width:w;
+    height:h;
+}
+.east {
+   	border-right: solid;
+    width:w;
+    height:h;
+}
+.west {
+   	border-left: solid;
+    width:w;
+    height:h;
+}
+</style>
+</head>
+<body>
+
+<table>
+	{{ range row := cells}}
+  <tr>
+  		{{ range cell := row}}
+		<td class="{{cell.CssClasses}}"></td>
+		<td class="{{cell.North}} {{cell.East}} {{cell.South}} {{cell.West}}"></td>
+		{{ end }}
+  </tr>
+  	{{ end}}
+</table>
+
+</body>
+</html>
