@@ -8,10 +8,10 @@ func TestXDirection(t *testing.T) {
 		pos FlagPosition
 		want int
 	}{
-		{NORTH, 0},
-		{SOUTH, 0},
-		{EAST, 1},
-		{WEST, -1},
+		{NORTH, -1},
+		{SOUTH, 1},
+		{EAST, 0},
+		{WEST, 0},
 	}
 
 	for _, test := range tests{
@@ -28,10 +28,10 @@ func TestYDirection(t *testing.T) {
 		pos FlagPosition
 		want int
 	}{
-		{NORTH, -1},
-		{SOUTH, 1},
-		{EAST, 0},
-		{WEST, 0},
+		{NORTH, 0},
+		{SOUTH, 0},
+		{EAST, 1},
+		{WEST, -1},
 	}
 
 	for _, test := range tests{
