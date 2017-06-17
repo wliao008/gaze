@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"github.com/wliao008/mazing/algos"
 	"github.com/wliao008/mazing/models"
-	_ "github.com/wliao008/mazing/structs"
+	"github.com/wliao008/mazing/structs"
 	_ "os"
 )
 
@@ -22,7 +22,7 @@ func main() {
 }
 
 func index(w http.ResponseWriter, req *http.Request){
-	bt := algos.NewKruskal(5, 4)
+	bt := algos.NewKruskal(10, 20)
 	err := bt.Generate()
 	if err != nil {
 		fmt.Println("ERROR")
@@ -50,17 +50,24 @@ func index(w http.ResponseWriter, req *http.Request){
 				model.Cells[h][w].CssClasses +="east "
 			}
 			//cell := bt.Board.Cells[j][i]
-			/*
-			model.Cells[i][j].X = i;
-			model.Cells[i][j].Y = j
-			
-			if i==0 {
-				model.Cells[0][j].CssClasses +="north "
-				model.Cells[0][j].Note += "north "
+			if h==0 {
+				model.Cells[0][w].CssClasses +="north "
+				//model.Cells[0][w].Note += "north "
 			}
 
-			model.Cells[i][j].Flag = fmt.Sprint(bt.Board.Cells[i][j].Flag)
-
+			if bt.Board.Cells[h][w].IsSet(structs.EAST) {
+				model.Cells[h][w].CssClasses += "east "
+			}
+			if bt.Board.Cells[h][w].IsSet(structs.WEST) {
+				model.Cells[h][w].CssClasses += "west "
+			}
+			if bt.Board.Cells[h][w].IsSet(structs.NORTH) {
+				model.Cells[h][w].CssClasses += "north "
+			}
+			if bt.Board.Cells[h][w].IsSet(structs.SOUTH) {
+				model.Cells[h][w].CssClasses += "south "
+			}
+			/*
 			if bt.Board.Cells[i][j].IsSet(structs.EAST) {
 				model.Cells[i][j].CssClasses += "east "
 				model.Cells[i][j].Note += "east "
