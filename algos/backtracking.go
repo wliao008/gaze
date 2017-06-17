@@ -11,8 +11,8 @@ type BackTracking struct {
 
 var directions []interface{}
 
-func NewBackTracking(width, height uint16) *BackTracking {
-	bt := &BackTracking{Board: structs.Board{width, height, nil}}
+func NewBackTracking(height, width uint16) *BackTracking {
+	bt := &BackTracking{Board: structs.Board{height, width, nil}}
 	bt.Board.Init()
 	return bt
 }
@@ -35,8 +35,8 @@ func (bt *BackTracking) doWork(x, y int) {
 		dir := direction.(structs.FlagPosition)
 		var nextX int = x + d.XDirection(dir)
 		var nextY int = y + d.YDirection(dir)
-		if nextX >= 0 && nextX < int(bt.Board.Width) &&
-			nextY >= 0 && nextY < int(bt.Board.Height) &&
+		if nextX >= 0 && nextX < int(bt.Board.Height) &&
+			nextY >= 0 && nextY < int(bt.Board.Width) &&
 			!bt.Board.Cells[nextX][nextY].IsSet(structs.VISITED) {
 			bt.Board.BreakWall(&bt.Board.Cells[x][y], &bt.Board.Cells[nextX][nextY], dir)
 			bt.doWork(nextX, nextY)

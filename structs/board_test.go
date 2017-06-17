@@ -52,10 +52,10 @@ func TestGetDirection(t *testing.T) {
 		to *Cell
 		want FlagPosition
 	}{
-		{&b.Cells[1][1], &b.Cells[0][1], WEST},
-		{&b.Cells[1][1], &b.Cells[1][0], NORTH},
-		{&b.Cells[1][1], &b.Cells[1][2], SOUTH},
-		{&b.Cells[1][1], &b.Cells[2][1], EAST},
+		{&b.Cells[1][1], &b.Cells[0][1], NORTH},
+		{&b.Cells[1][1], &b.Cells[1][0], WEST},
+		{&b.Cells[1][1], &b.Cells[1][2], EAST},
+		{&b.Cells[1][1], &b.Cells[2][1], SOUTH},
 	}
 
 	for _, test := range tests {
