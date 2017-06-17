@@ -7,6 +7,7 @@ import (
 	"github.com/wliao008/mazing/algos"
 	"github.com/wliao008/mazing/models"
 	"github.com/wliao008/mazing/structs"
+	"strings"
 	_ "os"
 )
 
@@ -86,6 +87,8 @@ func index(w http.ResponseWriter, req *http.Request){
 			}*/
 		}
 	}
+	model.Cells[0][0].CssClasses = strings.Replace(model.Cells[0][0].CssClasses, "north ","",-1)
+	model.Cells[bt.Board.Height-1][bt.Board.Width-1].CssClasses = strings.Replace(model.Cells[bt.Board.Height-1][bt.Board.Width-1].CssClasses, "south ","",-1)
 
 	err = tpl.ExecuteTemplate(w, "index.html", model)
 	if err != nil {
