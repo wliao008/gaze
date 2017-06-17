@@ -7,6 +7,7 @@ import (
 	"github.com/wliao008/mazing/algos"
 	"github.com/wliao008/mazing/models"
 	_ "github.com/wliao008/mazing/structs"
+	_ "os"
 )
 
 var tpl *template.Template

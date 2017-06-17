@@ -11,8 +11,8 @@ type Kruskal struct {
 	Board structs.Board
 }
 
-func NewKruskal(width, height uint16) *Kruskal {
-	k := &Kruskal{Board: structs.Board{width, height, nil}}
+func NewKruskal(height, width uint16) *Kruskal {
+	k := &Kruskal{Board: structs.Board{height, width, nil}}
 	k.Board.Init()
 	return k
 }
