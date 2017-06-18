@@ -1,0 +1,27 @@
+.nav{
+  border-bottom: 1px solid gray;
+  padding:10px;
+ margin-bottom: 20px;
+}
+
+table {
+	border-collapse: collapse;
+}
+.north { 
+	border-top: 1px solid gray;
+}
+.south {
+	border-bottom: 1px solid gray;
+}
+.east {
+	border-right: 1px solid gray;
+}
+.west {
+	border-left: 1px solid gray;
+}
+
+td {
+	width: 25px;
+	height: 25px;
+}
+

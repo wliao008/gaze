@@ -8,22 +8,25 @@ import (
 	"github.com/wliao008/mazing/models"
 	"github.com/wliao008/mazing/structs"
 	"strings"
+	"io"
+	"time"
 	_ "os"
 )
 
 var tpl *template.Template
 
 func init() {
-	tpl = template.Must(template.ParseGlob("web/templates/*.html"))
+	tpl = template.Must(template.ParseGlob("web/templates/*.tmpl"))
 }
 
 func main() {
-	http.HandleFunc("/", index)
+	http.HandleFunc("/", indexHandler)
+	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("./web/static/"))))
 	http.ListenAndServe(":8080", nil)
 }
 
-func index(w http.ResponseWriter, req *http.Request){
-	bt := algos.NewKruskal(10, 20)
+func indexHandler(w http.ResponseWriter, req *http.Request){
+	bt := algos.NewKruskal(20, 40)
 	err := bt.Generate()
 	if err != nil {
 		fmt.Println("ERROR")
@@ -36,6 +39,7 @@ func index(w http.ResponseWriter, req *http.Request){
 	for i := uint16(0); i < bt.Board.Height; i++ {
 		model.Cells[i] = make([]models.CellModel, bt.Board.Width)
 	}
+
 	// initialize model
 	for w := uint16(0); w < bt.Board.Width; w++ {
 		model.Cells[0][w].CssClasses += "north "
@@ -50,10 +54,8 @@ func index(w http.ResponseWriter, req *http.Request){
 			if w == bt.Board.Width - 1 {
 				model.Cells[h][w].CssClasses +="east "
 			}
-			//cell := bt.Board.Cells[j][i]
 			if h==0 {
 				model.Cells[0][w].CssClasses +="north "
-				//model.Cells[0][w].Note += "north "
 			}
 
 			if bt.Board.Cells[h][w].IsSet(structs.EAST) {
@@ -68,31 +70,28 @@ func index(w http.ResponseWriter, req *http.Request){
 			if bt.Board.Cells[h][w].IsSet(structs.SOUTH) {
 				model.Cells[h][w].CssClasses += "south "
 			}
-			/*
-			if bt.Board.Cells[i][j].IsSet(structs.EAST) {
-				model.Cells[i][j].CssClasses += "east "
-				model.Cells[i][j].Note += "east "
-			}
-			if bt.Board.Cells[i][j].IsSet(structs.WEST) {
-				model.Cells[i][j].CssClasses += "west "
-				model.Cells[i][j].Note += "west "
-			}
-			if bt.Board.Cells[i][j].IsSet(structs.NORTH) {
-				model.Cells[i][j].CssClasses += "north "
-				model.Cells[i][j].Note += "north "
-			}
-			if bt.Board.Cells[i][j].IsSet(structs.SOUTH) {
-				model.Cells[i][j].CssClasses += "south "
-				model.Cells[i][j].Note += "south "
-			}*/
 		}
 	}
+
+	//set the openning and ending cell
 	model.Cells[0][0].CssClasses = strings.Replace(model.Cells[0][0].CssClasses, "north ","",-1)
 	model.Cells[bt.Board.Height-1][bt.Board.Width-1].CssClasses = strings.Replace(model.Cells[bt.Board.Height-1][bt.Board.Width-1].CssClasses, "south ","",-1)
 
-	err = tpl.ExecuteTemplate(w, "index.html", model)
+	err = tpl.ExecuteTemplate(w, "index.tmpl", model)
 	if err != nil {
 		fmt.Println(err)
 		http.Error(w, "Internal server error", http.StatusInternalServerError)
 	}
+}
+
+func staticHandler(w http.ResponseWriter, req *http.Request) {
+	static_file := req.URL.Path[len("/static/css/"):]
+	fmt.Println(static_file)
+	f, err := http.Dir("/web/static/css/").Open("style.css")
+	if err == nil {
+		content := io.ReadSeeker(f)
+		http.ServeContent(w, req, "/web/static/css/style.css", time.Now(), content)
+		return
+	}
+	http.NotFound(w, req)
 }
