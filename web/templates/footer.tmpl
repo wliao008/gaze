@@ -1,19 +1,19 @@
 {{ define "footer" }}
 	</div>
 	<script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
-  <script>
-		var dialog = document.querySelector('dialog');
+    <script>
+	    var dialog = document.querySelector('dialog');
 		var showDialogButton = document.querySelector('#settingModal');
 		if (! dialog.showModal) {
-			dialogPolyfill.registerDialog(dialog);
+	        dialogPolyfill.registerDialog(dialog);
 		}
 		showDialogButton.addEventListener('click', function() {
-		  dialog.showModal();
+            dialog.showModal();
 		});
 		dialog.querySelector('.close').addEventListener('click', function() {
-		  dialog.close();
+            dialog.close();
 		});
-</script>			
+    </script>			
 </body>
 </html>
 {{ end }}
