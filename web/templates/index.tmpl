@@ -1,0 +1,13 @@
+{{ template "header" }}
+
+<table>
+	{{ range $row := .Cells}}
+  <tr>
+  		{{ range $cell := $row}}
+		<td class="{{$cell.CssClasses}}"></td>
+		{{ end }}
+  </tr>
+  	{{ end}}
+</table>
+
+{{ template "footer" }}
