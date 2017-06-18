@@ -1,7 +1,19 @@
 .nav{
+	width: 98%;
+	height: 20px;
   border-bottom: 1px solid gray;
   padding:10px;
- margin-bottom: 20px;
+	margin-bottom: 20px;
+}
+
+.logo {
+	width: 50%;
+	float: left;
+}
+
+.setting {
+	overflow: hidden;
+	float: right;
 }
 
 table {
