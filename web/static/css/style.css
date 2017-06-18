@@ -9,11 +9,18 @@
 .logo {
 	width: 50%;
 	float: left;
+	font-weight: bold;
 }
 
 .setting {
 	overflow: hidden;
 	float: right;
+}
+
+.content {
+	background-color: red
+	padding-left: 10px;
+	margin: 10px;
 }
 
 table {
