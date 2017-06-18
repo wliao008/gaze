@@ -4,10 +4,10 @@
 	{{ range $row := .Cells}}
   <tr>
   		{{ range $cell := $row}}
-		<td class="{{$cell.CssClasses}}"></td>
-		{{ end }}
+				<td class="{{$cell.CssClasses}}"></td>
+			{{ end }}
   </tr>
-  	{{ end}}
+  {{ end}}
 </table>
 
 {{ template "footer" }}
