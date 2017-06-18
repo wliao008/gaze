@@ -26,7 +26,7 @@ func main() {
 }
 
 func indexHandler(w http.ResponseWriter, req *http.Request){
-	bt := algos.NewKruskal(10, 20)
+	bt := algos.NewKruskal(20, 40)
 	err := bt.Generate()
 	if err != nil {
 		fmt.Println("ERROR")
