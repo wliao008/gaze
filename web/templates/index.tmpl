@@ -4,16 +4,12 @@
     <h5 class="mdl-dialog__title">Size</h5>
     <div class="mdl-dialog__content">
         <form action="#">
-            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                <input class="mdl-textfield__input" type="text" pattern="-?[0-9]*(\.[0-9]+)?" id="height" value="20">
-                <label class="mdl-textfield__label" for="height">Height...</label>
-                <span class="mdl-textfield__error">Input is not a number!</span>
-            </div>
-            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                <input class="mdl-textfield__input" type="text" pattern="-?[0-9]*(\.[0-9]+)?" id="width" value="40">
-                <label class="mdl-textfield__label" for="height">Width...</label>
-                <span class="mdl-textfield__error">Input is not a number!</span>
-            </div>
+					<input type="hidden"/>
+					<h4>Height: <span id="heightLabel">10</span></h4>
+					<input class="mdl-slider mdl-js-slider" type="range" min="10" max="100" value="10" tabindex="0" step="10" id="height">
+
+					<h4>Width: <span id="widthLabel">10</span></h4>
+					<input class="mdl-slider mdl-js-slider" type="range" min="10" max="100" value="10" tabindex="0" step="10" id="width">
         </form>
     </div>
     <div class="mdl-dialog__actions">

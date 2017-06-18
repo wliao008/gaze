@@ -13,6 +13,12 @@
 		dialog.querySelector('.close').addEventListener('click', function() {
             dialog.close();
 		});
+		document.querySelector('#height').addEventListener('input', function() {
+			document.getElementById("heightLabel").innerHTML = this.value
+		});
+		document.querySelector('#width').addEventListener('input', function() {
+			document.getElementById("widthLabel").innerHTML = this.value
+		});
     </script>			
 </body>
 </html>
