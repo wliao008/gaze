@@ -26,23 +26,8 @@ func main() {
 	http.ListenAndServe(":8080", nil)
 }
 
-func regenHandler(w http.ResponseWriter, req *http.Request) (uint16, uint16) {
-	req.ParseForm()
-	height := uint16(20)
-	width := uint16(40)
-	if val, ok := req.Form["height"]; ok {
-		h, _ := strconv.ParseInt(val[0], 10, 0)
-		height = uint16(h)
-	}
-	if val, ok := req.Form["width"]; ok {
-		w, _ := strconv.ParseInt(val[0], 10, 0)
-		width = uint16(w)
-	}
-	return height, width
-}
-
 func indexHandler(w http.ResponseWriter, req *http.Request){
-	height, width := regenHandler(w, req)
+	height, width := getSize(w, req)
 	fmt.Println("%d x %d", height, width)
 	bt := algos.NewKruskal(height, width)
 	err := bt.Generate()
@@ -113,3 +98,19 @@ func staticHandler(w http.ResponseWriter, req *http.Request) {
 	}
 	http.NotFound(w, req)
 }
+
+func getSize(w http.ResponseWriter, req *http.Request) (uint16, uint16) {
+	req.ParseForm()
+	height := uint16(20)
+	width := uint16(40)
+	if val, ok := req.Form["height"]; ok {
+		h, _ := strconv.ParseInt(val[0], 10, 0)
+		height = uint16(h)
+	}
+	if val, ok := req.Form["width"]; ok {
+		w, _ := strconv.ParseInt(val[0], 10, 0)
+		width = uint16(w)
+	}
+	return height, width
+}
+
