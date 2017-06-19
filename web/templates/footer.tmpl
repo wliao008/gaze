@@ -19,6 +19,9 @@
 		document.querySelector('#width').addEventListener('input', function() {
 			document.getElementById("widthLabel").innerHTML = this.value
 		});
+        document.querySelector('#ok').addEventListener('click', function() {
+            document.querySelector('#frmSize').submit();
+        });
     </script>			
 </body>
 </html>
