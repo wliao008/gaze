@@ -3,16 +3,16 @@
   <dialog class="mdl-dialog">
     <h5 class="mdl-dialog__title">Size</h5>
     <div class="mdl-dialog__content">
-        <form action="#">
+        <form id="frmSize" action="/home" method="post">
             <h4>Height: <span id="heightLabel">10</span></h4>
-		    <input class="mdl-slider mdl-js-slider" type="range" min="10" max="100" value="10" tabindex="0" step="10" id="height">
+		    <input class="mdl-slider mdl-js-slider" type="range" min="10" max="100" value="10" tabindex="0" step="10" id="height" name="height">
 
 		    <h4>Width: <span id="widthLabel">10</span></h4>
-            <input class="mdl-slider mdl-js-slider" type="range" min="10" max="100" value="10" tabindex="0" step="10" id="width">
+            <input class="mdl-slider mdl-js-slider" type="range" min="10" max="100" value="10" tabindex="0" step="10" id="width" name="width">
         </form>
     </div>
     <div class="mdl-dialog__actions">
-      <button type="button" class="mdl-button">Ok</button>
+      <button type="button" class="mdl-button" id="ok">Ok</button>
       <button type="button" class="mdl-button close">Cancel</button>
     </div>
   </dialog>

@@ -10,6 +10,7 @@ import (
 	"strings"
 	"io"
 	"time"
+	"strconv"
 	_ "os"
 )
 
@@ -20,13 +21,15 @@ func init() {
 }
 
 func main() {
-	http.HandleFunc("/", indexHandler)
+	http.HandleFunc("/home", indexHandler)
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("./web/static/"))))
 	http.ListenAndServe(":8080", nil)
 }
 
 func indexHandler(w http.ResponseWriter, req *http.Request){
-	bt := algos.NewKruskal(20, 40)
+	height, width := getSize(w, req)
+	fmt.Println("%d x %d", height, width)
+	bt := algos.NewKruskal(height, width)
 	err := bt.Generate()
 	if err != nil {
 		fmt.Println("ERROR")
@@ -95,3 +98,19 @@ func staticHandler(w http.ResponseWriter, req *http.Request) {
 	}
 	http.NotFound(w, req)
 }
+
+func getSize(w http.ResponseWriter, req *http.Request) (uint16, uint16) {
+	req.ParseForm()
+	height := uint16(20)
+	width := uint16(40)
+	if val, ok := req.Form["height"]; ok {
+		h, _ := strconv.ParseInt(val[0], 10, 0)
+		height = uint16(h)
+	}
+	if val, ok := req.Form["width"]; ok {
+		w, _ := strconv.ParseInt(val[0], 10, 0)
+		width = uint16(w)
+	}
+	return height, width
+}
+
