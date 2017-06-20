@@ -21,14 +21,18 @@ func init() {
 }
 
 func main() {
-	http.HandleFunc("/home", indexHandler)
+	http.HandleFunc("/", indexHandler)
+	http.HandleFunc("/home", homeHandler)
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("./web/static/"))))
 	http.ListenAndServe(":8080", nil)
 }
 
 func indexHandler(w http.ResponseWriter, req *http.Request){
+	http.Redirect(w, req, "/home", http.StatusSeeOther)
+}
+
+func homeHandler(w http.ResponseWriter, req *http.Request){
 	height, width := getSize(w, req)
-	fmt.Println("%d x %d", height, width)
 	bt := algos.NewKruskal(height, width)
 	err := bt.Generate()
 	if err != nil {
