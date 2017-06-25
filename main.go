@@ -41,6 +41,8 @@ func homeHandler(w http.ResponseWriter, req *http.Request){
 
 	// create model
 	model := &models.BoardModel{}
+	model.Height = bt.Board.Height
+	model.Width = bt.Board.Width
 	model.Cells = make([][]models.CellModel, bt.Board.Height)
 	model.RawCells = bt.Board.Cells
 	for i := uint16(0); i < bt.Board.Height; i++ {
@@ -107,14 +109,31 @@ func getSize(w http.ResponseWriter, req *http.Request) (uint16, uint16) {
 	req.ParseForm()
 	height := uint16(20)
 	width := uint16(40)
-	if val, ok := req.Form["height"]; ok {
-		h, _ := strconv.ParseInt(val[0], 10, 0)
-		height = uint16(h)
+	
+	if len(req.Form) == 0 {
+		// no new size specified by user
+		cookieSize, err := req.Cookie("size")
+		if err == nil {
+			size := strings.Split(cookieSize.Value, ",")
+			heightNew, _ := strconv.ParseUint(size[0], 10, 16)
+			widthNew, _ := strconv.ParseUint(size[1], 10, 16)
+			height = uint16(heightNew)
+			width = uint16(widthNew)
+		}
+	} else {
+		if val, ok := req.Form["height"]; ok {
+			h, _ := strconv.ParseInt(val[0], 10, 0)
+			height = uint16(h)
+		}
+		if val, ok := req.Form["width"]; ok {
+			w, _ := strconv.ParseInt(val[0], 10, 0)
+			width = uint16(w)
+		}
 	}
-	if val, ok := req.Form["width"]; ok {
-		w, _ := strconv.ParseInt(val[0], 10, 0)
-		width = uint16(w)
-	}
+	expiration := time.Now().Add(365 * 24 * time.Hour)
+	value := fmt.Sprintf("%d,%d", height, width)
+	cookieSize := &http.Cookie{Name: "size", Value: value, Expires: expiration}
+	http.SetCookie(w, cookieSize)
 	return height, width
 }
 
