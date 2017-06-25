@@ -22,9 +22,14 @@ func init() {
 
 func main() {
 	http.HandleFunc("/", indexHandler)
+	http.HandleFunc("/favicon.ico", faviconHandler)
 	http.HandleFunc("/home", homeHandler)
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("./web/static/"))))
 	http.ListenAndServe(":8080", nil)
+}
+
+func faviconHandler(w http.ResponseWriter, req *http.Request){
+	http.ServeFile(w, req, "favicon.ico")
 }
 
 func indexHandler(w http.ResponseWriter, req *http.Request){
