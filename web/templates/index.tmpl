@@ -4,11 +4,11 @@
     <h5 class="mdl-dialog__title">Size</h5>
     <div class="mdl-dialog__content">
         <form id="frmSize" action="/home" method="post">
-            <h4>Height: <span id="heightLabel">10</span></h4>
-		    <input class="mdl-slider mdl-js-slider" type="range" min="10" max="100" value="10" tabindex="0" step="10" id="height" name="height">
+            <h4>Height: <span id="heightLabel">{{ .Height }}</span></h4>
+            <input class="mdl-slider mdl-js-slider" type="range" min="10" max="100" value="{{ .Height }}" tabindex="0" step="10" id="height" name="height">
 
-		    <h4>Width: <span id="widthLabel">10</span></h4>
-            <input class="mdl-slider mdl-js-slider" type="range" min="10" max="100" value="10" tabindex="0" step="10" id="width" name="width">
+            <h4>Width: <span id="widthLabel">{{ .Width }}</span></h4>
+            <input class="mdl-slider mdl-js-slider" type="range" min="10" max="100" value="{{ .Width }}" tabindex="0" step="10" id="width" name="width">
         </form>
     </div>
     <div class="mdl-dialog__actions">
