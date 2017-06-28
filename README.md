@@ -22,7 +22,7 @@ Benchmarks are ran on the following hardware:
 MacBook Pro 2014, OS X 10.9, 2.6 GHz Intel Core i5, 16 GB 1600 MHz DDR3.
 
 Algorithm | Size | Iterations | ns/ops | ms/op | allocs/op
-----------|-------|------|-----------|--------------------
+----------|-------|------|-----------|---------|-----------
 Backtracking | 50x25 | 50 | 12935311 | 12.93 | 52
 Backtracking | 100x50 | 20 | 51892698 | 51.89 | 102
 Backtracking | 1000x500 | 1 | 5309771223 | 5309.77 | 1002
