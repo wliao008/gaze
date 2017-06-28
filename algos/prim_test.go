@@ -7,11 +7,11 @@ import (
 	"time"
 )
 
-func TestKruskalAlgo_Generate_AllCellsVisited(t *testing.T) {
+func TestPrim(t *testing.T) {
 	rand.Seed(time.Now().UTC().UnixNano())
 	count := rand.Intn(50) + 1
 	for c := 0; c < count; c++ {
-		k := NewKruskal(uint16(rand.Intn(100)+1), uint16(rand.Intn(100)+1))
+		k := NewPrim(uint16(rand.Intn(100)+1), uint16(rand.Intn(100)+1))
 		k.Generate()
 		for h := uint16(0); h < k.Board.Height; h++ {
 			for w := uint16(0); w < k.Board.Width; w++ {
@@ -23,34 +23,34 @@ func TestKruskalAlgo_Generate_AllCellsVisited(t *testing.T) {
 	}
 }
 
-func TestNewKruskal(t *testing.T) {
-	k := NewKruskal(10, 10)
+func TestNewPrim(t *testing.T) {
+	k := NewPrim(10, 10)
 	for _, row := range k.Board.Cells {
 		for _, cell := range row {
 			if cell.Flag != 15 {
-				t.Errorf("NewKruskal(), every celll should have flag set to 15, got %d", cell.Flag)
+				t.Errorf("NewPrim(), every celll should have flag set to 15, got %d", cell.Flag)
 			}
 		}
 	}
 }
 
-func BenchmarkKruskalAlgo50x25(b *testing.B) {
+func BenchmarkPrimAlgo50x25(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		k := NewKruskal(50, 25)
+		k := NewPrim(50, 25)
 		k.Generate()
 	}
 }
 
-func BenchmarkKruskalAlgo100x50(b *testing.B) {
+func BenchmarkPrimAlgo100x50(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		k := NewKruskal(100, 50)
+		k := NewPrim(100, 50)
 		k.Generate()
 	}
 }
 
-func BenchmarkKruskalAlgo1000x500(b *testing.B) {
+func BenchmarkPrimAlgo1000x500(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		k := NewKruskal(1000, 500)
+		k := NewPrim(1000, 500)
 		k.Generate()
 	}
 }
