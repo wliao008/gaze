@@ -38,7 +38,7 @@ func indexHandler(w http.ResponseWriter, req *http.Request){
 
 func homeHandler(w http.ResponseWriter, req *http.Request){
 	height, width := getSize(w, req)
-	bt := algos.NewKruskal(height, width)
+	bt := algos.NewPrim(height, width)
 	err := bt.Generate()
 	if err != nil {
 		fmt.Println("ERROR")
