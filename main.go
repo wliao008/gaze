@@ -7,11 +7,12 @@ import (
 	"github.com/wliao008/mazing/algos"
 	"github.com/wliao008/mazing/models"
 	"github.com/wliao008/mazing/structs"
+	"github.com/wliao008/mazing/solvers"
 	"strings"
 	"io"
 	"time"
 	"strconv"
-	_ "os"
+	"os"
 )
 
 var tpl *template.Template
@@ -21,6 +22,19 @@ func init() {
 }
 
 func main() {
+	bt := algos.NewPrim(5, 5)
+	err := bt.Generate()
+	if err != nil {
+		fmt.Println("ERROR")
+	}
+	bt.Board.Write(os.Stdout)
+	def := solvers.DeadEndFiller{}
+	def.Board = &bt.Board
+	fmt.Println("solving")
+	def.Solve()
+}
+
+func main2() {
 	http.HandleFunc("/", indexHandler)
 	http.HandleFunc("/favicon.ico", faviconHandler)
 	http.HandleFunc("/home", homeHandler)
