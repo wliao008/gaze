@@ -6,7 +6,7 @@ import (
 	"github.com/wliao008/mazing/util"
 )
 
-func BenchmarkInitialDeadEnds_1000x500(b *testing.B) {
+func BenchmarkDeadEnds_1000x500(b *testing.B) {
 	k := algos.NewPrim(1000, 500)
 	k.Generate()
 	def := DeadEndFiller{}
@@ -18,12 +18,11 @@ func BenchmarkInitialDeadEnds_1000x500(b *testing.B) {
 }
 
 func BenchmarkSolve_100x50(b *testing.B) {
-	k := algos.NewPrim(100, 50)
-	k.Generate()
-	def := DeadEndFiller{}
-	def.Board = &k.Board
-	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
+		k := algos.NewPrim(100, 50)
+		k.Generate()
+		def := DeadEndFiller{}
+		def.Board = &k.Board
 		def.Solve()
 	}
 }

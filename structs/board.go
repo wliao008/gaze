@@ -194,6 +194,66 @@ func (b *Board) DeadEnds(stack *util.Stack) {
 	}
 }
 
+func (b *Board) DeadNeighbors(c *Cell, stack *util.Stack) {
+	result := []*Cell{}
+	if ok, cell := b.getLiveNeighbor(c.X+1, c.Y); ok {
+		result = append(result, cell)
+	}
+
+	if ok, cell := b.getLiveNeighbor(c.X-1, c.Y); ok {
+		result = append(result, cell)
+	}
+
+	if ok, cell := b.getLiveNeighbor(c.X, c.Y+1); ok {
+		result = append(result, cell)
+	}
+
+	if ok, cell := b.getLiveNeighbor(c.X, c.Y-1); ok {
+		result = append(result, cell)
+	}
+
+	for _, item := range result {
+		// check for solid walls
+		flag := item.Flag & 15
+		walls := uint8(0)
+		walls += flag & 1
+		walls += (flag>>1) & 1
+		walls += (flag>>2) & 1
+		walls += (flag>>3) & 1
+
+		// check for surrounding cells that are dead ends
+		if !item.IsSet(WEST) && item.Y-1 >= 0 &&
+			b.Cells[item.X][item.Y-1].IsSet(DEAD) {
+			walls += 1
+		}
+		if !item.IsSet(EAST) && item.Y+1 < b.Width &&
+			b.Cells[item.X][item.Y+1].IsSet(DEAD) {
+			walls += 1
+		}
+		if !item.IsSet(NORTH) && item.X != 0 &&
+			b.Cells[item.X-1][item.Y].IsSet(DEAD) {
+			walls += 1
+		}
+		if !item.IsSet(SOUTH) && item.X+1 < b.Height &&
+			b.Cells[item.X+1][item.Y].IsSet(DEAD) {
+			walls += 1
+		}
+
+		if walls >= 3 {
+			stack.Push(item)
+		}
+	}
+}
+
+func (b *Board) getLiveNeighbor(x, y uint16) (bool, *Cell) {
+	if x >= 0 && x < b.Height &&
+		y >= 0 && y < b.Width &&
+		!b.Cells[x][y].IsSet(DEAD) {
+		return true, &b.Cells[x][y]
+	}
+	return false, nil
+}
+
 func (b *Board) getNeighbor(x, y uint16) (bool, *Cell) {
 	if x >= 0 && x < b.Height &&
 		y >= 0 && y < b.Width &&
