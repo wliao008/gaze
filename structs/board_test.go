@@ -1,7 +1,6 @@
 package structs
 
 import (
-	"os"
 	"testing"
 	"bytes"
 	"strings"
@@ -153,7 +152,6 @@ func TestDeadEnds3(t *testing.T) {
 	b.Cells[1][1].ClearBit(SOUTH)
 	stack := &util.Stack{}
 	b.DeadEnds(stack)
-	b.Write(os.Stdout)
 	count := 0
 	c := stack.Pop()
 	for c != nil {
