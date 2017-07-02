@@ -22,7 +22,7 @@ func init() {
 }
 
 func main_console() {
-	bt := algos.NewPrim(100, 50)
+	bt := algos.NewPrim(3, 3)
 	err := bt.Generate()
 	if err != nil {
 		fmt.Println("ERROR")
@@ -45,7 +45,7 @@ func main() {
 }
 
 func faviconHandler(w http.ResponseWriter, req *http.Request){
-	http.ServeFile(w, req, "favicon.ico")
+	http.ServeFile(w, req, "web/favicon.ico")
 }
 
 func indexHandler(w http.ResponseWriter, req *http.Request){

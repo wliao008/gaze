@@ -169,24 +169,6 @@ func (b *Board) DeadEnds(stack *util.Stack) {
 			walls += (flag>>2) & 1
 			walls += (flag>>3) & 1
 
-			// check for surrounding cells that are dead ends
-			if !c.IsSet(WEST) && c.Y-1 >= 0 &&
-				b.Cells[c.X][c.Y-1].IsSet(DEAD) {
-				walls += 1
-			}
-			if !c.IsSet(EAST) && c.Y+1 < b.Width &&
-				b.Cells[c.X][c.Y+1].IsSet(DEAD) {
-				walls += 1
-			}
-			if !c.IsSet(NORTH) && c.X != 0 &&
-				b.Cells[c.X-1][c.Y].IsSet(DEAD) {
-				walls += 1
-			}
-			if !c.IsSet(SOUTH) && c.X+1 < b.Height &&
-				b.Cells[c.X+1][c.Y].IsSet(DEAD) {
-				walls += 1
-			}
-
 			if walls >= 3 {
 				stack.Push(c)
 			}
