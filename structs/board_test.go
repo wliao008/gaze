@@ -4,6 +4,7 @@ import (
 	"testing"
 	"bytes"
 	"strings"
+	"github.com/wliao008/mazing/util"
 )
 
 func TestInit(t *testing.T) {
@@ -98,5 +99,43 @@ func TestWrite(t *testing.T) {
 	want := "   _ _\n|_|_|_|\n|_|_|_|\n|_|_| |"
 	if got != want {
 		t.Errorf("Write(), \nwant \n%s \ngot \n%s", want, got)
+	}
+}
+
+func TestDeadEnds(t *testing.T) {
+	b := &Board{3,3,nil}
+	b.Init()
+	stack := &util.Stack{}
+	b.DeadEnds(stack)
+	count := 0
+	c := stack.Pop()
+	for c != nil {
+		count += 1
+		c = stack.Pop()
+	}
+	if count != 9 {
+		t.Error("DeadEnds(), want 9, got %d", count)
+	}
+}
+
+func TestDeadEnds2(t *testing.T) {
+	b := &Board{1,10,nil}
+	b.Init()
+	b.Cells[0][0].ClearBit(NORTH)
+	b.Cells[0][9].ClearBit(SOUTH)
+	for i:=0; i<9; i++ {
+		b.Cells[0][i].ClearBit(EAST)
+		b.Cells[0][i+1].ClearBit(WEST)
+	}
+	stack := &util.Stack{}
+	b.DeadEnds(stack)
+	count := 0
+	c := stack.Pop()
+	for c != nil {
+		count += 1
+		c = stack.Pop()
+	}
+	if count != 0 {
+		t.Error("DeadEnds(), want 0, got %d", count)
 	}
 }

@@ -22,16 +22,18 @@ func init() {
 }
 
 func main() {
-	bt := algos.NewPrim(5, 5)
+	bt := algos.NewPrim(10, 15)
 	err := bt.Generate()
 	if err != nil {
 		fmt.Println("ERROR")
 	}
+	bt.Board.Cells[0][0].ClearBit(structs.NORTH)
+	bt.Board.Cells[bt.Board.Height-1][bt.Board.Width-1].ClearBit(structs.SOUTH)
 	bt.Board.Write(os.Stdout)
 	def := solvers.DeadEndFiller{}
 	def.Board = &bt.Board
-	fmt.Println("solving")
 	def.Solve()
+	bt.Board.Write2(os.Stdout)
 }
 
 func main2() {
