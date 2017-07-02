@@ -38,6 +38,9 @@ table {
 .west {
 	border-left: 1px solid gray;
 }
+.gray {
+	background-color: #eee;
+}
 
 td {
 	width: 10px;

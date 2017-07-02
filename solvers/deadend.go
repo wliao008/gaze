@@ -23,8 +23,9 @@ func (def *DeadEndFiller) Solve() {
 	def.Board.DeadEnds(stack)
 	c := stack.Pop()
 	for c != nil {	
-		c.(*structs.Cell).SetBit(structs.DEAD)
-		def.Board.DeadEnds(stack)
+		cell := c.(*structs.Cell)
+		cell.SetBit(structs.DEAD)
+		def.Board.DeadNeighbors(cell, stack)
 		c = stack.Pop()
 	}
 }
