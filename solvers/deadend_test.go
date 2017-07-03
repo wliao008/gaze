@@ -17,9 +17,9 @@ func BenchmarkDeadEnds_1000x500(b *testing.B) {
 	}
 }
 
-func BenchmarkSolve_100x50(b *testing.B) {
+func BenchmarkSolve_1000x500(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		k := algos.NewPrim(100, 50)
+		k := algos.NewPrim(1000, 500)
 		k.Generate()
 		def := DeadEndFiller{}
 		def.Board = &k.Board

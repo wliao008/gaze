@@ -139,3 +139,26 @@ func TestDeadEnds2(t *testing.T) {
 		t.Error("DeadEnds(), want 0, got %d", count)
 	}
 }
+
+func TestDeadEnds3(t *testing.T) {
+	b := &Board{2,2,nil}
+	b.Init()
+	b.Cells[0][0].ClearBit(NORTH)
+	b.Cells[0][0].ClearBit(EAST)
+	b.Cells[0][1].ClearBit(WEST)
+	b.Cells[0][1].ClearBit(SOUTH)
+	b.Cells[1][0].ClearBit(EAST)
+	b.Cells[1][1].ClearBit(WEST)
+	b.Cells[1][1].ClearBit(SOUTH)
+	stack := &util.Stack{}
+	b.DeadEnds(stack)
+	count := 0
+	c := stack.Pop()
+	for c != nil {
+		count += 1
+		c = stack.Pop()
+	}
+	if count != 1 {
+		t.Error("DeadEnds(), want 1, got %d", count)
+	}
+}
