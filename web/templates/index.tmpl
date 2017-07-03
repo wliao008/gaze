@@ -5,10 +5,10 @@
     <div class="mdl-dialog__content">
         <form id="frmSize" action="/home" method="post">
             <h4>Height: <span id="heightLabel">{{ .Height }}</span></h4>
-            <input class="mdl-slider mdl-js-slider" type="range" min="10" max="100" value="{{ .Height }}" tabindex="0" step="10" id="height" name="height">
+            <input class="mdl-slider mdl-js-slider" type="range" min="10" max="100" value="{{ .Height }}" tabindex="0" step="1" id="height" name="height">
 
             <h4>Width: <span id="widthLabel">{{ .Width }}</span></h4>
-            <input class="mdl-slider mdl-js-slider" type="range" min="10" max="100" value="{{ .Width }}" tabindex="0" step="10" id="width" name="width">
+            <input class="mdl-slider mdl-js-slider" type="range" min="10" max="100" value="{{ .Width }}" tabindex="0" step="1" id="width" name="width">
         </form>
     </div>
     <div class="mdl-dialog__actions">
@@ -27,6 +27,37 @@
 		{{ end}}
 	</table>
   
-  <a href="javascript:void(0);" id="solve">solve</a>
+  <a href="javascript:void(0);" id="settingModal">size</a>&nbsp;
+  <a href="javascript:void(0);" id="solve">solve</a>&nbsp;
+  <a href="/home">new</a>&nbsp;
 
+    <script>
+	    var dialog = document.querySelector('dialog');
+		var showDialogButton = document.querySelector('#settingModal');
+		if (! dialog.showModal) {
+	        dialogPolyfill.registerDialog(dialog);
+		}
+		showDialogButton.addEventListener('click', function() {
+            dialog.showModal();
+		});
+		dialog.querySelector('.close').addEventListener('click', function() {
+            dialog.close();
+		});
+		document.querySelector('#height').addEventListener('input', function() {
+			document.getElementById("heightLabel").innerHTML = this.value
+		});
+		document.querySelector('#width').addEventListener('input', function() {
+			document.getElementById("widthLabel").innerHTML = this.value
+		});
+        document.querySelector('#ok').addEventListener('click', function() {
+            document.querySelector('#frmSize').submit();
+        });
+		document.querySelector('#solve').addEventListener('click', function() {
+        	var paths = document.getElementsByClassName("p");
+        	var i;
+			for (i = 0; i < paths.length; i++) {
+				paths[i].style.backgroundColor = "#eee";
+			}
+		});
+    </script>			
 {{ template "footer" }}
