@@ -1,7 +1,9 @@
 package structs
 
 import (
+	//"fmt"
 	"io"
+	"github.com/wliao008/mazing/util"
 )
 
 type Board struct {
@@ -129,6 +131,129 @@ func (b *Board) Write(writer io.Writer) {
 	}
 }
 
+func (b *Board) Write2(writer io.Writer) {
+	for h := uint16(0); h < b.Height; h++ {
+		for w := uint16(0); w < b.Width; w++ {
+			c := b.Cells[h][w]
+			if c.IsSet(DEAD) {
+				writer.Write([]byte("*"))
+			}else{
+				writer.Write([]byte("-"))
+			}
+		}
+		writer.Write([]byte("\n"))
+	}
+}
+
+
+func (b *Board) DeadEnds(stack *util.Stack) {
+	//this function is a memory optimzation, declaring h, w etc outside of
+	//the for loops reduces allocations.
+	flag := uint8(0)
+	walls := uint8(0)
+	h := uint16(0)
+	c := &Cell{}
+	
+	for; h < b.Height; h++ {
+		for w := uint16(0); w < b.Width; w++ {
+			c = &b.Cells[h][w]
+			if c.IsSet(DEAD) {
+				continue
+			}
+
+			// check for solid walls
+			flag = c.Flag & 15
+			walls = 0
+			walls += flag & 1
+			walls += (flag>>1) & 1
+			walls += (flag>>2) & 1
+			walls += (flag>>3) & 1
+
+			// check for surrounding cells that are dead ends
+			if !c.IsSet(WEST) && c.Y-1 >= 0 &&
+				b.Cells[c.X][c.Y-1].IsSet(DEAD) {
+				walls += 1
+			}
+			if !c.IsSet(EAST) && c.Y+1 < b.Width &&
+				b.Cells[c.X][c.Y+1].IsSet(DEAD) {
+				walls += 1
+			}
+			if !c.IsSet(NORTH) && c.X != 0 &&
+				b.Cells[c.X-1][c.Y].IsSet(DEAD) {
+				walls += 1
+			}
+			if !c.IsSet(SOUTH) && c.X+1 < b.Height &&
+				b.Cells[c.X+1][c.Y].IsSet(DEAD) {
+				walls += 1
+			}
+
+			if walls >= 3 {
+				stack.Push(c)
+			}
+		}
+	}
+}
+
+func (b *Board) DeadNeighbors(c *Cell, stack *util.Stack) {
+	result := []*Cell{}
+	if ok, cell := b.getLiveNeighbor(c.X+1, c.Y); ok {
+		result = append(result, cell)
+	}
+
+	if ok, cell := b.getLiveNeighbor(c.X-1, c.Y); ok {
+		result = append(result, cell)
+	}
+
+	if ok, cell := b.getLiveNeighbor(c.X, c.Y+1); ok {
+		result = append(result, cell)
+	}
+
+	if ok, cell := b.getLiveNeighbor(c.X, c.Y-1); ok {
+		result = append(result, cell)
+	}
+
+	for _, item := range result {
+		// check for solid walls
+		flag := item.Flag & 15
+		walls := uint8(0)
+		walls += flag & 1
+		walls += (flag>>1) & 1
+		walls += (flag>>2) & 1
+		walls += (flag>>3) & 1
+
+		// check for surrounding cells that are dead ends
+		if !item.IsSet(WEST) && item.Y-1 >= 0 &&
+			b.Cells[item.X][item.Y-1].IsSet(DEAD) {
+			walls += 1
+		}
+		if !item.IsSet(EAST) && item.Y+1 < b.Width &&
+			b.Cells[item.X][item.Y+1].IsSet(DEAD) {
+			walls += 1
+		}
+		if !item.IsSet(NORTH) && item.X != 0 &&
+			b.Cells[item.X-1][item.Y].IsSet(DEAD) {
+			walls += 1
+		}
+		if !item.IsSet(SOUTH) && item.X+1 < b.Height &&
+			b.Cells[item.X+1][item.Y].IsSet(DEAD) {
+			walls += 1
+		}
+
+		if walls >= 3 {
+			stack.Push(item)
+		}
+	}
+}
+
+func (b *Board) getLiveNeighbor(x, y uint16) (bool, *Cell) {
+	if x >= 0 && x < b.Height &&
+		y >= 0 && y < b.Width &&
+		!b.Cells[x][y].IsSet(DEAD) {
+		return true, &b.Cells[x][y]
+	}
+	return false, nil
+}
+
 func (b *Board) getNeighbor(x, y uint16) (bool, *Cell) {
 	if x >= 0 && x < b.Height &&
 		y >= 0 && y < b.Width &&
@@ -137,3 +262,4 @@ func (b *Board) getNeighbor(x, y uint16) (bool, *Cell) {
 	}
 	return false, nil
 }
+

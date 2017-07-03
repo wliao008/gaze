@@ -7,17 +7,33 @@ import (
 	"github.com/wliao008/mazing/algos"
 	"github.com/wliao008/mazing/models"
 	"github.com/wliao008/mazing/structs"
+	"github.com/wliao008/mazing/solvers"
 	"strings"
 	"io"
 	"time"
 	"strconv"
-	_ "os"
+	"os"
 )
 
 var tpl *template.Template
 
 func init() {
 	tpl = template.Must(template.ParseGlob("web/templates/*.tmpl"))
+}
+
+func main_console() {
+	bt := algos.NewPrim(100, 50)
+	err := bt.Generate()
+	if err != nil {
+		fmt.Println("ERROR")
+	}
+	bt.Board.Cells[0][0].ClearBit(structs.NORTH)
+	bt.Board.Cells[bt.Board.Height-1][bt.Board.Width-1].ClearBit(structs.SOUTH)
+	bt.Board.Write(os.Stdout)
+	def := solvers.DeadEndFiller{}
+	def.Board = &bt.Board
+	def.Solve()
+	bt.Board.Write2(os.Stdout)
 }
 
 func main() {
@@ -52,6 +68,12 @@ func homeHandler(w http.ResponseWriter, req *http.Request){
 	if err != nil {
 		fmt.Println("ERROR")
 	}
+	bt.Board.Cells[0][0].ClearBit(structs.NORTH)
+	bt.Board.Cells[bt.Board.Height-1][bt.Board.Width-1].ClearBit(structs.SOUTH)
+	def := solvers.DeadEndFiller{}
+	def.Board = &bt.Board
+	def.Solve()
+	//bt.Board.Write2(os.Stdout)
 
 	// create model
 	model := &models.BoardModel{}
@@ -74,6 +96,9 @@ func homeHandler(w http.ResponseWriter, req *http.Request){
 		for w := uint16(0); w < bt.Board.Width; w++ {
 			model.Cells[h][w].X = w;
 			model.Cells[h][w].Y = h
+			if !bt.Board.Cells[h][w].IsSet(structs.DEAD){
+				model.Cells[h][w].CssClasses += "p "
+			}
 			if w == bt.Board.Width - 1 {
 				model.Cells[h][w].CssClasses +="east "
 			}
