@@ -40,6 +40,7 @@ func main() {
 	http.HandleFunc("/", indexHandler)
 	http.HandleFunc("/favicon.ico", faviconHandler)
 	http.HandleFunc("/home", homeHandler)
+	http.HandleFunc("/about", aboutHandler)
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("./web/static/"))))
 	http.ListenAndServe(":8080", nil)
 }
@@ -50,6 +51,14 @@ func faviconHandler(w http.ResponseWriter, req *http.Request){
 
 func indexHandler(w http.ResponseWriter, req *http.Request){
 	http.Redirect(w, req, "/home", http.StatusSeeOther)
+}
+
+func aboutHandler(w http.ResponseWriter, req *http.Request){
+	err := tpl.ExecuteTemplate(w, "about.tmpl", nil)
+	if err != nil {
+		fmt.Println(err)
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
+	}
 }
 
 func homeHandler(w http.ResponseWriter, req *http.Request){

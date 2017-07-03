@@ -47,3 +47,10 @@ td {
 	height: 10px;
 }
 
+.about_bg{
+	height: 272px;
+	background-image: url("/static/images/about.png");
+	background-repeat: repeat-x;
+	opacity: 0.5;
+}
+

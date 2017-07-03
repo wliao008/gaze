@@ -1,35 +1,6 @@
 {{ define "footer" }}
     </div>
     <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
-    <script>
-	    var dialog = document.querySelector('dialog');
-		var showDialogButton = document.querySelector('#settingModal');
-		if (! dialog.showModal) {
-	        dialogPolyfill.registerDialog(dialog);
-		}
-		showDialogButton.addEventListener('click', function() {
-            dialog.showModal();
-		});
-		dialog.querySelector('.close').addEventListener('click', function() {
-            dialog.close();
-		});
-		document.querySelector('#height').addEventListener('input', function() {
-			document.getElementById("heightLabel").innerHTML = this.value
-		});
-		document.querySelector('#width').addEventListener('input', function() {
-			document.getElementById("widthLabel").innerHTML = this.value
-		});
-        document.querySelector('#ok').addEventListener('click', function() {
-            document.querySelector('#frmSize').submit();
-        });
-		document.querySelector('#solve').addEventListener('click', function() {
-        	var paths = document.getElementsByClassName("p");
-        	var i;
-			for (i = 0; i < paths.length; i++) {
-				paths[i].style.backgroundColor = "#eee";
-			}
-		});
-    </script>			
 </body>
 </html>
 {{ end }}
