@@ -9,7 +9,8 @@ type DisjointSet struct {
 }
 
 type Item struct {
-	Data interface{}
+	From interface{}
+	To interface{}
 	Parent *Item
 }
 
@@ -36,7 +37,7 @@ func (ds *DisjointSet) Write(writer io.Writer) {
 }
 
 func (ds *DisjointSet) WriteItem(item *Item, writer io.Writer) {
-	writer.Write([]byte(item.Data.(string) + " --> "))
+	writer.Write([]byte(item.From.(string) + " --> "))
 	if item.Parent != nil {
 		ds.WriteItem(item.Parent, writer)
 	}
