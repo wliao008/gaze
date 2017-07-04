@@ -21,6 +21,11 @@ func init() {
 	tpl = template.Must(template.ParseGlob("web/templates/*.tmpl"))
 }
 
+func main() {
+	k := algos.NewKruskal(3, 3)
+	k.Test()
+}
+
 func main_console() {
 	bt := algos.NewPrim(3, 3)
 	err := bt.Generate()
@@ -36,7 +41,7 @@ func main_console() {
 	bt.Board.Write2(os.Stdout)
 }
 
-func main() {
+func main2() {
 	http.HandleFunc("/", indexHandler)
 	http.HandleFunc("/favicon.ico", faviconHandler)
 	http.HandleFunc("/home", homeHandler)
