@@ -66,6 +66,12 @@ func (k *Kruskal) Test2() {
 		fmt.Println(li)
 	}
 	fmt.Println("-----------")
+	k.Shuffle(list)
+	for _, item := range list {
+		from := item.From.Data
+		to := item.To.Data
+		fmt.Printf("[%d,%d] (item %p) - [%d,%d] (item %p)\n", from.X, from.Y, &item, to.X, to.Y, &item)
+	}
 	for _, item := range list {
 		root1 := ds.Find(item.From)
 		root2 := ds.Find(item.To)
