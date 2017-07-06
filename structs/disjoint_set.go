@@ -11,7 +11,6 @@ type DisjointSet struct {
 
 type Item struct {
 	Data *Cell
-	Name string
 	Parent *Item
 }
 

@@ -2,38 +2,40 @@ package structs
 
 import (
 	"testing"
-	"fmt"
 	"os"
 )
 
 func TestFind(t *testing.T) {
 	ds := &DisjointSet{}
 	ds.Items = make([]*Item, 2)
-	item1 := &Item{"1", nil}
-	item2 := &Item{"2", nil}
+	c1 := &Cell{15, 0, 0}
+	c2 := &Cell{15, 0, 1}
+	item1 := &Item{c1, nil}
+	item2 := &Item{c2, nil}
 	ds.Items[0] = item1
 	ds.Items[1] = item2
 	result := ds.Find(item1)
-	fmt.Println(result)
-	if result.Data != "1" {
-		t.Errorf("Find(), want 1, got %d", result.Data)
+	if result.Data.X != 0 && result.Data.Y != 0 {
+		t.Errorf("Find(), want [0,0], got [%d,%d]", result.Data.X, result.Data.Y)
 	}
 }
 
 func TestUnion(t *testing.T) {
 	ds := &DisjointSet{}
 	ds.Items = make([]*Item, 2)
-	item1 := &Item{"1", nil}
-	item2 := &Item{"2", nil}
+	c1 := &Cell{15, 0, 0}
+	c2 := &Cell{15, 0, 1}
+	item1 := &Item{c1, nil}
+	item2 := &Item{c2, nil}
 	ds.Items[0] = item1
 	ds.Items[1] = item2
 	result := ds.Union(item1, item2)
-	if result.Data != "2" {
-		t.Errorf("Union(), want 2, got %d", result.Data)
+	if result.Data.X != 0 && result.Data.Y != 1 {
+		t.Errorf("Union(), want [0,1], got [%d,%d]", result.Data.X, result.Data.Y)
 	}
 	root := ds.Find(item1)
-	if root.Data != "2" {
-		t.Errorf("Union(), merged item1 & item2, Find(item1) should return item2 as root, got %d", root.Data)
+	if result.Data.X != 0 && result.Data.Y != 1 {
+		t.Errorf("Union(), merged item1 & item2, Find(item1) should return item2 as root, got %v", root.Data)
 	}
 	ds.Write(os.Stdout)
 }

@@ -38,7 +38,7 @@ func (k *Kruskal) Test2() {
 	var list []*ListItem
 	for h := uint16(0); h < k.Board.Height; h++ {
 		for w := uint16(0); w < k.Board.Width; w++ {
-			item := &structs.Item{&k.Board.Cells[h][w], "", nil}
+			item := &structs.Item{&k.Board.Cells[h][w], nil}
 			ds.Items = append(ds.Items, item)
 		}
 	}
@@ -81,7 +81,7 @@ func (k *Kruskal) Test2() {
 		ds.Write(os.Stdout)
 		fmt.Println("-------------")
 	}
-	
+
 	ds.Write(os.Stdout)
 	fmt.Println("-----------")
 }
