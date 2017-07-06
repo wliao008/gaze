@@ -1,5 +1,7 @@
 package structs
 
+import "fmt"
+
 type FlagPosition uint8
 
 const (
@@ -42,4 +44,8 @@ func (c *Cell) ClearBit(pos FlagPosition) {
 
 func (c *Cell) IsSet(pos FlagPosition) bool {
 	return c.Flag&(1<<pos) != 0
+}
+
+func (c *Cell) String() string {
+	return fmt.Sprintf("[%d,%d]", c.X, c.Y)
 }

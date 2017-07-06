@@ -22,8 +22,8 @@ func init() {
 }
 
 func main() {
-	k := algos.NewKruskal(3, 3)
-	k.Test()
+	k := algos.NewKruskal(2, 2)
+	k.Test2()
 }
 
 func main_console() {
