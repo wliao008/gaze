@@ -76,9 +76,16 @@ func (k *Kruskal) Test2() {
 		fmt.Printf("=> %v - %v\n", item.From, item.To)
 		root1 := ds.Find(item.From)
 		root2 := ds.Find(item.To)
+		/*
 		if root1.Data.IsSet(structs.VISITED) &&
 			root2.Data.IsSet(structs.VISITED) {
 			fmt.Printf("%v - %v ignored\n", root1, root2)
+			continue
+		}
+		*/
+		if root1.Data.X == root2.Data.X &&
+			root1.Data.Y == root2.Data.Y {
+			fmt.Printf("%v - %v ignored\n", item.From, item.To)
 			continue
 		}
 
