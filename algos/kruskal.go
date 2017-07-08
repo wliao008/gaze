@@ -20,7 +20,7 @@ type ListItem struct {
 func (li *ListItem) String() string {
 	from := li.From.Data
 	to := li.To.Data
-	return fmt.Sprintf("[%d,%d] (%p) to [%d,%d] (%p)", from.X, from.Y, &li.From, to.X, to.Y, &li.To)
+	return fmt.Sprintf("[%d,%d] to [%d,%d]", from.X, from.Y, to.X, to.Y)
 }
 
 func NewKruskal(height, width uint16) *Kruskal {
@@ -38,7 +38,7 @@ func (k *Kruskal) Test2() {
 	var list []*ListItem
 	for h := uint16(0); h < k.Board.Height; h++ {
 		for w := uint16(0); w < k.Board.Width; w++ {
-			item := &structs.Item{&k.Board.Cells[h][w], nil}
+			item := &structs.Item{&k.Board.Cells[h][w], nil, nil}
 			ds.Items = append(ds.Items, item)
 		}
 	}
@@ -70,13 +70,15 @@ func (k *Kruskal) Test2() {
 	for _, item := range list {
 		from := item.From.Data
 		to := item.To.Data
-		fmt.Printf("[%d,%d] (item %p) - [%d,%d] (item %p)\n", from.X, from.Y, &item, to.X, to.Y, &item)
+		fmt.Printf("[%d,%d] - [%d,%d]\n", from.X, from.Y, to.X, to.Y)
 	}
 	for _, item := range list {
+		fmt.Printf("=> %v - %v\n", item.From, item.To)
 		root1 := ds.Find(item.From)
 		root2 := ds.Find(item.To)
 		if root1.Data.IsSet(structs.VISITED) &&
 			root2.Data.IsSet(structs.VISITED) {
+			fmt.Printf("%v - %v ignored\n", root1, root2)
 			continue
 		}
 

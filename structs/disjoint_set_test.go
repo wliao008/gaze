@@ -10,8 +10,8 @@ func TestFind(t *testing.T) {
 	ds.Items = make([]*Item, 2)
 	c1 := &Cell{15, 0, 0}
 	c2 := &Cell{15, 0, 1}
-	item1 := &Item{c1, nil}
-	item2 := &Item{c2, nil}
+	item1 := &Item{c1, nil, nil}
+	item2 := &Item{c2, nil, nil}
 	ds.Items[0] = item1
 	ds.Items[1] = item2
 	result := ds.Find(item1)
@@ -25,8 +25,8 @@ func TestUnion(t *testing.T) {
 	ds.Items = make([]*Item, 2)
 	c1 := &Cell{15, 0, 0}
 	c2 := &Cell{15, 0, 1}
-	item1 := &Item{c1, nil}
-	item2 := &Item{c2, nil}
+	item1 := &Item{c1, nil, nil}
+	item2 := &Item{c2, nil, nil}
 	ds.Items[0] = item1
 	ds.Items[1] = item2
 	result := ds.Union(item1, item2)

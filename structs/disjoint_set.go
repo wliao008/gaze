@@ -11,11 +11,12 @@ type DisjointSet struct {
 
 type Item struct {
 	Data *Cell
-	Parent *Item
+	Next *Item
+	Prev *Item
 }
 
 func (i *Item) String() string {
-	return fmt.Sprintf("%v (%p)", i.Data, &i)
+	return fmt.Sprintf("%v", i.Data)
 }
 
 func (ds *DisjointSet) FindItem(c *Cell) (bool, *Item) {
@@ -29,18 +30,27 @@ func (ds *DisjointSet) FindItem(c *Cell) (bool, *Item) {
 
 //Find goes up the tree and find the root
 func (ds *DisjointSet) Find(item *Item) *Item {
-	if item.Parent == nil {
+	if item.Next == nil {
 		return item 
 	}
-	return ds.Find(item.Parent)
+	return ds.Find(item.Next)
+}
+
+func (ds *DisjointSet) FindPrev(item *Item) *Item {
+	if item.Prev == nil {
+		return item 
+	}
+	return ds.FindPrev(item.Prev)
 }
 
 func (ds *DisjointSet) Union(item1, item2 *Item) *Item {
-	root1 := ds.Find(item1)
-	root2 := ds.Find(item2)
-	root1.Parent = root2
-	fmt.Printf("setting %v.Parent to %v\n", root1, root2)
-	return root2
+	last := ds.Find(item1)
+	root := ds.FindPrev(item2)
+	last.Next = root
+	root.Prev = last
+	fmt.Printf("setting %v.Next to %v\n", last, root)
+	fmt.Printf("setting %v.Prev to %v\n", root, last)
+	return ds.Find(item2)
 }
 
 func (ds *DisjointSet) Write(writer io.Writer) {
@@ -51,11 +61,11 @@ func (ds *DisjointSet) Write(writer io.Writer) {
 }
 
 func (ds *DisjointSet) WriteItem(item *Item, writer io.Writer) {
-	str := fmt.Sprintf("%v (%p)", item.Data, &item)
+	str := fmt.Sprintf("%v", item.Data)
 	writer.Write([]byte(str))
-	if item.Parent != nil {
+	if item.Next != nil {
 		writer.Write([]byte(" --> "))
-		ds.WriteItem(item.Parent, writer)
+		ds.WriteItem(item.Next, writer)
 	} else {
 		writer.Write([]byte(" --> nil "))
 	}
