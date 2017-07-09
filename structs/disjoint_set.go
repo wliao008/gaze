@@ -6,7 +6,7 @@ import (
 )
 
 type DisjointSet struct {
-	Items []*Item
+	Items map[string]*Item
 }
 
 type Item struct {
@@ -19,10 +19,8 @@ func (i *Item) String() string {
 }
 
 func (ds *DisjointSet) FindItem(c *Cell) (bool, *Item) {
-	for _, item := range ds.Items {
-		if item.Data.X == c.X && item.Data.Y == c.Y {
-			return true, item
-		}
+	if item, ok := ds.Items[fmt.Sprintf("%d%d", c.X, c.Y)]; ok {
+		return true, item
 	}
 	return false, nil
 }

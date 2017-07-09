@@ -5,6 +5,7 @@ import (
 	"math/rand"
 	"time"
 	"fmt"
+	"strconv"
 )
 
 type Kruskal struct {
@@ -34,16 +35,20 @@ func init() {
 
 func (k *Kruskal) Generate() error {
 	ds := &structs.DisjointSet{}
+	ds.Items = make(map[string]*structs.Item)
 	var list []*ListItem
-	for h := uint16(0); h < k.Board.Height; h++ {
-		for w := uint16(0); w < k.Board.Width; w++ {
+	height := int(k.Board.Height)
+	width := int(k.Board.Width)
+	for h := 0; h < height; h++ {
+		for w := 0; w < width; w++ {
+			//k.Board.Cells[h][w].SetBit(structs.VISITED)
 			item := &structs.Item{&k.Board.Cells[h][w], nil}
-			ds.Items = append(ds.Items, item)
+			ds.Items[strconv.Itoa(h) + strconv.Itoa(w)] = item
 		}
 	}
 
-	for h := uint16(0); h < k.Board.Height; h++ {
-		for w := uint16(0); w < k.Board.Width; w++ {
+	for h := 0; h < height; h++ {
+		for w := 0; w < width; w++ {
 			c := &k.Board.Cells[h][w]
 			_, fromItem := ds.FindItem(c)
 			cells := k.Board.Neighbors(c)
@@ -72,6 +77,8 @@ func (k *Kruskal) Generate() error {
 		root1.Data.SetBit(structs.VISITED)
 		root2.Data.SetBit(structs.VISITED)
 	}
+	/*
+	*/
 
 	return nil
 }

@@ -145,6 +145,20 @@ func (b *Board) Write2(writer io.Writer) {
 	}
 }
 
+func (b *Board) WriteVisited(writer io.Writer) {
+	for h := uint16(0); h < b.Height; h++ {
+		for w := uint16(0); w < b.Width; w++ {
+			c := b.Cells[h][w]
+			if c.IsSet(VISITED) {
+				writer.Write([]byte("*"))
+			}else{
+				writer.Write([]byte(" "))
+			}
+		}
+		writer.Write([]byte("\n"))
+	}
+}
+
 
 func (b *Board) DeadEnds(stack *util.Stack) {
 	//this function is a memory optimzation, declaring h, w etc outside of
