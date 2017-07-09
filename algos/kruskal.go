@@ -5,7 +5,7 @@ import (
 	"math/rand"
 	"time"
 	"fmt"
-	//"strconv"
+	"strconv"
 )
 
 type Kruskal struct {
@@ -36,32 +36,16 @@ func init() {
 func (k *Kruskal) Generate() error {
 	ds := &structs.DisjointSet{}
 	ds.Items = make(map[string]*structs.Item)
-	tmp := make(map[string]int)
 	var list []*ListItem
 	height := int(k.Board.Height)
 	width := int(k.Board.Width)
-	mapcount := 0
 	for h := 0; h < height; h++ {
 		for w := 0; w < width; w++ {
 			//k.Board.Cells[h][w].SetBit(structs.VISITED)
 			item := &structs.Item{&k.Board.Cells[h][w], nil}
-			key := fmt.Sprintf("%d_%d", h, w)
-			if key == "143" {
-				fmt.Printf("%d,%d\n", h, w)
-			}
-			ds.Items[key] = item
-			tmp[fmt.Sprintf("%d_%d", h, w)] += 1
-			mapcount += 1
+			ds.Items[strconv.Itoa(h) + "_" + strconv.Itoa(w)] = item
 		}
 	}
-
-	for k, v := range tmp {
-		if v > 1 {
-			fmt.Printf("%s=%d\n", k, v)
-		}
-	}
-
-	fmt.Printf("ds.Items = %d, mapcount=%d\n", len(ds.Items), mapcount)
 
 	for h := 0; h < height; h++ {
 		for w := 0; w < width; w++ {
@@ -96,9 +80,6 @@ func (k *Kruskal) Generate() error {
 		k.Board.Cells[item.To.Data.X][item.To.Data.Y].SetBit(structs.VISITED)
 		idx += 1
 	}
-	/*
-	*/
-	fmt.Printf("list = %d, idx=%d\n", len(list), idx)
 
 	return nil
 }

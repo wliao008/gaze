@@ -2,13 +2,11 @@ package algos
 
 import (
 	"testing"
-	//"github.com/wliao008/mazing/structs"
-	//"math/rand"
-	//"time"
-	//"os"
+	"github.com/wliao008/mazing/structs"
+	"math/rand"
+	"time"
 )
 
-/*
 func TestKruskal(t *testing.T) {
 	rand.Seed(time.Now().UTC().UnixNano())
 	count := rand.Intn(50) + 1
@@ -24,7 +22,6 @@ func TestKruskal(t *testing.T) {
 		}
 	}
 }
-*/
 
 func TestNewKruskal(t *testing.T) {
 	k := NewPrim(10, 10)
