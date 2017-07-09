@@ -5,7 +5,7 @@ import (
 	"math/rand"
 	"time"
 	"fmt"
-	"strconv"
+	//"strconv"
 )
 
 type Kruskal struct {
@@ -36,16 +36,32 @@ func init() {
 func (k *Kruskal) Generate() error {
 	ds := &structs.DisjointSet{}
 	ds.Items = make(map[string]*structs.Item)
+	tmp := make(map[string]int)
 	var list []*ListItem
 	height := int(k.Board.Height)
 	width := int(k.Board.Width)
+	mapcount := 0
 	for h := 0; h < height; h++ {
 		for w := 0; w < width; w++ {
 			//k.Board.Cells[h][w].SetBit(structs.VISITED)
 			item := &structs.Item{&k.Board.Cells[h][w], nil}
-			ds.Items[strconv.Itoa(h) + strconv.Itoa(w)] = item
+			key := fmt.Sprintf("%d_%d", h, w)
+			if key == "143" {
+				fmt.Printf("%d,%d\n", h, w)
+			}
+			ds.Items[key] = item
+			tmp[fmt.Sprintf("%d_%d", h, w)] += 1
+			mapcount += 1
 		}
 	}
+
+	for k, v := range tmp {
+		if v > 1 {
+			fmt.Printf("%s=%d\n", k, v)
+		}
+	}
+
+	fmt.Printf("ds.Items = %d, mapcount=%d\n", len(ds.Items), mapcount)
 
 	for h := 0; h < height; h++ {
 		for w := 0; w < width; w++ {
@@ -61,11 +77,13 @@ func (k *Kruskal) Generate() error {
 	}
 
 	k.Shuffle(list)
+	idx := 0
 	for _, item := range list {
 		root1 := ds.Find(item.From)
 		root2 := ds.Find(item.To)
 		if root1.Data.X == root2.Data.X &&
 			root1.Data.Y == root2.Data.Y {
+			idx += 1
 			continue
 		}
 
@@ -74,11 +92,13 @@ func (k *Kruskal) Generate() error {
 				&k.Board.Cells[item.To.Data.X][item.To.Data.Y], dir)
 
 		_ = ds.Union(root1, root2)
-		root1.Data.SetBit(structs.VISITED)
-		root2.Data.SetBit(structs.VISITED)
+		k.Board.Cells[item.From.Data.X][item.From.Data.Y].SetBit(structs.VISITED)
+		k.Board.Cells[item.To.Data.X][item.To.Data.Y].SetBit(structs.VISITED)
+		idx += 1
 	}
 	/*
 	*/
+	fmt.Printf("list = %d, idx=%d\n", len(list), idx)
 
 	return nil
 }

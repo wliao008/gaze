@@ -19,7 +19,7 @@ func (i *Item) String() string {
 }
 
 func (ds *DisjointSet) FindItem(c *Cell) (bool, *Item) {
-	if item, ok := ds.Items[fmt.Sprintf("%d%d", c.X, c.Y)]; ok {
+	if item, ok := ds.Items[fmt.Sprintf("%d_%d", c.X, c.Y)]; ok {
 		return true, item
 	}
 	return false, nil
@@ -34,10 +34,8 @@ func (ds *DisjointSet) Find(item *Item) *Item {
 }
 
 func (ds *DisjointSet) Union(item1, item2 *Item) *Item {
-	root1 := ds.Find(item1)
-	root2 := ds.Find(item2)
-	root1.Parent = root2
-	return root2
+	item1.Parent = item2
+	return item2
 }
 
 func (ds *DisjointSet) Write(writer io.Writer) {

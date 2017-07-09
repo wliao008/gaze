@@ -22,7 +22,7 @@ func init() {
 }
 
 func main() {
-	k := algos.NewKruskal(10, 9)
+	k := algos.NewKruskal(40, 60)
 	k.Generate()
 	k.Board.Write(os.Stdout)
 }
