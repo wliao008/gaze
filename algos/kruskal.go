@@ -37,7 +37,7 @@ func (k *Kruskal) Generate() error {
 	var list []*ListItem
 	for h := uint16(0); h < k.Board.Height; h++ {
 		for w := uint16(0); w < k.Board.Width; w++ {
-			item := &structs.Item{&k.Board.Cells[h][w], nil, nil}
+			item := &structs.Item{&k.Board.Cells[h][w], nil}
 			ds.Items = append(ds.Items, item)
 		}
 	}

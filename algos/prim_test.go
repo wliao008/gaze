@@ -41,9 +41,9 @@ func BenchmarkPrimAlgo_1000x500(b *testing.B) {
 	}
 }
 
-func BenchmarkPrimAlgo2_1000x500(b *testing.B) {
+func BenchmarkPrimAlgo_100x50(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		k := NewPrim(1000, 500)
+		k := NewPrim(100, 50)
 		k.GenerateNew()
 	}
 }

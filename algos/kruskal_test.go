@@ -34,6 +34,13 @@ func TestNewKruskal(t *testing.T) {
 	}
 }
 
+func BenchmarkKruskalAlgo_1000x500(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		k := NewKruskal(1000, 500)
+		k.Generate()
+	}
+}
+
 func BenchmarkKruskalAlgo_100x50(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		k := NewKruskal(100, 50)
