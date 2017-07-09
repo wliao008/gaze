@@ -48,8 +48,6 @@ func (ds *DisjointSet) Union(item1, item2 *Item) *Item {
 	root := ds.FindPrev(item2)
 	last.Next = root
 	root.Prev = last
-	fmt.Printf("setting %v.Next to %v\n", last, root)
-	fmt.Printf("setting %v.Prev to %v\n", root, last)
 	return ds.Find(item2)
 }
 
