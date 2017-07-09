@@ -39,6 +39,7 @@ func (k *Kruskal) Generate() error {
 	var list []*ListItem
 	height := int(k.Board.Height)
 	width := int(k.Board.Width)
+	// ~8ms
 	for h := 0; h < height; h++ {
 		for w := 0; w < width; w++ {
 			//k.Board.Cells[h][w].SetBit(structs.VISITED)
@@ -60,25 +61,22 @@ func (k *Kruskal) Generate() error {
 		}
 	}
 
+	// ~60ms
 	k.Shuffle(list)
-	idx := 0
 	for _, item := range list {
 		root1 := ds.Find(item.From)
 		root2 := ds.Find(item.To)
 		if root1.Data.X == root2.Data.X &&
 			root1.Data.Y == root2.Data.Y {
-			idx += 1
 			continue
 		}
 
 		dir := k.Board.GetDirection(item.From.Data, item.To.Data)
-		k.Board.BreakWall(&k.Board.Cells[item.From.Data.X][item.From.Data.Y], 
-				&k.Board.Cells[item.To.Data.X][item.To.Data.Y], dir)
+		k.Board.BreakWall(item.From.Data, item.To.Data, dir)
 
 		_ = ds.Union(root1, root2)
-		k.Board.Cells[item.From.Data.X][item.From.Data.Y].SetBit(structs.VISITED)
-		k.Board.Cells[item.To.Data.X][item.To.Data.Y].SetBit(structs.VISITED)
-		idx += 1
+		item.From.Data.SetBit(structs.VISITED)
+		item.To.Data.SetBit(structs.VISITED)
 	}
 
 	return nil
