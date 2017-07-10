@@ -39,6 +39,9 @@ table {
 	border-left: 1px solid gray;
 }
 .gray {
+	color: #808080;
+}
+.gray_bg {
 	background-color: #eee;
 }
 
@@ -53,4 +56,3 @@ td {
 	background-repeat: repeat-x;
 	opacity: 0.5;
 }
-
