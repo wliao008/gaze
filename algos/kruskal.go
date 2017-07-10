@@ -10,6 +10,8 @@ import (
 
 type Kruskal struct {
 	Board structs.Board
+	Set *structs.DisjointSet
+	List []*ListItem
 }
 
 type ListItem struct {
@@ -26,6 +28,33 @@ func (li *ListItem) String() string {
 func NewKruskal(height, width uint16) *Kruskal {
 	k := &Kruskal{Board: structs.Board{height, width, nil}}
 	k.Board.Init()
+	k.Set = &structs.DisjointSet{}
+	k.Set.Items = make(map[string]*structs.Item)
+	// ~8ms
+
+	height2 := int(k.Board.Height)
+	width2 := int(k.Board.Width)
+	for h := 0; h < height2; h++ {
+		for w := 0; w < width2; w++ {
+			//k.Board.Cells[h][w].SetBit(structs.VISITED)
+			item := &structs.Item{&k.Board.Cells[h][w], nil}
+			k.Set.Items[strconv.Itoa(h) + "_" + strconv.Itoa(w)] = item
+		}
+	}
+
+	for h := 0; h < height2; h++ {
+		for w := 0; w < width2; w++ {
+			c := &k.Board.Cells[h][w]
+			_, fromItem := k.Set.FindItem(c)
+			cells := k.Board.Neighbors(c)
+			for _, cell := range cells {
+				_, toItem := k.Set.FindItem(cell)
+				li := &ListItem{From: fromItem, To: toItem}
+				k.List = append(k.List, li)
+			}
+		}
+	}
+
 	return k
 }
 
@@ -34,38 +63,11 @@ func init() {
 }
 
 func (k *Kruskal) Generate() error {
-	ds := &structs.DisjointSet{}
-	ds.Items = make(map[string]*structs.Item)
-	var list []*ListItem
-	height := int(k.Board.Height)
-	width := int(k.Board.Width)
-	// ~8ms
-	for h := 0; h < height; h++ {
-		for w := 0; w < width; w++ {
-			//k.Board.Cells[h][w].SetBit(structs.VISITED)
-			item := &structs.Item{&k.Board.Cells[h][w], nil}
-			ds.Items[strconv.Itoa(h) + "_" + strconv.Itoa(w)] = item
-		}
-	}
-
-	for h := 0; h < height; h++ {
-		for w := 0; w < width; w++ {
-			c := &k.Board.Cells[h][w]
-			_, fromItem := ds.FindItem(c)
-			cells := k.Board.Neighbors(c)
-			for _, cell := range cells {
-				_, toItem := ds.FindItem(cell)
-				li := &ListItem{From: fromItem, To: toItem}
-				list = append(list, li)
-			}
-		}
-	}
-
 	// ~60ms
-	k.Shuffle(list)
-	for _, item := range list {
-		root1 := ds.Find(item.From)
-		root2 := ds.Find(item.To)
+	k.Shuffle()
+	for _, item := range k.List {
+		root1 := k.Set.Find(item.From)
+		root2 := k.Set.Find(item.To)
 		if root1.Data.X == root2.Data.X &&
 			root1.Data.Y == root2.Data.Y {
 			continue
@@ -74,7 +76,7 @@ func (k *Kruskal) Generate() error {
 		dir := k.Board.GetDirection(item.From.Data, item.To.Data)
 		k.Board.BreakWall(item.From.Data, item.To.Data, dir)
 
-		_ = ds.Union(root1, root2)
+		_ = k.Set.Union(root1, root2)
 		item.From.Data.SetBit(structs.VISITED)
 		item.To.Data.SetBit(structs.VISITED)
 	}
@@ -82,12 +84,12 @@ func (k *Kruskal) Generate() error {
 	return nil
 }
 
-func (k *Kruskal) Shuffle(arr []*ListItem) {
+func (k *Kruskal) Shuffle() {
 	t := time.Now()
 	rand.Seed(int64(t.Nanosecond()))
-	for i := len(arr) - 1; i > 0; i-- {
+	for i := len(k.List) - 1; i > 0; i-- {
 		j := rand.Intn(i)
-		arr[i], arr[j] = arr[j], arr[i]
+		k.List[i], k.List[j] = k.List[j], k.List[i]
 	}
 }
 
