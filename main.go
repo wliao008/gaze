@@ -21,13 +21,13 @@ func init() {
 	tpl = template.Must(template.ParseGlob("web/templates/*.tmpl"))
 }
 
-func main() {
+func main_console() {
 	k := algos.NewKruskal(40, 60)
 	k.Generate()
 	k.Board.Write(os.Stdout)
 }
 
-func main_console() {
+func main2() {
 	bt := algos.NewPrim(3, 3)
 	err := bt.Generate()
 	if err != nil {
@@ -42,7 +42,7 @@ func main_console() {
 	bt.Board.Write2(os.Stdout)
 }
 
-func main2() {
+func main() {
 	http.HandleFunc("/", indexHandler)
 	http.HandleFunc("/favicon.ico", faviconHandler)
 	http.HandleFunc("/home", homeHandler)
@@ -69,7 +69,7 @@ func aboutHandler(w http.ResponseWriter, req *http.Request){
 
 func homeHandler(w http.ResponseWriter, req *http.Request){
 	height, width := getSize(w, req)
-	bt := algos.NewPrim(height, width)
+	bt := algos.NewKruskal(height, width)
 	err := bt.Generate()
 	if err != nil {
 		fmt.Println("ERROR")
@@ -79,7 +79,7 @@ func homeHandler(w http.ResponseWriter, req *http.Request){
 	def := solvers.DeadEndFiller{}
 	def.Board = &bt.Board
 	def.Solve()
-	//bt.Board.Write2(os.Stdout)
+	//bt.Board.Write(os.Stdout)
 
 	// create model
 	model := &models.BoardModel{}
