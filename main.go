@@ -10,6 +10,7 @@ import (
 	"github.com/wliao008/mazing/solvers"
 	"strings"
 	"io"
+	"math/rand"
 	"time"
 	"strconv"
 	"os"
@@ -67,61 +68,83 @@ func aboutHandler(w http.ResponseWriter, req *http.Request){
 	}
 }
 
+func getBoard(height, width uint16) (*structs.Board, string) {
+	rand.Seed(time.Now().UTC().UnixNano())
+	var idx int = rand.Intn(2)
+	board := &structs.Board{}
+	if idx == 0 {
+		k := algos.NewKruskal(height, width)
+		_ = k.Generate()
+		board = &k.Board
+		return board, "kruskal algorithm"
+	} else {
+		p := algos.NewPrim(height, width)
+		_ = p.Generate()
+		board = &p.Board
+		return board, "prim algorithm"
+	}
+}
+
 func homeHandler(w http.ResponseWriter, req *http.Request){
 	height, width := getSize(w, req)
+
+	board, name := getBoard(height, width)
+	/*
 	bt := algos.NewKruskal(height, width)
 	err := bt.Generate()
 	if err != nil {
 		fmt.Println("ERROR")
 	}
-	bt.Board.Cells[0][0].ClearBit(structs.NORTH)
-	bt.Board.Cells[bt.Board.Height-1][bt.Board.Width-1].ClearBit(structs.SOUTH)
+	*/
+	board.Cells[0][0].ClearBit(structs.NORTH)
+	board.Cells[height-1][width-1].ClearBit(structs.SOUTH)
 	def := solvers.DeadEndFiller{}
-	def.Board = &bt.Board
+	def.Board = board
 	def.Solve()
 	//bt.Board.Write(os.Stdout)
 
 	// create model
 	model := &models.BoardModel{}
-	model.Height = bt.Board.Height
-	model.Width = bt.Board.Width
-	model.Cells = make([][]models.CellModel, bt.Board.Height)
-	model.RawCells = bt.Board.Cells
-	for i := uint16(0); i < bt.Board.Height; i++ {
-		model.Cells[i] = make([]models.CellModel, bt.Board.Width)
+	model.Name = name
+	model.Height = height
+	model.Width = width
+	model.Cells = make([][]models.CellModel, height)
+	model.RawCells = board.Cells
+	for i := uint16(0); i < height; i++ {
+		model.Cells[i] = make([]models.CellModel, width)
 	}
 
 	// initialize model
-	for w := uint16(0); w < bt.Board.Width; w++ {
+	for w := uint16(0); w < width; w++ {
 		model.Cells[0][w].CssClasses += "north "
-		model.Cells[bt.Board.Height-1][w].CssClasses += "south "
+		model.Cells[height-1][w].CssClasses += "south "
 	}
 
-	for h := uint16(0); h < bt.Board.Height; h++ {
+	for h := uint16(0); h < height; h++ {
 		model.Cells[h][0].CssClasses +="west "
-		for w := uint16(0); w < bt.Board.Width; w++ {
+		for w := uint16(0); w < width; w++ {
 			model.Cells[h][w].X = w;
 			model.Cells[h][w].Y = h
-			if !bt.Board.Cells[h][w].IsSet(structs.DEAD){
+			if !board.Cells[h][w].IsSet(structs.DEAD){
 				model.Cells[h][w].CssClasses += "p "
 			}
-			if w == bt.Board.Width - 1 {
+			if w == width - 1 {
 				model.Cells[h][w].CssClasses +="east "
 			}
 			if h==0 {
 				model.Cells[0][w].CssClasses +="north "
 			}
 
-			if bt.Board.Cells[h][w].IsSet(structs.EAST) {
+			if board.Cells[h][w].IsSet(structs.EAST) {
 				model.Cells[h][w].CssClasses += "east "
 			}
-			if bt.Board.Cells[h][w].IsSet(structs.WEST) {
+			if board.Cells[h][w].IsSet(structs.WEST) {
 				model.Cells[h][w].CssClasses += "west "
 			}
-			if bt.Board.Cells[h][w].IsSet(structs.NORTH) {
+			if board.Cells[h][w].IsSet(structs.NORTH) {
 				model.Cells[h][w].CssClasses += "north "
 			}
-			if bt.Board.Cells[h][w].IsSet(structs.SOUTH) {
+			if board.Cells[h][w].IsSet(structs.SOUTH) {
 				model.Cells[h][w].CssClasses += "south "
 			}
 		}
@@ -129,9 +152,9 @@ func homeHandler(w http.ResponseWriter, req *http.Request){
 
 	//set the openning and ending cell
 	model.Cells[0][0].CssClasses = strings.Replace(model.Cells[0][0].CssClasses, "north ","",-1)
-	model.Cells[bt.Board.Height-1][bt.Board.Width-1].CssClasses = strings.Replace(model.Cells[bt.Board.Height-1][bt.Board.Width-1].CssClasses, "south ","",-1)
+	model.Cells[height-1][width-1].CssClasses = strings.Replace(model.Cells[height-1][width-1].CssClasses, "south ","",-1)
 
-	err = tpl.ExecuteTemplate(w, "index.tmpl", model)
+	err := tpl.ExecuteTemplate(w, "index.tmpl", model)
 	if err != nil {
 		fmt.Println(err)
 		http.Error(w, "Internal server error", http.StatusInternalServerError)

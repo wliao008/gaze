@@ -8,6 +8,7 @@ import (
 )
 
 type Kruskal struct {
+	Name string
 	Board structs.Board
 	Set *structs.DisjointSet
 	List []*ListItem
@@ -26,6 +27,7 @@ func (li *ListItem) String() string {
 
 func NewKruskal(height, width uint16) *Kruskal {
 	k := &Kruskal{Board: structs.Board{height, width, nil}}
+	k.Name = "kruskal algorithm"
 	k.Board.Init()
 	k.Set = &structs.DisjointSet{}
 	k.Set.Items = make(map[string]*structs.Item)

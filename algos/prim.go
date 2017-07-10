@@ -8,11 +8,12 @@ import (
 )
 
 type Prim struct {
+	Name string
 	Board structs.Board
 }
 
 func NewPrim(height, width uint16) *Prim {
-	p := &Prim{Board: structs.Board{height, width, nil}}
+	p := &Prim{Name: "prim algorithm", Board: structs.Board{height, width, nil}}
 	p.Board.Init()
 	return p
 }
