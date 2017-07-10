@@ -74,14 +74,18 @@ func getBoard(height, width uint16) (*structs.Board, string) {
 	board := &structs.Board{}
 	if idx == 0 {
 		k := algos.NewKruskal(height, width)
+		start := time.Now()
 		_ = k.Generate()
 		board = &k.Board
-		return board, "kruskal algorithm"
+		elasped := time.Since(start)
+		return board, fmt.Sprintf("kruskal algorithm, took %s", elasped)
 	} else {
 		p := algos.NewPrim(height, width)
+		start := time.Now()
 		_ = p.Generate()
 		board = &p.Board
-		return board, "prim algorithm"
+		elasped := time.Since(start)
+		return board, fmt.Sprintf("prim algorithm, took %s", elasped)
 	}
 }
 
