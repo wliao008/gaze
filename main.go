@@ -22,8 +22,8 @@ func init() {
 	tpl = template.Must(template.ParseGlob("web/templates/*.tmpl"))
 }
 
-func main() {
-	k := algos.NewKruskalWeave(4, 4)
+func main_console() {
+	k := algos.NewKruskalWeave(3, 3)
 	k.Generate()
 	k.Board.Write(os.Stdout)
 }
@@ -43,7 +43,7 @@ func main2() {
 	bt.Board.Write2(os.Stdout)
 }
 
-func main_web() {
+func main() {
 	http.HandleFunc("/", indexHandler)
 	http.HandleFunc("/favicon.ico", faviconHandler)
 	http.HandleFunc("/home", homeHandler)
@@ -73,12 +73,12 @@ func getBoard(height, width uint16) (*structs.Board, string) {
 	var idx int = rand.Intn(2)
 	board := &structs.Board{}
 	if idx == 0 {
-		k := algos.NewKruskal(height, width)
+		k := algos.NewKruskalWeave(height, width)
 		start := time.Now()
 		_ = k.Generate()
 		board = &k.Board
 		elasped := time.Since(start)
-		return board, fmt.Sprintf("kruskal algorithm, took %s", elasped)
+		return board, fmt.Sprintf("%s, took %s", k.Name, elasped)
 	} else {
 		p := algos.NewPrim(height, width)
 		start := time.Now()

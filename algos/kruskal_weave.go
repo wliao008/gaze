@@ -31,20 +31,44 @@ func NewKruskalWeave(height, width uint16) *KruskalWeave {
 			k.Set.Items[fmt.Sprintf("%d_%d", h, w)] = item
 		}
 	}
-	fmt.Printf("sets created: %d\n", len(k.Set.Items))
+	//fmt.Printf("sets created: %d\n", len(k.Set.Items))
 	k.preprocess()
-	k.Set.Write(os.Stdout)
+	//fmt.Printf("after pre-process\n")
+	k.Board.Write(os.Stdout)
+
+	for h = uint16(0); h < height; h++ {
+		for w = uint16(0); w < width; w++ {
+			c := &k.Board.Cells[h][w]
+			if c.IsSet(structs.CROSS) {
+				c.SetBit(structs.VISITED)
+				continue
+			}
+
+			_, fromItem := k.Set.FindItem(c)
+			cells := k.Board.Neighbors(c)
+			for _, cell := range cells {
+				_, toItem := k.Set.FindItem(cell)
+				li := &ListItem{From: fromItem, To: toItem}
+				k.List = append(k.List, li)
+			}
+		}
+	}
+	//fmt.Printf("k.List=%d\n", len(k.List))
+	//for _, li := range k.List {
+	//	fmt.Println(li)
+	//}
+
 	return k
 }
 
 func (k *KruskalWeave) preprocess() {
-	fmt.Println("preprocessing")
+	//fmt.Println("preprocessing")
 	h := uint16(0)
 	w := uint16(0)
 	for h = uint16(1); h < k.Board.Height-1; h++ {
 		for w = uint16(1) ; w < k.Board.Width-1; w++ {
 			c := &k.Board.Cells[h][w]
-			fmt.Printf("%v -----------\n", c)
+			//fmt.Printf("%v -----------\n", c)
 			neighbors := k.Board.Neighbors(c)
 			crossed := 0
 			for _, neighbor := range neighbors {
@@ -54,7 +78,7 @@ func (k *KruskalWeave) preprocess() {
 				}
 			}
 			corners := k.Board.CornerNeighbors(c)
-			fmt.Println("\t-----------")
+			//fmt.Println("\t-----------")
 			for _, corner := range corners {
 				//fmt.Printf("\t%v\n", corner)
 				if corner.IsSet(structs.CROSS) {
@@ -68,7 +92,7 @@ func (k *KruskalWeave) preprocess() {
 				if idx2 == 1 {
 					c.SetBit(structs.CROSS)
 					if idx == 0 {
-						fmt.Printf("\tthis cell is marked as CROSS H\n")
+						//fmt.Printf("\tthis cell is marked as CROSS H\n")
 						left := &k.Board.Cells[c.X][c.Y-1]
 						right := &k.Board.Cells[c.X][c.Y+1]
 						_, fromItem := k.Set.FindItem(left)
@@ -91,7 +115,7 @@ func (k *KruskalWeave) preprocess() {
 						_ = k.Set.Union(rootUp, rootDown)
 
 					}else {
-						fmt.Printf("\tthis cell is marked as CROSS V\n")
+						//fmt.Printf("\tthis cell is marked as CROSS V\n")
 						up := &k.Board.Cells[c.X-1][c.Y]
 						down := &k.Board.Cells[c.X+1][c.Y]
 						_, fromItem := k.Set.FindItem(up)
@@ -127,7 +151,26 @@ func init() {
 }
 
 func (k *KruskalWeave) Generate() error {
+	// ~60ms, ~40k allocation, ~1mb
+	/*
+	*/
+	for _, item := range k.List {
+		root1 := k.Set.Find(item.From)
+		root2 := k.Set.Find(item.To)
+		if root1.Data.X == root2.Data.X &&
+			root1.Data.Y == root2.Data.Y {
+			continue
+		}
 
+		dir := k.Board.GetDirection(item.From.Data, item.To.Data)
+		k.Board.BreakWall(item.From.Data, item.To.Data, dir)
+
+		_ = k.Set.Union(root1, root2)
+		item.From.Data.SetBit(structs.VISITED)
+		item.To.Data.SetBit(structs.VISITED)
+	}
+	//fmt.Printf("after Generate\n")
+	//k.Set.Write(os.Stdout)
 	return nil
 }
 
