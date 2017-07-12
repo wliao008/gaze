@@ -163,8 +163,8 @@ func (b *Board) WriteVisited(writer io.Writer) {
 func (b *Board) DeadEnds(stack *util.Stack) {
 	//this function is a memory optimzation, declaring h, w etc outside of
 	//the for loops reduces allocations.
-	flag := uint8(0)
-	walls := uint8(0)
+	flag := uint16(0)
+	walls := uint16(0)
 	h := uint16(0)
 	c := &Cell{}
 	
@@ -211,7 +211,7 @@ func (b *Board) DeadNeighbors(c *Cell, stack *util.Stack) {
 	for _, item := range result {
 		// check for solid walls
 		flag := item.Flag & 15
-		walls := uint8(0)
+		walls := uint16(0)
 		walls += flag & 1
 		walls += (flag>>1) & 1
 		walls += (flag>>2) & 1

@@ -73,7 +73,7 @@ func TestBreakWall(t *testing.T) {
 	var tests = []struct{
 		from, to *Cell
 		dir FlagPosition
-		want1, want2 uint8
+		want1, want2 uint16
 	}{
 		{&b.Cells[1][1], &b.Cells[0][1], WEST, 23, 27},
 		{&b.Cells[1][1], &b.Cells[1][0], NORTH, 30, 29},
