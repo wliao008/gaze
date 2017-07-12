@@ -80,6 +80,16 @@ func (k *KruskalWeave) preprocess() {
 						root1b := k.Set.Find(toItem)
 						root2b := k.Set.Find(toItem2)
 						_ = k.Set.Union(root1b, root2b)
+
+						up := &k.Board.Cells[c.X-1][c.Y]
+						down := &k.Board.Cells[c.X+1][c.Y]
+						_, upItem := k.Set.FindItem(up)
+						_, downItem := k.Set.FindItem(down)
+						rootUp := k.Set.Find(upItem)
+						rootDown := k.Set.Find(downItem)
+						_ = k.Set.Union(root2b, rootUp)
+						_ = k.Set.Union(rootUp, rootDown)
+
 					}else {
 						fmt.Printf("\tthis cell is marked as CROSS V\n")
 						up := &k.Board.Cells[c.X-1][c.Y]
@@ -93,6 +103,15 @@ func (k *KruskalWeave) preprocess() {
 						root1b := k.Set.Find(toItem)
 						root2b := k.Set.Find(toItem2)
 						_ = k.Set.Union(root1b, root2b)
+
+						left := &k.Board.Cells[c.X][c.Y-1]
+						right := &k.Board.Cells[c.X][c.Y+1]
+						_, leftItem := k.Set.FindItem(left)
+						_, rightItem := k.Set.FindItem(right)
+						rootLeft := k.Set.Find(leftItem)
+						rootRight := k.Set.Find(rightItem)
+						_ = k.Set.Union(root2b, rootLeft)
+						_ = k.Set.Union(rootLeft, rootRight)
 					}
 					k.Board.Break2Walls(c, idx)
 
