@@ -5,6 +5,7 @@ import (
 	"math/rand"
 	"time"
 	"fmt"
+	"os"
 )
 
 type KruskalWeave struct {
@@ -18,7 +19,21 @@ func NewKruskalWeave(height, width uint16) *KruskalWeave {
 	k := &KruskalWeave{Board: structs.Board{height, width, nil}}
 	k.Name = "kruskal weave algorithm"
 	k.Board.Init()
+	k.Set = &structs.DisjointSet{}
+	k.Set.Items = make(map[string]*structs.Item)
+	// ~8ms, ~80k allocations, ~2mb
+	h := uint16(0)
+	w := uint16(0)
+	for h = uint16(0); h < height; h++ {
+		for w = uint16(0) ; w < width; w++ {
+			//k.Board.Cells[h][w].SetBit(structs.VISITED)
+			item := &structs.Item{&k.Board.Cells[h][w], nil}
+			k.Set.Items[fmt.Sprintf("%d_%d", h, w)] = item
+		}
+	}
+	fmt.Printf("sets created: %d\n", len(k.Set.Items))
 	k.preprocess()
+	k.Set.Write(os.Stdout)
 	return k
 }
 
@@ -54,10 +69,34 @@ func (k *KruskalWeave) preprocess() {
 					c.SetBit(structs.CROSS)
 					if idx == 0 {
 						fmt.Printf("\tthis cell is marked as CROSS H\n")
+						left := &k.Board.Cells[c.X][c.Y-1]
+						right := &k.Board.Cells[c.X][c.Y+1]
+						_, fromItem := k.Set.FindItem(left)
+						_, toItem := k.Set.FindItem(c)
+						root1 := k.Set.Find(fromItem)
+						root2 := k.Set.Find(toItem)
+						_ = k.Set.Union(root1, root2)
+						_, toItem2 := k.Set.FindItem(right)
+						root1b := k.Set.Find(toItem)
+						root2b := k.Set.Find(toItem2)
+						_ = k.Set.Union(root1b, root2b)
 					}else {
 						fmt.Printf("\tthis cell is marked as CROSS V\n")
+						up := &k.Board.Cells[c.X-1][c.Y]
+						down := &k.Board.Cells[c.X+1][c.Y]
+						_, fromItem := k.Set.FindItem(up)
+						_, toItem := k.Set.FindItem(c)
+						root1 := k.Set.Find(fromItem)
+						root2 := k.Set.Find(toItem)
+						_ = k.Set.Union(root1, root2)
+						_, toItem2 := k.Set.FindItem(down)
+						root1b := k.Set.Find(toItem)
+						root2b := k.Set.Find(toItem2)
+						_ = k.Set.Union(root1b, root2b)
 					}
 					k.Board.Break2Walls(c, idx)
+
+
 				}
 			}
 		}
