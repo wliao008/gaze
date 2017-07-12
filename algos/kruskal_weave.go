@@ -47,16 +47,18 @@ func (k *KruskalWeave) preprocess() {
 				}
 			}
 			if crossed == 0 {
-				c.SetBit(structs.CROSS)
 				var idx int = rand.Intn(2)
-				if idx == 0 {
-					fmt.Printf("\tthis cell is marked as CROSS H\n")
-				}else {
-					fmt.Printf("\tthis cell is marked as CROSS V\n")
+				//ignore the walls breaking if 0
+				var idx2 int = rand.Intn(2)
+				if idx2 == 1 {
+					c.SetBit(structs.CROSS)
+					if idx == 0 {
+						fmt.Printf("\tthis cell is marked as CROSS H\n")
+					}else {
+						fmt.Printf("\tthis cell is marked as CROSS V\n")
+					}
+					k.Board.Break2Walls(c, idx)
 				}
-				k.Board.Break2Walls(c, idx)
-			} else {
-				fmt.Printf("\tthis cell should be ignored\n")
 			}
 		}
 	}
