@@ -22,8 +22,8 @@ func init() {
 	tpl = template.Must(template.ParseGlob("web/templates/*.tmpl"))
 }
 
-func main_console() {
-	k := algos.NewKruskal(40, 60)
+func main() {
+	k := algos.NewKruskalWeave(10, 10)
 	k.Generate()
 	k.Board.Write(os.Stdout)
 }
@@ -43,7 +43,7 @@ func main2() {
 	bt.Board.Write2(os.Stdout)
 }
 
-func main() {
+func main_web() {
 	http.HandleFunc("/", indexHandler)
 	http.HandleFunc("/favicon.ico", faviconHandler)
 	http.HandleFunc("/home", homeHandler)

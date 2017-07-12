@@ -1,7 +1,7 @@
 package structs
 
 import (
-	//"fmt"
+	"fmt"
 	"io"
 	"github.com/wliao008/mazing/util"
 )
@@ -57,6 +57,27 @@ func (b *Board) Neighbors(c *Cell) []*Cell {
 	return result
 }
 
+// Neighbors find the neighboring cells of the current cell
+func (b *Board) CornerNeighbors(c *Cell) []*Cell {
+	result := []*Cell{}
+	if ok, cell := b.getNeighbor(c.X+1, c.Y+1); ok {
+		result = append(result, cell)
+	}
+
+	if ok, cell := b.getNeighbor(c.X+1, c.Y-1); ok {
+		result = append(result, cell)
+	}
+
+	if ok, cell := b.getNeighbor(c.X-1, c.Y+1); ok {
+		result = append(result, cell)
+	}
+
+	if ok, cell := b.getNeighbor(c.X-1, c.Y-1); ok {
+		result = append(result, cell)
+	}
+	return result
+}
+
 func (b *Board) GetDirection(from, to *Cell) FlagPosition {
 	// X denotes row, Y denotes col
 	//
@@ -97,6 +118,41 @@ func (b *Board) BreakWall(from, to *Cell, direction FlagPosition) {
 	case NORTH:
 		from.ClearBit(NORTH)
 		to.ClearBit(SOUTH)
+	}
+}
+
+func (b *Board) BreakWall2(from, to *Cell, direction FlagPosition) {
+	switch direction {
+	case EAST:
+		from.ClearBit(EAST)
+		to.ClearBit(WEST)
+	case SOUTH:
+		from.ClearBit(SOUTH)
+		to.ClearBit(NORTH)
+	case WEST:
+		from.ClearBit(WEST)
+		to.ClearBit(EAST)
+	case NORTH:
+		from.ClearBit(NORTH)
+		to.ClearBit(SOUTH)
+	}
+}
+
+func (b *Board) Break2Walls(c *Cell, idx int) {
+	if idx == 0 {
+		left := &b.Cells[c.X][c.Y-1]
+		right := &b.Cells[c.X][c.Y+1]
+		b.BreakWall2(left, c, EAST)
+		b.BreakWall2(c, right, EAST)
+		fmt.Printf("\t%v - %v\n", left, c)
+		fmt.Printf("\t%v - %v\n", c, right)
+	} else {
+		up := &b.Cells[c.X-1][c.Y]
+		down := &b.Cells[c.X+1][c.Y]
+		b.BreakWall2(up, c, SOUTH)
+		b.BreakWall2(c, down, SOUTH)
+		fmt.Printf("\t%v - %v\n", up, c)
+		fmt.Printf("\t%v - %v\n", c, down)
 	}
 }
 
