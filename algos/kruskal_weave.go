@@ -47,6 +47,9 @@ func NewKruskalWeave(height, width uint16) *KruskalWeave {
 			_, fromItem := k.Set.FindItem(c)
 			cells := k.Board.Neighbors(c)
 			for _, cell := range cells {
+				if cell.IsSet(structs.CROSS) {
+					continue
+				}
 				_, toItem := k.Set.FindItem(cell)
 				li := &ListItem{From: fromItem, To: toItem}
 				k.List = append(k.List, li)
@@ -65,8 +68,8 @@ func (k *KruskalWeave) preprocess() {
 	//fmt.Println("preprocessing")
 	h := uint16(0)
 	w := uint16(0)
-	for h = uint16(1); h < k.Board.Height-1; h++ {
-		for w = uint16(1) ; w < k.Board.Width-1; w++ {
+	for h = uint16(1); h < k.Board.Height-2; h++ {
+		for w = uint16(1) ; w < k.Board.Width-2; w++ {
 			c := &k.Board.Cells[h][w]
 			//fmt.Printf("%v -----------\n", c)
 			neighbors := k.Board.Neighbors(c)
