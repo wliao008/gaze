@@ -62,6 +62,7 @@ func NewKruskalWeave(height, width uint16) *KruskalWeave {
 	//for _, li := range k.List {
 	//	fmt.Println(li)
 	//}
+	k.Shuffle()
 
 	return k
 }
@@ -148,12 +149,12 @@ func (k *KruskalWeave) Generate() error {
 	/*
 	*/
 	for _, item := range k.List {
-		fmt.Printf("%v to %v\n", item.From, item.To)
+		//fmt.Printf("%v to %v\n", item.From, item.To)
 		root1 := k.Set.Find(item.From)
 		root2 := k.Set.Find(item.To)
 		if root1.Data.X == root2.Data.X &&
 			root1.Data.Y == root2.Data.Y {
-			fmt.Printf("ignoring [%d,%d]\n", root1.Data.X, root1.Data.Y)
+			//fmt.Printf("ignoring [%d,%d]\n", root1.Data.X, root1.Data.Y)
 			continue
 		}
 
@@ -163,10 +164,10 @@ func (k *KruskalWeave) Generate() error {
 		_, tailItem := k.Set.FindItem(item.From.Data)
 		tail := k.Set.FindTail(tailItem)
 		_ = k.Set.Union(tail, root2)
-		fmt.Printf("\tconnect set %v (tail) -> %v (root)\n", tail, root2)
-		k.Board.Write(os.Stdout)
-		k.Set.Write(os.Stdout)
-		fmt.Println("")
+		//fmt.Printf("\tconnect set %v (tail) -> %v (root)\n", tail, root2)
+		//k.Board.Write(os.Stdout)
+		//k.Set.Write(os.Stdout)
+		//fmt.Println("")
 		item.From.Data.SetBit(structs.VISITED)
 		item.To.Data.SetBit(structs.VISITED)
 	}
