@@ -23,7 +23,7 @@ func init() {
 }
 
 func main() {
-	k := algos.NewKruskalWeave(3, 3)
+	k := algos.NewKruskalWeave(5, 5)
 	k.Generate()
 	k.Board.Write(os.Stdout)
 }
