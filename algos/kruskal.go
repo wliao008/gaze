@@ -37,7 +37,7 @@ func NewKruskal(height, width uint16) *Kruskal {
 	for h = uint16(0); h < height; h++ {
 		for w = uint16(0) ; w < width; w++ {
 			//k.Board.Cells[h][w].SetBit(structs.VISITED)
-			item := &structs.Item{&k.Board.Cells[h][w], nil}
+			item := &structs.Item{&k.Board.Cells[h][w], nil, nil}
 			k.Set.Items[fmt.Sprintf("%d_%d", h, w)] = item
 		}
 	}
