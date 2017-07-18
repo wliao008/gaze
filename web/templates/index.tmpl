@@ -17,7 +17,7 @@
     </div>
   </dialog>
 
-	<table>
+	<table class="{{ .TableCss }}">
 		{{ range $row := .Cells}}
 		<tr>
             {{ range $cell := $row}}
@@ -30,7 +30,7 @@
   <a href="javascript:void(0);" id="settingModal">size</a>&nbsp;
   <a href="javascript:void(0);" id="solve">solve</a>&nbsp;
   <a href="/home">new</a>&nbsp;
-	<span class="gray">generated with {{ .Name }}</span>
+	<div class="gray">generated w/ {{ .Name }}</div>
 
     <script>
 	    var dialog = document.querySelector('dialog');

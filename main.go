@@ -70,11 +70,17 @@ func aboutHandler(w http.ResponseWriter, req *http.Request){
 
 func getBoard(height, width uint16) (*structs.Board, string) {
 	rand.Seed(time.Now().UTC().UnixNano())
-	var idx int = rand.Intn(2)
-	idx = 0
+	var idx int = rand.Intn(3)
 	board := &structs.Board{}
 	if idx == 0 {
 		k := algos.NewKruskalWeave(height, width)
+		start := time.Now()
+		_ = k.Generate()
+		board = &k.Board
+		elasped := time.Since(start)
+		return board, fmt.Sprintf("%s, took %s", k.Name, elasped)
+	} else if idx == 1 {
+		k := algos.NewKruskal(height, width)
 		start := time.Now()
 		_ = k.Generate()
 		board = &k.Board
@@ -110,6 +116,9 @@ func homeHandler(w http.ResponseWriter, req *http.Request){
 
 	// create model
 	model := &models.BoardModel{}
+	if !strings.Contains(name, "weave") {
+		model.TableCss = "cb"
+	}
 	model.Name = name
 	model.Height = height
 	model.Width = width

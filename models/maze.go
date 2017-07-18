@@ -6,6 +6,7 @@ type BoardModel struct {
 	Cells [][]CellModel
 	RawCells [][]structs.Cell
 	Height, Width uint16
+	TableCss string
 }
 
 type CellModel struct {

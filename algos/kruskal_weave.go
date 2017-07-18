@@ -87,6 +87,8 @@ func (k *KruskalWeave) preprocess() {
 	//fmt.Println("preprocessing")
 	h := uint16(0)
 	w := uint16(0)
+	all := 0
+	ignored := 0
 	for h = uint16(1); h < k.Board.Height-1; h++ {
 		for w = uint16(1) ; w < k.Board.Width-1; w++ {
 			c := &k.Board.Cells[h][w]
@@ -100,8 +102,15 @@ func (k *KruskalWeave) preprocess() {
 				}
 			}
 			if crossed == 0 {
-				c.SetBit(structs.CROSS)
+				all += 1
 				//fmt.Printf("\tmarked as CROSS\n")
+				var ignore int = rand.Intn(4)
+				if ignore > 0 {
+					ignored += 1
+					continue
+				}
+
+				c.SetBit(structs.CROSS)
 				var idx int = rand.Intn(2)
 				if idx == 0 {
 					//fmt.Printf("\tthis cell is marked as CROSS H\n")
@@ -129,6 +138,8 @@ func (k *KruskalWeave) preprocess() {
 			}
 		}
 	}
+
+	fmt.Printf("all=%d, ignored=%d\n", all, ignored)
 }
 
 func init() {

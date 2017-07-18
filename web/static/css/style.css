@@ -23,10 +23,10 @@
 	margin: 10px;
 }
 /*
-table {
+*/
+.cb {
 	border-collapse: collapse;
 }
-*/
 .north { 
 	border-top: 1px solid gray;
 }
@@ -53,7 +53,7 @@ table {
 	border-left: 1px solid rgb(255,64,129);
 }
 .gray {
-	color: #808080;
+	color: #DEDEDE;
 }
 .gray_bg {
 	background-color: #eee;
