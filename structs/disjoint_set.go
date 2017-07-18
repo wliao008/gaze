@@ -11,8 +11,7 @@ type DisjointSet struct {
 
 type Item struct {
 	Data *Cell
-	Prev *Item
-	Next *Item
+	Parent *Item
 }
 
 func (i *Item) String() string {
@@ -28,22 +27,23 @@ func (ds *DisjointSet) FindItem(c *Cell) (bool, *Item) {
 
 //Find goes up the tree and find the root
 func (ds *DisjointSet) Find(item *Item) *Item {
-	if item.Prev == nil {
+	if item.Parent == nil {
 		return item 
 	}
-	return ds.Find(item.Prev)
+	return ds.Find(item.Parent)
 }
 
+/*
 func (ds *DisjointSet) FindTail(item *Item) *Item {
 	if item.Next == nil {
 		return item 
 	}
 	return ds.FindTail(item.Next)
 }
+*/
 
 func (ds *DisjointSet) Union(item1, item2 *Item) *Item {
-	item1.Next = item2
-	item2.Prev = item1
+	item1.Parent = item2
 	return item2
 }
 
@@ -57,9 +57,9 @@ func (ds *DisjointSet) Write(writer io.Writer) {
 func (ds *DisjointSet) WriteItem(item *Item, writer io.Writer) {
 	str := fmt.Sprintf("%v", item.Data)
 	writer.Write([]byte(str))
-	if item.Next!= nil {
+	if item.Parent!= nil {
 		writer.Write([]byte(" --> "))
-		ds.WriteItem(item.Next, writer)
+		ds.WriteItem(item.Parent, writer)
 	} else {
 		writer.Write([]byte(" --> nil "))
 	}

@@ -22,8 +22,8 @@ func init() {
 	tpl = template.Must(template.ParseGlob("web/templates/*.tmpl"))
 }
 
-func main() {
-	k := algos.NewKruskalWeave(5, 5)
+func main_con() {
+	k := algos.NewKruskalWeave(3, 3)
 	k.Generate()
 	k.Board.Write(os.Stdout)
 }
@@ -43,7 +43,7 @@ func main2() {
 	bt.Board.Write2(os.Stdout)
 }
 
-func mainweb() {
+func main() {
 	http.HandleFunc("/", indexHandler)
 	http.HandleFunc("/favicon.ico", faviconHandler)
 	http.HandleFunc("/home", homeHandler)
@@ -71,6 +71,7 @@ func aboutHandler(w http.ResponseWriter, req *http.Request){
 func getBoard(height, width uint16) (*structs.Board, string) {
 	rand.Seed(time.Now().UTC().UnixNano())
 	var idx int = rand.Intn(2)
+	idx = 0
 	board := &structs.Board{}
 	if idx == 0 {
 		k := algos.NewKruskalWeave(height, width)
@@ -150,6 +151,21 @@ func homeHandler(w http.ResponseWriter, req *http.Request){
 			}
 			if board.Cells[h][w].IsSet(structs.SOUTH) {
 				model.Cells[h][w].CssClasses += "south "
+			}
+
+			if board.Cells[h][w].IsSet(structs.CROSS) {
+				if board.Cells[h][w].IsSet(structs.EAST) {
+					model.Cells[h][w+1].CssClasses += "west2 "
+				}
+				if board.Cells[h][w].IsSet(structs.WEST) {
+					model.Cells[h][w-1].CssClasses += "east2 "
+				}
+				if board.Cells[h][w].IsSet(structs.NORTH) {
+					model.Cells[h-1][w].CssClasses += "south2 "
+				}
+				if board.Cells[h][w].IsSet(structs.SOUTH) {
+					model.Cells[h+1][w].CssClasses += "north2 "
+				}
 			}
 		}
 	}

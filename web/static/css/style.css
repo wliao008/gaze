@@ -39,6 +39,19 @@ table {
 .west {
 	border-left: 1px solid gray;
 }
+
+.north2 { 
+	border-top: 1px solid rgb(255,64,129);
+}
+.south2 {
+	border-bottom: 1px solid rgb(255,64,129);
+}
+.east2 {
+	border-right: 1px solid rgb(255,64,129);
+}
+.west2 {
+	border-left: 1px solid rgb(255,64,129);
+}
 .gray {
 	color: #808080;
 }

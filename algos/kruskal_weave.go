@@ -27,7 +27,7 @@ func NewKruskalWeave(height, width uint16) *KruskalWeave {
 	for h = uint16(0); h < height; h++ {
 		for w = uint16(0) ; w < width; w++ {
 			//k.Board.Cells[h][w].SetBit(structs.VISITED)
-			item := &structs.Item{&k.Board.Cells[h][w], nil, nil}
+			item := &structs.Item{&k.Board.Cells[h][w], nil}
 			k.Set.Items[fmt.Sprintf("%d_%d", h, w)] = item
 		}
 	}
@@ -75,7 +75,7 @@ func (k *KruskalWeave) connectSets(c1, c2 *structs.Cell) {
 	
 	_, from := k.Set.FindItem(c1)
 	_, to := k.Set.FindItem(c2)
-	root1 := k.Set.FindTail(from)
+	root1 := k.Set.Find(from)
 	root2 := k.Set.Find(to)
 	if root1.Data.X != root2.Data.X ||
 		root1.Data.Y != root2.Data.Y {
@@ -152,9 +152,7 @@ func (k *KruskalWeave) Generate() error {
 		dir := k.Board.GetDirection(item.From.Data, item.To.Data)
 		k.Board.BreakWall(item.From.Data, item.To.Data, dir)
 
-		_, tailItem := k.Set.FindItem(item.From.Data)
-		tail := k.Set.FindTail(tailItem)
-		_ = k.Set.Union(tail, root2)
+		_ = k.Set.Union(root1, root2)
 		//fmt.Printf("\tconnect set %v (tail) -> %v (root)\n", tail, root2)
 		//k.Board.Write(os.Stdout)
 		//k.Set.Write(os.Stdout)
