@@ -33,8 +33,8 @@ func NewKruskalWeave(height, width uint16) *KruskalWeave {
 	}
 	//fmt.Printf("sets created: %d\n", len(k.Set.Items))
 	k.preprocess()
-	fmt.Println("sets")
-	k.Set.Write(os.Stdout)
+	//fmt.Println("sets")
+	//k.Set.Write(os.Stdout)
 	//fmt.Printf("after pre-process\n")
 	k.Board.Write(os.Stdout)
 
@@ -90,18 +90,18 @@ func (k *KruskalWeave) preprocess() {
 	for h = uint16(1); h < k.Board.Height-1; h++ {
 		for w = uint16(1) ; w < k.Board.Width-1; w++ {
 			c := &k.Board.Cells[h][w]
-			fmt.Printf("%v -----------\n", c)
+			//fmt.Printf("%v -----------\n", c)
 			neighbors := k.Board.Neighbors(c)
 			crossed := 0
 			for _, neighbor := range neighbors {
-				fmt.Printf("\t%v\n", neighbor)
+				//fmt.Printf("\t%v\n", neighbor)
 				if neighbor.IsSet(structs.CROSS) {
 					crossed += 1
 				}
 			}
 			if crossed == 0 {
 				c.SetBit(structs.CROSS)
-				fmt.Printf("\tmarked as CROSS\n")
+				//fmt.Printf("\tmarked as CROSS\n")
 				var idx int = rand.Intn(2)
 				if idx == 0 {
 					//fmt.Printf("\tthis cell is marked as CROSS H\n")
