@@ -67,6 +67,22 @@ func NewKruskalWeave(height, width uint16) *KruskalWeave {
 	return k
 }
 
+func (k *KruskalWeave) connectSets(c1, c2 *structs.Cell) {
+	if c1.X == c2.X &&
+		c1.Y == c2.Y {
+		return
+	}
+	
+	_, from := k.Set.FindItem(c1)
+	_, to := k.Set.FindItem(c2)
+	root1 := k.Set.FindTail(from)
+	root2 := k.Set.Find(to)
+	if root1.Data.X != root2.Data.X ||
+		root1.Data.Y != root2.Data.Y {
+		_ = k.Set.Union(root1, root2)
+	}
+}
+
 func (k *KruskalWeave) preprocess() {
 	//fmt.Println("preprocessing")
 	h := uint16(0)
@@ -91,47 +107,22 @@ func (k *KruskalWeave) preprocess() {
 					//fmt.Printf("\tthis cell is marked as CROSS H\n")
 					left := &k.Board.Cells[c.X][c.Y-1]
 					right := &k.Board.Cells[c.X][c.Y+1]
-					_, fromItem := k.Set.FindItem(left)
-					_, toItem := k.Set.FindItem(c)
-					root1 := k.Set.FindTail(fromItem)
-					root2 := k.Set.Find(toItem)
-					_ = k.Set.Union(root1, root2)
-
-					_, toItem2 := k.Set.FindItem(right)
-					root1b := k.Set.FindTail(toItem)
-					root2b := k.Set.Find(toItem2)
-					_ = k.Set.Union(root1b, root2b)
+					k.connectSets(left, c)
+					k.connectSets(c, right)
 
 					up := &k.Board.Cells[c.X-1][c.Y]
 					down := &k.Board.Cells[c.X+1][c.Y]
-					_, upItem := k.Set.FindItem(up)
-					_, downItem := k.Set.FindItem(down)
-					rootUp := k.Set.FindTail(upItem)
-					rootDown := k.Set.Find(downItem)
-					_ = k.Set.Union(rootUp, rootDown)
-
+					k.connectSets(up, down)
 				}else {
 					//fmt.Printf("\tthis cell is marked as CROSS V\n")
 					up := &k.Board.Cells[c.X-1][c.Y]
 					down := &k.Board.Cells[c.X+1][c.Y]
-					_, fromItem := k.Set.FindItem(up)
-					_, toItem := k.Set.FindItem(c)
-					root1 := k.Set.FindTail(fromItem)
-					root2 := k.Set.Find(toItem)
-					_ = k.Set.Union(root1, root2)
-
-					_, toItem2 := k.Set.FindItem(down)
-					root1b := k.Set.FindTail(toItem)
-					root2b := k.Set.Find(toItem2)
-					_ = k.Set.Union(root1b, root2b)
+					k.connectSets(up, c)
+					k.connectSets(c, down)
 
 					left := &k.Board.Cells[c.X][c.Y-1]
 					right := &k.Board.Cells[c.X][c.Y+1]
-					_, leftItem := k.Set.FindItem(left)
-					_, rightItem := k.Set.FindItem(right)
-					rootLeft := k.Set.FindTail(leftItem)
-					rootRight := k.Set.Find(rightItem)
-					_ = k.Set.Union(rootLeft, rootRight)
+					k.connectSets(left, right)
 				}
 
 				k.Board.Break2Walls(c, idx)
