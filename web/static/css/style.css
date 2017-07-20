@@ -22,9 +22,14 @@
 	padding-left: 10px;
 	margin: 10px;
 }
-
-table {
-	border-collapse: collapse;
+/*
+*/
+.cb {
+    border-collapse: collapse;
+}
+.cb2 {
+    border-collapse: separate;
+    border-spacing: 0px 0px;
 }
 .north { 
 	border-top: 1px solid gray;
@@ -38,18 +43,34 @@ table {
 .west {
 	border-left: 1px solid gray;
 }
+
+.north2 { 
+	border-top: 2px solid rgb(255,64,129);
+}
+.south2 {
+	border-bottom: 2px solid rgb(255,64,129);
+}
+.east2 {
+	border-right: 2px solid rgb(255,64,129);
+}
+.west2 {
+	border-left: 2px solid rgb(255,64,129);
+}
 .gray {
-	color: #808080;
+	color: #DEDEDE;
 }
 .gray_bg {
 	background-color: #eee;
 }
 
-td {
+.td {
 	width: 10px;
 	height: 10px;
 }
-
+.sp {
+	width: 2px;
+	height: 2px;
+}
 .about_bg{
 	height: 272px;
 	background-image: url("/static/images/about.png");

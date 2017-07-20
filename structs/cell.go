@@ -2,7 +2,7 @@ package structs
 
 import "fmt"
 
-type FlagPosition uint8
+type FlagPosition uint16
 
 const (
 	NORTH FlagPosition = iota
@@ -12,7 +12,8 @@ const (
 	VISITED
 	START
 	END
-	DEAD
+	DEAD 	//a dead cell is not part of the solution path
+	CROSS	//for weave maze
 )
 
 type Cell struct {
@@ -29,7 +30,7 @@ type Cell struct {
 	 * 6: end
 	 * 7: dead
 	 */
-	Flag uint8
+	Flag uint16
 	X uint16 // row
 	Y uint16 // col
 }

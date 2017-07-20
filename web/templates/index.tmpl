@@ -5,10 +5,10 @@
     <div class="mdl-dialog__content">
         <form id="frmSize" action="/home" method="post">
             <h4>Height: <span id="heightLabel">{{ .Height }}</span></h4>
-            <input class="mdl-slider mdl-js-slider" type="range" min="10" max="100" value="{{ .Height }}" tabindex="0" step="1" id="height" name="height">
+            <input class="mdl-slider mdl-js-slider" type="range" min="3" max="100" value="{{ .Height }}" tabindex="0" step="1" id="height" name="height">
 
             <h4>Width: <span id="widthLabel">{{ .Width }}</span></h4>
-            <input class="mdl-slider mdl-js-slider" type="range" min="10" max="100" value="{{ .Width }}" tabindex="0" step="1" id="width" name="width">
+            <input class="mdl-slider mdl-js-slider" type="range" min="3" max="100" value="{{ .Width }}" tabindex="0" step="1" id="width" name="width">
         </form>
     </div>
     <div class="mdl-dialog__actions">
@@ -17,7 +17,7 @@
     </div>
   </dialog>
 
-	<table>
+	<table class="{{ .TableCss }}">
 		{{ range $row := .Cells}}
 		<tr>
             {{ range $cell := $row}}
@@ -30,7 +30,7 @@
   <a href="javascript:void(0);" id="settingModal">size</a>&nbsp;
   <a href="javascript:void(0);" id="solve">solve</a>&nbsp;
   <a href="/home">new</a>&nbsp;
-	<span class="gray">generated with {{ .Name }}</span>
+	<div class="gray">generated w/ {{ .Name }}</div>
 
     <script>
 	    var dialog = document.querySelector('dialog');

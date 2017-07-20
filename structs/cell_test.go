@@ -7,7 +7,7 @@ import (
 func TestSetBit(t *testing.T) {
 	var tests = []struct {
 		inputs []FlagPosition
-		want   uint8
+		want   uint16
 	}{
 		{[]FlagPosition{NORTH}, 1},
 		{[]FlagPosition{SOUTH}, 2},
@@ -35,7 +35,7 @@ func TestSetBit(t *testing.T) {
 func TestClearBit(t *testing.T) {
 	var tests = []struct {
 		inputs []FlagPosition
-		want   uint8
+		want   uint16
 	}{
 		{[]FlagPosition{NORTH}, 254},
 		{[]FlagPosition{SOUTH}, 253},
