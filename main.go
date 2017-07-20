@@ -257,7 +257,7 @@ func processWeaveMaze(board *structs.Board, name string) *models.BoardModel {
 			//mc := &model.Cells[h*2][w*2]
 
 			if c.IsSet(structs.CROSS) {
-				fmt.Printf("crossed@%v\n", c)
+				//fmt.Printf("crossed@%v\n", c)
 				if c.IsSet(structs.WEST) {
 					//3 cells to modify
 					//upper left
@@ -271,9 +271,9 @@ func processWeaveMaze(board *structs.Board, name string) *models.BoardModel {
 					//upper right
 					model.Cells[h*2-1][w*2+1].CssClasses += "south "
 					//right
-					fmt.Printf("before: [%d,%d] %s\n", h*2, w*2+2, model.Cells[h*2][w*2+2].CssClasses)
+					//fmt.Printf("before: [%d,%d] %s\n", h*2, w*2+2, model.Cells[h*2][w*2+2].CssClasses)
 					model.Cells[h*2][w*2+2].CssClasses = strings.Replace(model.Cells[h*2][w*2+2].CssClasses, "west ", "", -1)
-					fmt.Printf("after: [%d,%d] %s\n", h*2, w*2+2, model.Cells[h*2][w*2+2].CssClasses)
+					//fmt.Printf("after: [%d,%d] %s\n", h*2, w*2+2, model.Cells[h*2][w*2+2].CssClasses)
 					//lower right
 					model.Cells[h*2+1][w*2+1].CssClasses += "north "
 				}

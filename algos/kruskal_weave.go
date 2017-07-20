@@ -36,7 +36,7 @@ func NewKruskalWeave(height, width uint16) *KruskalWeave {
 	//fmt.Println("sets")
 	//k.Set.Write(os.Stdout)
 	//fmt.Printf("after pre-process\n")
-	k.Board.Write(os.Stdout)
+	//k.Board.Write(os.Stdout)
 
 	for h = uint16(0); h < height; h++ {
 		for w = uint16(0); w < width; w++ {
@@ -104,7 +104,7 @@ func (k *KruskalWeave) preprocess() {
 			if crossed == 0 {
 				all += 1
 				//fmt.Printf("\tmarked as CROSS\n")
-				var ignore int = rand.Intn(4)
+				var ignore int = rand.Intn(5)
 				if ignore > 0 {
 					ignored += 1
 					continue
