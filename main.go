@@ -303,19 +303,19 @@ func processWeaveMaze(board *structs.Board, name string) *models.BoardModel {
 					model.Cells[h*2-1][w*2-1].CssClasses += "east "
 				}
 				//upper
-				//if h*2-1 < height && w*2 < width {
-				//	model.Cells[h*2-1][w*2].CssClasses += "east "
-				//}
+				if h*2-1 < height && w*2 < width {
+					model.Cells[h*2-1][w*2].CssClasses += "east "
+				}
 			}
 			if !c.IsSet(structs.WEST) {
 				//uper left
 				if h*2-1 < height && w*2-1 < width {
 					model.Cells[h*2-1][w*2-1].CssClasses += "south "
 				}
-				//left
-				//if h*2-1 < height && w*2 < width {
-				//	model.Cells[h*2-1][w*2].CssClasses += "south "
-				//}
+				//left left
+				if h*2+1 < height && w*2-1 < width {
+					model.Cells[h*2+1][w*2-1].CssClasses += "north "
+				}
 			}
 			/*
 			if c.IsSet(structs.CROSS) {
