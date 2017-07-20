@@ -172,7 +172,7 @@ func (k *KruskalWeave) Generate() error {
 		item.To.Data.SetBit(structs.VISITED)
 	}
 	//fmt.Printf("after Generate\n")
-	//k.Set.Write(os.Stdout)
+	k.Board.Write(os.Stdout)
 	return nil
 }
 

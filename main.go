@@ -214,28 +214,125 @@ func processWeaveMaze(board *structs.Board, name string) *models.BoardModel {
 		for w := uint16(0); w < width; w++ {
 			model.Cells[h][w].X = w;
 			model.Cells[h][w].Y = h
-			model.Cells[h][w].CssClasses = " north south east west "
 			if h % 2 == 1 || w % 2 == 1 {
-				model.Cells[h][w].CssClasses += "sp "
+				model.Cells[h][w].CssClasses = "sp "
 			} else {
-				model.Cells[h][w].CssClasses += "td "
+				model.Cells[h][w].CssClasses = "td "
 			}
 		}
 	}
 
 	/*
+	*/
 	for h := uint16(0); h < board.Height; h++ {
 		for w := uint16(0); w < board.Width; w++ {
-			c := board.Cells[h][w]
-			//mcr := model.Cells[h][w*2+1]
-			if !c.IsSet(structs.EAST) {
-				model.Cells[h][w*2].CssClasses += strings.Replace(model.Cells[h][w*2].CssClasses, "east", "", -1)
-				//mcr.CssClasses += strings.Replace(mcr.CssClasses, "west", "", -1)
-				fmt.Println("process")
+			c := &board.Cells[h][w]
+			mc := &model.Cells[h*2][w*2]
+			
+			if w == width - 1 {
+				model.Cells[h][w].CssClasses +="east "
+			}
+			if h==0 {
+				model.Cells[0][w].CssClasses +="north "
+			}
+
+			if c.IsSet(structs.EAST) {
+				mc.CssClasses += "east "
+			}
+			if c.IsSet(structs.WEST) {
+				mc.CssClasses += "west "
+			}
+			if c.IsSet(structs.NORTH) {
+				mc.CssClasses += "north "
+			}
+			if c.IsSet(structs.SOUTH) {
+				mc.CssClasses += "south "
 			}
 		}
 	}
-	*/
+
+	for h := uint16(0); h < board.Height; h++ {
+		for w := uint16(0); w < board.Width; w++ {
+			c := &board.Cells[h][w]
+			//mc := &model.Cells[h*2][w*2]
+
+			if c.IsSet(structs.CROSS) {
+				fmt.Printf("crossed@%v\n", c)
+				if c.IsSet(structs.WEST) {
+					//3 cells to modify
+					//upper left
+					model.Cells[h*2-1][w*2-1].CssClasses += "south "
+					//left
+					model.Cells[h*2][w*2-2].CssClasses = strings.Replace(model.Cells[h*2][w*2-2].CssClasses, "east ", "", -1)
+					//lower left
+					model.Cells[h*2+1][w*2-1].CssClasses += "north "
+				}
+				if c.IsSet(structs.EAST) {
+					//upper right
+					model.Cells[h*2-1][w*2+1].CssClasses += "south "
+					//right
+					fmt.Printf("before: [%d,%d] %s\n", h*2, w*2+2, model.Cells[h*2][w*2+2].CssClasses)
+					model.Cells[h*2][w*2+2].CssClasses = strings.Replace(model.Cells[h*2][w*2+2].CssClasses, "west ", "", -1)
+					fmt.Printf("after: [%d,%d] %s\n", h*2, w*2+2, model.Cells[h*2][w*2+2].CssClasses)
+					//lower right
+					model.Cells[h*2+1][w*2+1].CssClasses += "north "
+				}
+				if c.IsSet(structs.NORTH) {
+					//upper left
+					model.Cells[h*2-1][w*2-1].CssClasses += "east "
+					//upper
+					model.Cells[h*2-2][w*2].CssClasses = strings.Replace(model.Cells[h*2-2][w*2].CssClasses, "south ", "", -1)
+					//upper right
+					model.Cells[h*2-1][w*2+1].CssClasses += "west "
+				}
+				if c.IsSet(structs.SOUTH) {
+					//lower left
+					model.Cells[h*2+1][w*2-1].CssClasses += "east "
+					//lower
+					model.Cells[h*2+1][w*2].CssClasses = strings.Replace(model.Cells[h*2+1][w*2].CssClasses, "south ", "", -1)
+					//lower cell
+					model.Cells[h*2+2][w*2].CssClasses = strings.Replace(model.Cells[h*2+2][w*2].CssClasses, "north ", "", -1)
+					//lower right
+					model.Cells[h*2+1][w*2+1].CssClasses += "west "
+				}
+			}
+
+			if !c.IsSet(structs.NORTH) {
+				//uper left
+				if h*2-1 < height && w*2-1 < width {
+					model.Cells[h*2-1][w*2-1].CssClasses += "east "
+				}
+				//upper
+				//if h*2-1 < height && w*2 < width {
+				//	model.Cells[h*2-1][w*2].CssClasses += "east "
+				//}
+			}
+			if !c.IsSet(structs.WEST) {
+				//uper left
+				if h*2-1 < height && w*2-1 < width {
+					model.Cells[h*2-1][w*2-1].CssClasses += "south "
+				}
+				//left
+				//if h*2-1 < height && w*2 < width {
+				//	model.Cells[h*2-1][w*2].CssClasses += "south "
+				//}
+			}
+			/*
+			if c.IsSet(structs.CROSS) {
+				fmt.Printf("crossed@%v\n", c)
+				if c.IsSet(structs.NORTH) {
+					model.Cells[h*2-1][w*2-1].CssClasses += "east "
+					model.Cells[h*2-1][w*2].CssClasses += "east "
+					model.Cells[h*2-2][w*2].CssClasses = strings.Replace(model.Cells[h*2-2][w*2].CssClasses, "south ", "", -1)
+				}
+				if c.IsSet(structs.SOUTH) {
+					model.Cells[h*2+1][w*2-1].CssClasses += "east "
+					model.Cells[h*2+1][w*2].CssClasses += "east "
+					model.Cells[h*2+2][w*2+2].CssClasses = strings.Replace(model.Cells[h*2-2][w*2].CssClasses, "north ", "", -1)
+				}
+			}*/
+		}
+	}
 
 	//set the openning and ending cell
 	model.Cells[0][0].CssClasses = strings.Replace(model.Cells[0][0].CssClasses, "north ","",-1)
