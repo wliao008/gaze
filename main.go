@@ -317,6 +317,27 @@ func processWeaveMaze(board *structs.Board, name string) *models.BoardModel {
 					model.Cells[h*2+1][w*2-1].CssClasses += "north "
 				}
 			}
+			//if top border
+			if h == 0 {
+				if !c.IsSet(structs.WEST) {
+					model.Cells[0][w*2-1].CssClasses += "north "
+				} else {
+					w2 := int(w)
+					if w2*2-1 >= 1  {
+						model.Cells[0][w2*2-1].CssClasses = strings.Replace(model.Cells[0][w2*2-1].CssClasses, "north ", "", -1)
+					}
+				}
+			}
+			if h == board.Height - 1 {
+				if !c.IsSet(structs.WEST) {
+					model.Cells[h*2][w*2-1].CssClasses += "south "
+				}
+			}
+			if w == 0 {
+				if !c.IsSet(structs.SOUTH) {
+					model.Cells[h*2+1][0].CssClasses += "west "
+				}
+			}
 			/*
 			if c.IsSet(structs.CROSS) {
 				fmt.Printf("crossed@%v\n", c)
