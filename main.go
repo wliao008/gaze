@@ -72,7 +72,6 @@ func getBoard(height, width uint16) (*structs.Board, string) {
 	rand.Seed(time.Now().UTC().UnixNano())
 	var idx int = rand.Intn(3)
 	board := &structs.Board{}
-	idx=0
 	if idx == 0 {
 		k := algos.NewKruskalWeave(height, width)
 		start := time.Now()
@@ -120,73 +119,73 @@ func homeHandler(w http.ResponseWriter, req *http.Request){
 	model.TableCss = "cb2"
 	if !strings.Contains(name, "weave") {
 		model.TableCss = "cb"
-	}
-	model.Name = name
-	model.Height = height
-	model.Width = width
-	model.Cells = make([][]models.CellModel, height)
-	model.RawCells = board.Cells
-	for i := uint16(0); i < height; i++ {
-		model.Cells[i] = make([]models.CellModel, width)
-	}
+		model.Name = name
+		model.Height = height
+		model.Width = width
+		model.Cells = make([][]models.CellModel, height)
+		model.RawCells = board.Cells
+		for i := uint16(0); i < height; i++ {
+			model.Cells[i] = make([]models.CellModel, width)
+		}
 
-	// initialize model
-	for w := uint16(0); w < width; w++ {
-		model.Cells[0][w].CssClasses += "north "
-		model.Cells[height-1][w].CssClasses += "south "
-	}
-
-	for h := uint16(0); h < height; h++ {
-		model.Cells[h][0].CssClasses +="west "
+		// initialize model
 		for w := uint16(0); w < width; w++ {
-			model.Cells[h][w].X = w;
-			model.Cells[h][w].Y = h
-			if !board.Cells[h][w].IsSet(structs.DEAD){
-				model.Cells[h][w].CssClasses += "p "
-			}
-			if w == width - 1 {
-				model.Cells[h][w].CssClasses +="east "
-			}
-			if h==0 {
-				model.Cells[0][w].CssClasses +="north "
-			}
+			model.Cells[0][w].CssClasses += "north "
+			model.Cells[height-1][w].CssClasses += "south "
+		}
 
-			if board.Cells[h][w].IsSet(structs.EAST) {
-				model.Cells[h][w].CssClasses += "east "
-			}
-			if board.Cells[h][w].IsSet(structs.WEST) {
-				model.Cells[h][w].CssClasses += "west "
-			}
-			if board.Cells[h][w].IsSet(structs.NORTH) {
-				model.Cells[h][w].CssClasses += "north "
-			}
-			if board.Cells[h][w].IsSet(structs.SOUTH) {
-				model.Cells[h][w].CssClasses += "south "
-			}
+		for h := uint16(0); h < height; h++ {
+			model.Cells[h][0].CssClasses +="west "
+			for w := uint16(0); w < width; w++ {
+				model.Cells[h][w].X = w;
+				model.Cells[h][w].Y = h
+				model.Cells[h][w].CssClasses += "td "
+				if !board.Cells[h][w].IsSet(structs.DEAD){
+					model.Cells[h][w].CssClasses += "p "
+				}
+				if w == width - 1 {
+					model.Cells[h][w].CssClasses +="east "
+				}
+				if h==0 {
+					model.Cells[0][w].CssClasses +="north "
+				}
 
-			if board.Cells[h][w].IsSet(structs.CROSS) {
 				if board.Cells[h][w].IsSet(structs.EAST) {
-					model.Cells[h][w+1].CssClasses += "west2 "
+					model.Cells[h][w].CssClasses += "east "
 				}
 				if board.Cells[h][w].IsSet(structs.WEST) {
-					model.Cells[h][w-1].CssClasses += "east2 "
+					model.Cells[h][w].CssClasses += "west "
 				}
 				if board.Cells[h][w].IsSet(structs.NORTH) {
-					model.Cells[h-1][w].CssClasses += "south2 "
+					model.Cells[h][w].CssClasses += "north "
 				}
 				if board.Cells[h][w].IsSet(structs.SOUTH) {
-					model.Cells[h+1][w].CssClasses += "north2 "
+					model.Cells[h][w].CssClasses += "south "
+				}
+
+				if board.Cells[h][w].IsSet(structs.CROSS) {
+					if board.Cells[h][w].IsSet(structs.EAST) {
+						model.Cells[h][w+1].CssClasses += "west2 "
+					}
+					if board.Cells[h][w].IsSet(structs.WEST) {
+						model.Cells[h][w-1].CssClasses += "east2 "
+					}
+					if board.Cells[h][w].IsSet(structs.NORTH) {
+						model.Cells[h-1][w].CssClasses += "south2 "
+					}
+					if board.Cells[h][w].IsSet(structs.SOUTH) {
+						model.Cells[h+1][w].CssClasses += "north2 "
+					}
 				}
 			}
 		}
+
+		//set the openning and ending cell
+		model.Cells[0][0].CssClasses = strings.Replace(model.Cells[0][0].CssClasses, "north ","",-1)
+		model.Cells[height-1][width-1].CssClasses = strings.Replace(model.Cells[height-1][width-1].CssClasses, "south ","",-1)
+	} else {
+		model = processWeaveMaze(board, name)
 	}
-
-	//set the openning and ending cell
-	model.Cells[0][0].CssClasses = strings.Replace(model.Cells[0][0].CssClasses, "north ","",-1)
-	model.Cells[height-1][width-1].CssClasses = strings.Replace(model.Cells[height-1][width-1].CssClasses, "south ","",-1)
-
-
-	model = processWeaveMaze(board, name)
 	err := tpl.ExecuteTemplate(w, "index.tmpl", model)
 	if err != nil {
 		fmt.Println(err)
@@ -222,8 +221,6 @@ func processWeaveMaze(board *structs.Board, name string) *models.BoardModel {
 		}
 	}
 
-	/*
-	*/
 	for h := uint16(0); h < board.Height; h++ {
 		for w := uint16(0); w < board.Width; w++ {
 			c := &board.Cells[h][w]
@@ -338,20 +335,6 @@ func processWeaveMaze(board *structs.Board, name string) *models.BoardModel {
 					model.Cells[h*2+1][0].CssClasses += "west "
 				}
 			}
-			/*
-			if c.IsSet(structs.CROSS) {
-				fmt.Printf("crossed@%v\n", c)
-				if c.IsSet(structs.NORTH) {
-					model.Cells[h*2-1][w*2-1].CssClasses += "east "
-					model.Cells[h*2-1][w*2].CssClasses += "east "
-					model.Cells[h*2-2][w*2].CssClasses = strings.Replace(model.Cells[h*2-2][w*2].CssClasses, "south ", "", -1)
-				}
-				if c.IsSet(structs.SOUTH) {
-					model.Cells[h*2+1][w*2-1].CssClasses += "east "
-					model.Cells[h*2+1][w*2].CssClasses += "east "
-					model.Cells[h*2+2][w*2+2].CssClasses = strings.Replace(model.Cells[h*2-2][w*2].CssClasses, "north ", "", -1)
-				}
-			}*/
 		}
 	}
 
