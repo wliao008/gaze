@@ -7,6 +7,7 @@ type BoardModel struct {
 	RawCells [][]structs.Cell
 	Height, Width uint16
 	TableCss string
+	WeaveChecked string
 }
 
 type CellModel struct {

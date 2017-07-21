@@ -1,14 +1,28 @@
 {{ template "header" }}
 
-  <dialog class="mdl-dialog">
-    <h5 class="mdl-dialog__title">Size</h5>
+  <dialog class="mdl-dialog" style="width:400px">
+    <h5 class="mdl-dialog__title">Setting</h5>
     <div class="mdl-dialog__content">
         <form id="frmSize" action="/home" method="post">
-            <h4>Height: <span id="heightLabel">{{ .Height }}</span></h4>
-            <input class="mdl-slider mdl-js-slider" type="range" min="3" max="100" value="{{ .Height }}" tabindex="0" step="1" id="height" name="height">
+        <div class="mdl-grid">
+          <div class="mdl-cell mdl-cell--4-col"><span class="mdl-switch__label">Height</span></div>
+          <div class="mdl-cell mdl-cell--6-col"><input class="mdl-slider mdl-js-slider" type="range" min="3" max="100" value="{{ .Height }}" tabindex="0" step="1" id="height" name="height"></div>
+          <div class="mdl-cell mdl-cell--2-col"><span id="heightLabel" class="mdl-switch__label">{{ .Height }}</span></div>
+        </div>
 
-            <h4>Width: <span id="widthLabel">{{ .Width }}</span></h4>
-            <input class="mdl-slider mdl-js-slider" type="range" min="3" max="100" value="{{ .Width }}" tabindex="0" step="1" id="width" name="width">
+        <div class="mdl-grid">
+          <div class="mdl-cell mdl-cell--4-col"><span class="mdl-switch__label">Width</span></div>
+          <div class="mdl-cell mdl-cell--6-col"><input class="mdl-slider mdl-js-slider" type="range" min="3" max="100" value="{{ .Width }}" tabindex="0" step="1" id="width" name="width"></div>
+          <div class="mdl-cell mdl-cell--2-col"><span id="widthLabel" class="mdl-switch__label">{{ .Width }}</span></div>
+        </div>
+
+        <div class="mdl-grid">
+          <div class="mdl-cell mdl-cell--4-col"></div>
+          <div class="mdl-cell mdl-cell--8-col"><label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="weave">
+              <input type="checkbox" id="weave" name="weave" class="mdl-switch__input" {{ .WeaveChecked }}>
+              <span class="mdl-switch__label">Weave the passages</span>
+            </label></div>
+        </div>
         </form>
     </div>
     <div class="mdl-dialog__actions">
@@ -27,7 +41,7 @@
 		{{ end}}
 	</table>
   
-  <a href="javascript:void(0);" id="settingModal">size</a>&nbsp;
+  <a href="javascript:void(0);" id="settingModal">setting</a>&nbsp;
   <a href="javascript:void(0);" id="solve">solve</a>&nbsp;
   <a href="/home">new</a>&nbsp;
 	<div class="gray">generated w/ {{ .Name }}</div>
