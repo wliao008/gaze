@@ -365,7 +365,7 @@ func getSize(w http.ResponseWriter, req *http.Request) (uint16, uint16, uint16) 
 			size := strings.Split(cookie.Value, ",")
 			heightNew, _ := strconv.ParseUint(size[0], 10, 16)
 			widthNew, _ := strconv.ParseUint(size[1], 10, 16)
-			weaveNew, _ := strconv.ParseUint(size[1], 10, 16)
+			weaveNew, _ := strconv.ParseUint(size[2], 10, 16)
 			height = uint16(heightNew)
 			width = uint16(widthNew)
 			weave = uint16(weaveNew)
@@ -384,7 +384,7 @@ func getSize(w http.ResponseWriter, req *http.Request) (uint16, uint16, uint16) 
 		}
 	}
 	expiration := time.Now().Add(365 * 24 * time.Hour)
-	value := fmt.Sprintf("%d,%d,%d", height, width,weave)
+	value := fmt.Sprintf("%d,%d,%d", height, width, weave)
 	cookie := &http.Cookie{Name: "setting", Value: value, Expires: expiration}
 	http.SetCookie(w, cookie)
 	return height, width, weave
