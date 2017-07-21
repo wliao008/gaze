@@ -98,15 +98,7 @@ func getBoard(height, width uint16) (*structs.Board, string) {
 
 func homeHandler(w http.ResponseWriter, req *http.Request){
 	height, width := getSize(w, req)
-
 	board, name := getBoard(height, width)
-	/*
-	bt := algos.NewKruskal(height, width)
-	err := bt.Generate()
-	if err != nil {
-		fmt.Println("ERROR")
-	}
-	*/
 	board.Cells[0][0].ClearBit(structs.NORTH)
 	board.Cells[height-1][width-1].ClearBit(structs.SOUTH)
 	def := solvers.DeadEndFiller{}
@@ -200,8 +192,8 @@ func processWeaveMaze(board *structs.Board, name string) *models.BoardModel {
 	model := &models.BoardModel{}
 	model.TableCss = "cb"
 	model.Name = name
-	model.Height = height
-	model.Width = width
+	model.Height = board.Height
+	model.Width = board.Width
 	model.Cells = make([][]models.CellModel, height)
 	model.RawCells = board.Cells
 	for i := uint16(0); i < height; i++ {
