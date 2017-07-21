@@ -100,7 +100,7 @@ func getBoard(height, width, weave uint16) (*structs.Board, string) {
 
 func homeHandler(w http.ResponseWriter, req *http.Request){
 	height, width, weave := getSize(w, req)
-	fmt.Printf("height=%d, width=%d, weave=%d\n", height, width, weave)
+	//fmt.Printf("height=%d, width=%d, weave=%d\n", height, width, weave)
 	board, name := getBoard(height, width, weave)
 	board.Cells[0][0].ClearBit(structs.NORTH)
 	board.Cells[height-1][width-1].ClearBit(structs.SOUTH)
@@ -356,7 +356,7 @@ func getSize(w http.ResponseWriter, req *http.Request) (uint16, uint16, uint16) 
 	req.ParseForm()
 	height := uint16(20)
 	width := uint16(40)
-	weave := uint16(0)
+	weave := uint16(1)
 	
 	if len(req.Form) == 0 {
 		// no new size specified by user
@@ -381,6 +381,8 @@ func getSize(w http.ResponseWriter, req *http.Request) (uint16, uint16, uint16) 
 		}
 		if _, ok := req.Form["weave"]; ok {
 			weave = 1
+		} else {
+			weave = 0
 		}
 	}
 	expiration := time.Now().Add(365 * 24 * time.Hour)

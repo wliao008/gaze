@@ -123,7 +123,7 @@ func (k *KruskalWeave) preprocess() {
 		}
 	}
 
-	fmt.Printf("all=%d, ignored=%d\n", all, ignored)
+	//fmt.Printf("all=%d, ignored=%d\n", all, ignored)
 }
 
 func init() {
