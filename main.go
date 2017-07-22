@@ -68,18 +68,20 @@ func aboutHandler(w http.ResponseWriter, req *http.Request){
 	}
 }
 
-func getBoard(height, width uint16) (*structs.Board, string) {
+func getBoard(height, width, weave uint16) (*structs.Board, string) {
 	rand.Seed(time.Now().UTC().UnixNano())
-	var idx int = rand.Intn(3)
 	board := &structs.Board{}
-	if idx == 0 {
+	if weave == 1 {
 		k := algos.NewKruskalWeave(height, width)
 		start := time.Now()
 		_ = k.Generate()
 		board = &k.Board
 		elasped := time.Since(start)
 		return board, fmt.Sprintf("%s, took %s", k.Name, elasped)
-	} else if idx == 1 {
+	}
+
+	var idx int = rand.Intn(2)
+	if idx == 0 {
 		k := algos.NewKruskal(height, width)
 		start := time.Now()
 		_ = k.Generate()
@@ -97,16 +99,9 @@ func getBoard(height, width uint16) (*structs.Board, string) {
 }
 
 func homeHandler(w http.ResponseWriter, req *http.Request){
-	height, width := getSize(w, req)
-
-	board, name := getBoard(height, width)
-	/*
-	bt := algos.NewKruskal(height, width)
-	err := bt.Generate()
-	if err != nil {
-		fmt.Println("ERROR")
-	}
-	*/
+	height, width, weave := getSize(w, req)
+	//fmt.Printf("height=%d, width=%d, weave=%d\n", height, width, weave)
+	board, name := getBoard(height, width, weave)
 	board.Cells[0][0].ClearBit(structs.NORTH)
 	board.Cells[height-1][width-1].ClearBit(structs.SOUTH)
 	def := solvers.DeadEndFiller{}
@@ -198,10 +193,11 @@ func processWeaveMaze(board *structs.Board, name string) *models.BoardModel {
 	height := board.Height + (board.Height - 1)
 	width := board.Width + (board.Width - 1)
 	model := &models.BoardModel{}
+	model.WeaveChecked = "checked"
 	model.TableCss = "cb"
 	model.Name = name
-	model.Height = height
-	model.Width = width
+	model.Height = board.Height
+	model.Width = board.Width
 	model.Cells = make([][]models.CellModel, height)
 	model.RawCells = board.Cells
 	for i := uint16(0); i < height; i++ {
@@ -356,20 +352,23 @@ func staticHandler(w http.ResponseWriter, req *http.Request) {
 	http.NotFound(w, req)
 }
 
-func getSize(w http.ResponseWriter, req *http.Request) (uint16, uint16) {
+func getSize(w http.ResponseWriter, req *http.Request) (uint16, uint16, uint16) {
 	req.ParseForm()
 	height := uint16(20)
 	width := uint16(40)
+	weave := uint16(1)
 	
 	if len(req.Form) == 0 {
 		// no new size specified by user
-		cookieSize, err := req.Cookie("size")
+		cookie, err := req.Cookie("setting")
 		if err == nil {
-			size := strings.Split(cookieSize.Value, ",")
+			size := strings.Split(cookie.Value, ",")
 			heightNew, _ := strconv.ParseUint(size[0], 10, 16)
 			widthNew, _ := strconv.ParseUint(size[1], 10, 16)
+			weaveNew, _ := strconv.ParseUint(size[2], 10, 16)
 			height = uint16(heightNew)
 			width = uint16(widthNew)
+			weave = uint16(weaveNew)
 		}
 	} else {
 		if val, ok := req.Form["height"]; ok {
@@ -380,11 +379,16 @@ func getSize(w http.ResponseWriter, req *http.Request) (uint16, uint16) {
 			w, _ := strconv.ParseInt(val[0], 10, 0)
 			width = uint16(w)
 		}
+		if _, ok := req.Form["weave"]; ok {
+			weave = 1
+		} else {
+			weave = 0
+		}
 	}
 	expiration := time.Now().Add(365 * 24 * time.Hour)
-	value := fmt.Sprintf("%d,%d", height, width)
-	cookieSize := &http.Cookie{Name: "size", Value: value, Expires: expiration}
-	http.SetCookie(w, cookieSize)
-	return height, width
+	value := fmt.Sprintf("%d,%d,%d", height, width, weave)
+	cookie := &http.Cookie{Name: "setting", Value: value, Expires: expiration}
+	http.SetCookie(w, cookie)
+	return height, width, weave
 }
 
