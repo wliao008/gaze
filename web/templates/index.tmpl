@@ -42,7 +42,9 @@
 	</table>
   
   <a href="javascript:void(0);" id="settingModal">setting</a>&nbsp;
+  {{ if not .WeaveChecked }}
   <a href="javascript:void(0);" id="solve">solve</a>&nbsp;
+  {{ end }}
   <a href="/home">new</a>&nbsp;
 	<div class="gray">generated w/ {{ .Name }}</div>
 
