@@ -385,6 +385,13 @@ func getSize(w http.ResponseWriter, req *http.Request) (uint16, uint16, uint16) 
 			weave = 0
 		}
 	}
+	if height > 100 {
+		height = 100
+	}
+	if width > 100 {
+		width = 100
+	}
+	//fmt.Printf("height=%d, width=%d\n", height, width)
 	expiration := time.Now().Add(365 * 24 * time.Hour)
 	value := fmt.Sprintf("%d,%d,%d", height, width, weave)
 	cookie := &http.Cookie{Name: "setting", Value: value, Expires: expiration}
