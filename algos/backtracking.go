@@ -1,8 +1,8 @@
 package algos
 
 import (
-	"github.com/wliao008/mazing/structs"
-	"github.com/wliao008/mazing/util"
+	"github.com/wliao008/gaze/structs"
+	"github.com/wliao008/gaze/util"
 )
 
 type BackTracking struct {

@@ -1,10 +1,11 @@
 package algos
 
 import (
-	"testing"
-	"github.com/wliao008/mazing/structs"
 	"math/rand"
+	"testing"
 	"time"
+
+	"github.com/wliao008/gaze/structs"
 )
 
 func TestPrim(t *testing.T) {
@@ -47,4 +48,3 @@ func BenchmarkPrimAlgo_100x50(b *testing.B) {
 		k.Generate()
 	}
 }
-

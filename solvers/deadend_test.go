@@ -2,8 +2,9 @@ package solvers
 
 import (
 	"testing"
-	"github.com/wliao008/mazing/algos"
-	"github.com/wliao008/mazing/util"
+
+	"github.com/wliao008/gaze/algos"
+	"github.com/wliao008/gaze/util"
 )
 
 func BenchmarkDeadEnds_1000x500(b *testing.B) {

@@ -1,18 +1,19 @@
 package algos
 
 import (
-	"github.com/wliao008/mazing/structs"
+	"fmt"
 	"math/rand"
 	"time"
-	"fmt"
+
+	"github.com/wliao008/gaze/structs"
 	//"os"
 )
 
 type KruskalWeave struct {
-	Name string
+	Name  string
 	Board structs.Board
-	Set *structs.DisjointSet
-	List []*ListItem
+	Set   *structs.DisjointSet
+	List  []*ListItem
 }
 
 func NewKruskalWeave(height, width uint16) *KruskalWeave {
@@ -25,7 +26,7 @@ func NewKruskalWeave(height, width uint16) *KruskalWeave {
 	h := uint16(0)
 	w := uint16(0)
 	for h = uint16(0); h < height; h++ {
-		for w = uint16(0) ; w < width; w++ {
+		for w = uint16(0); w < width; w++ {
 			item := &structs.Item{&k.Board.Cells[h][w], nil}
 			k.Set.Items[fmt.Sprintf("%d_%d", h, w)] = item
 		}
@@ -62,7 +63,7 @@ func (k *KruskalWeave) connectSets(c1, c2 *structs.Cell) {
 		c1.Y == c2.Y {
 		return
 	}
-	
+
 	_, from := k.Set.FindItem(c1)
 	_, to := k.Set.FindItem(c2)
 	root1 := k.Set.Find(from)
@@ -79,7 +80,7 @@ func (k *KruskalWeave) preprocess() {
 	all := 0
 	ignored := 0
 	for h = uint16(1); h < k.Board.Height-1; h++ {
-		for w = uint16(1) ; w < k.Board.Width-1; w++ {
+		for w = uint16(1); w < k.Board.Width-1; w++ {
 			c := &k.Board.Cells[h][w]
 			neighbors := k.Board.Neighbors(c)
 			crossed := 0
@@ -107,7 +108,7 @@ func (k *KruskalWeave) preprocess() {
 					up := &k.Board.Cells[c.X-1][c.Y]
 					down := &k.Board.Cells[c.X+1][c.Y]
 					k.connectSets(up, down)
-				}else {
+				} else {
 					up := &k.Board.Cells[c.X-1][c.Y]
 					down := &k.Board.Cells[c.X+1][c.Y]
 					k.connectSets(up, c)
@@ -159,4 +160,3 @@ func (k *KruskalWeave) Shuffle() {
 		k.List[i], k.List[j] = k.List[j], k.List[i]
 	}
 }
-

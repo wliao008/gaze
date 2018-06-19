@@ -1,14 +1,15 @@
 package structs
 
 import (
-	"testing"
 	"bytes"
 	"strings"
-	"github.com/wliao008/mazing/util"
+	"testing"
+
+	"github.com/wliao008/gaze/util"
 )
 
 func TestInit(t *testing.T) {
-	b := &Board{10,10,nil}
+	b := &Board{10, 10, nil}
 	for _, row := range b.Cells {
 		for _, cell := range row {
 			if cell.Flag != 15 {
@@ -19,22 +20,22 @@ func TestInit(t *testing.T) {
 }
 
 func TestNeighbors(t *testing.T) {
-	b := &Board{3,3,nil}
+	b := &Board{3, 3, nil}
 	b.Init()
-	var tests = []struct{
-		x uint16
-		y uint16
+	var tests = []struct {
+		x    uint16
+		y    uint16
 		want int
 	}{
-		{0,0,2},
-		{0,1,3},
-		{0,2,2},
-		{1,0,3},
-		{1,1,4},
-		{1,2,3},
-		{2,0,2},
-		{2,1,3},
-		{2,2,2},
+		{0, 0, 2},
+		{0, 1, 3},
+		{0, 2, 2},
+		{1, 0, 3},
+		{1, 1, 4},
+		{1, 2, 3},
+		{2, 0, 2},
+		{2, 1, 3},
+		{2, 2, 2},
 	}
 	for _, test := range tests {
 		c := &b.Cells[test.x][test.y]
@@ -46,11 +47,11 @@ func TestNeighbors(t *testing.T) {
 }
 
 func TestGetDirection(t *testing.T) {
-	b := &Board{10,10,nil}
+	b := &Board{10, 10, nil}
 	b.Init()
-	var tests = []struct{
+	var tests = []struct {
 		from *Cell
-		to *Cell
+		to   *Cell
 		want FlagPosition
 	}{
 		{&b.Cells[1][1], &b.Cells[0][1], NORTH},
@@ -68,11 +69,11 @@ func TestGetDirection(t *testing.T) {
 }
 
 func TestBreakWall(t *testing.T) {
-	b := &Board{10,10,nil}
+	b := &Board{10, 10, nil}
 	b.Init()
-	var tests = []struct{
-		from, to *Cell
-		dir FlagPosition
+	var tests = []struct {
+		from, to     *Cell
+		dir          FlagPosition
 		want1, want2 uint16
 	}{
 		{&b.Cells[1][1], &b.Cells[0][1], WEST, 23, 27},
@@ -84,14 +85,14 @@ func TestBreakWall(t *testing.T) {
 	for _, test := range tests {
 		b.BreakWall(test.from, test.to, test.dir)
 		if test.from.Flag != test.want1 && test.to.Flag != test.want2 {
-			t.Error("BreakWall(%v, %v), flags should be %d, %d, got %d, %d", 
+			t.Error("BreakWall(%v, %v), flags should be %d, %d, got %d, %d",
 				test.want1, test.want2, test.from.Flag, test.to.Flag)
 		}
 	}
 }
 
 func TestWrite(t *testing.T) {
-	b := &Board{3,3,nil}
+	b := &Board{3, 3, nil}
 	b.Init()
 	var buf bytes.Buffer
 	b.Write(&buf)
@@ -103,7 +104,7 @@ func TestWrite(t *testing.T) {
 }
 
 func TestDeadEnds(t *testing.T) {
-	b := &Board{3,3,nil}
+	b := &Board{3, 3, nil}
 	b.Init()
 	stack := &util.Stack{}
 	b.DeadEnds(stack)
@@ -119,11 +120,11 @@ func TestDeadEnds(t *testing.T) {
 }
 
 func TestDeadEnds2(t *testing.T) {
-	b := &Board{1,10,nil}
+	b := &Board{1, 10, nil}
 	b.Init()
 	b.Cells[0][0].ClearBit(NORTH)
 	b.Cells[0][9].ClearBit(SOUTH)
-	for i:=0; i<9; i++ {
+	for i := 0; i < 9; i++ {
 		b.Cells[0][i].ClearBit(EAST)
 		b.Cells[0][i+1].ClearBit(WEST)
 	}
@@ -141,7 +142,7 @@ func TestDeadEnds2(t *testing.T) {
 }
 
 func TestDeadEnds3(t *testing.T) {
-	b := &Board{2,2,nil}
+	b := &Board{2, 2, nil}
 	b.Init()
 	b.Cells[0][0].ClearBit(NORTH)
 	b.Cells[0][0].ClearBit(EAST)

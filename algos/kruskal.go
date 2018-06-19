@@ -1,22 +1,23 @@
 package algos
 
 import (
-	"github.com/wliao008/mazing/structs"
+	"fmt"
 	"math/rand"
 	"time"
-	"fmt"
+
+	"github.com/wliao008/gaze/structs"
 )
 
 type Kruskal struct {
-	Name string
+	Name  string
 	Board structs.Board
-	Set *structs.DisjointSet
-	List []*ListItem
+	Set   *structs.DisjointSet
+	List  []*ListItem
 }
 
 type ListItem struct {
 	From *structs.Item
-	To *structs.Item
+	To   *structs.Item
 }
 
 func (li *ListItem) String() string {
@@ -35,7 +36,7 @@ func NewKruskal(height, width uint16) *Kruskal {
 	h := uint16(0)
 	w := uint16(0)
 	for h = uint16(0); h < height; h++ {
-		for w = uint16(0) ; w < width; w++ {
+		for w = uint16(0); w < width; w++ {
 			//k.Board.Cells[h][w].SetBit(structs.VISITED)
 			item := &structs.Item{&k.Board.Cells[h][w], nil}
 			k.Set.Items[fmt.Sprintf("%d_%d", h, w)] = item
@@ -93,4 +94,3 @@ func (k *Kruskal) Shuffle() {
 		k.List[i], k.List[j] = k.List[j], k.List[i]
 	}
 }
-

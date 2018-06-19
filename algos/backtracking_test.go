@@ -1,12 +1,13 @@
 package algos
 
 import (
-	"github.com/wliao008/mazing/structs" 
 	"testing"
+
+	"github.com/wliao008/gaze/structs"
 )
 
 func TestBackTrakcingAlgo_Generate_AllCellsVisited(t *testing.T) {
-	k := NewBackTracking(10,10)
+	k := NewBackTracking(10, 10)
 	k.Generate()
 	for i := uint16(0); i < k.Board.Width; i++ {
 		for j := uint16(0); j < k.Board.Height; j++ {

@@ -1,14 +1,15 @@
 package algos
 
 import (
-	"github.com/wliao008/mazing/structs"
-	"github.com/wliao008/mazing/util"
 	"math/rand"
 	"time"
+
+	"github.com/wliao008/gaze/structs"
+	"github.com/wliao008/gaze/util"
 )
 
 type Prim struct {
-	Name string
+	Name  string
 	Board structs.Board
 }
 
@@ -34,7 +35,7 @@ func (p *Prim) Generate() error {
 			var idx int = rand.Intn(len(neighbors))
 			to := neighbors[idx]
 			dir := p.Board.GetDirection(cell, to)
-			p.Board.BreakWall(&p.Board.Cells[cell.X][cell.Y], 
+			p.Board.BreakWall(&p.Board.Cells[cell.X][cell.Y],
 				&p.Board.Cells[to.X][to.Y], dir)
 			stack.Push(&p.Board.Cells[to.X][to.Y])
 		} else {
@@ -58,7 +59,7 @@ func (p *Prim) GenerateNew() error {
 			var idx int = rand.Intn(len(neighbors))
 			to := neighbors[idx]
 			dir := p.Board.GetDirection(cell, to)
-			p.Board.BreakWall(&p.Board.Cells[cell.X][cell.Y], 
+			p.Board.BreakWall(&p.Board.Cells[cell.X][cell.Y],
 				&p.Board.Cells[to.X][to.Y], dir)
 			stack.Push(&p.Board.Cells[to.X][to.Y])
 		} else {

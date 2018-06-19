@@ -3,7 +3,8 @@ package structs
 import (
 	//"fmt"
 	"io"
-	"github.com/wliao008/mazing/util"
+
+	"github.com/wliao008/gaze/util"
 )
 
 type Board struct {
@@ -193,7 +194,7 @@ func (b *Board) Write2(writer io.Writer) {
 			c := b.Cells[h][w]
 			if c.IsSet(DEAD) {
 				writer.Write([]byte("*"))
-			}else{
+			} else {
 				writer.Write([]byte("-"))
 			}
 		}
@@ -207,14 +208,13 @@ func (b *Board) WriteVisited(writer io.Writer) {
 			c := b.Cells[h][w]
 			if c.IsSet(VISITED) {
 				writer.Write([]byte("*"))
-			}else{
+			} else {
 				writer.Write([]byte(" "))
 			}
 		}
 		writer.Write([]byte("\n"))
 	}
 }
-
 
 func (b *Board) DeadEnds(stack *util.Stack) {
 	//this function is a memory optimzation, declaring h, w etc outside of
@@ -223,8 +223,8 @@ func (b *Board) DeadEnds(stack *util.Stack) {
 	walls := uint16(0)
 	h := uint16(0)
 	c := &Cell{}
-	
-	for; h < b.Height; h++ {
+
+	for ; h < b.Height; h++ {
 		for w := uint16(0); w < b.Width; w++ {
 			c = &b.Cells[h][w]
 			if c.IsSet(DEAD) {
@@ -235,9 +235,9 @@ func (b *Board) DeadEnds(stack *util.Stack) {
 			flag = c.Flag & 15
 			walls = 0
 			walls += flag & 1
-			walls += (flag>>1) & 1
-			walls += (flag>>2) & 1
-			walls += (flag>>3) & 1
+			walls += (flag >> 1) & 1
+			walls += (flag >> 2) & 1
+			walls += (flag >> 3) & 1
 
 			if walls >= 3 {
 				stack.Push(c)
@@ -269,9 +269,9 @@ func (b *Board) DeadNeighbors(c *Cell, stack *util.Stack) {
 		flag := item.Flag & 15
 		walls := uint16(0)
 		walls += flag & 1
-		walls += (flag>>1) & 1
-		walls += (flag>>2) & 1
-		walls += (flag>>3) & 1
+		walls += (flag >> 1) & 1
+		walls += (flag >> 2) & 1
+		walls += (flag >> 3) & 1
 
 		// check for surrounding cells that are dead ends
 		if !item.IsSet(WEST) && item.Y-1 >= 0 &&
@@ -314,4 +314,3 @@ func (b *Board) getNeighbor(x, y uint16) (bool, *Cell) {
 	}
 	return false, nil
 }
-

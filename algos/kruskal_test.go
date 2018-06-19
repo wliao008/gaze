@@ -1,10 +1,11 @@
 package algos
 
 import (
-	"testing"
-	"github.com/wliao008/mazing/structs"
 	"math/rand"
+	"testing"
 	"time"
+
+	"github.com/wliao008/gaze/structs"
 )
 
 func TestKruskal(t *testing.T) {
