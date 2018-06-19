@@ -5,19 +5,19 @@ import (
 	"math/rand"
 	"time"
 
-	"github.com/wliao008/gaze/structs"
+	"github.com/wliao008/gaze"
 )
 
 type Kruskal struct {
 	Name  string
-	Board structs.Board
-	Set   *structs.DisjointSet
+	Board gaze.Board
+	Set   *gaze.DisjointSet
 	List  []*ListItem
 }
 
 type ListItem struct {
-	From *structs.Item
-	To   *structs.Item
+	From *gaze.Item
+	To   *gaze.Item
 }
 
 func (li *ListItem) String() string {
@@ -27,18 +27,17 @@ func (li *ListItem) String() string {
 }
 
 func NewKruskal(height, width uint16) *Kruskal {
-	k := &Kruskal{Board: structs.Board{height, width, nil}}
+	k := &Kruskal{Board: gaze.Board{height, width, nil}}
 	k.Name = "kruskal algorithm"
 	k.Board.Init()
-	k.Set = &structs.DisjointSet{}
-	k.Set.Items = make(map[string]*structs.Item)
+	k.Set = &gaze.DisjointSet{}
+	k.Set.Items = make(map[string]*gaze.Item)
 	// ~8ms, ~80k allocations, ~2mb
 	h := uint16(0)
 	w := uint16(0)
 	for h = uint16(0); h < height; h++ {
 		for w = uint16(0); w < width; w++ {
-			//k.Board.Cells[h][w].SetBit(structs.VISITED)
-			item := &structs.Item{&k.Board.Cells[h][w], nil}
+			item := &gaze.Item{&k.Board.Cells[h][w], nil}
 			k.Set.Items[fmt.Sprintf("%d_%d", h, w)] = item
 		}
 	}
@@ -46,7 +45,6 @@ func NewKruskal(height, width uint16) *Kruskal {
 	for h = uint16(0); h < height; h++ {
 		for w = uint16(0); w < width; w++ {
 			c := &k.Board.Cells[h][w]
-			//c.SetBit(structs.VISITED)
 			_, fromItem := k.Set.FindItem(c)
 			cells := k.Board.Neighbors(c)
 			for _, cell := range cells {
@@ -79,8 +77,8 @@ func (k *Kruskal) Generate() error {
 		k.Board.BreakWall(item.From.Data, item.To.Data, dir)
 
 		_ = k.Set.Union(root1, root2)
-		item.From.Data.SetBit(structs.VISITED)
-		item.To.Data.SetBit(structs.VISITED)
+		item.From.Data.SetBit(gaze.VISITED)
+		item.To.Data.SetBit(gaze.VISITED)
 	}
 
 	return nil

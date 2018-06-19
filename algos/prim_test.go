@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/wliao008/gaze/structs"
+	"github.com/wliao008/gaze"
 )
 
 func TestPrim(t *testing.T) {
@@ -16,7 +16,7 @@ func TestPrim(t *testing.T) {
 		k.Generate()
 		for h := uint16(0); h < k.Board.Height; h++ {
 			for w := uint16(0); w < k.Board.Width; w++ {
-				if !k.Board.Cells[h][w].IsSet(structs.VISITED) {
+				if !k.Board.Cells[h][w].IsSet(gaze.VISITED) {
 					t.Errorf("Prim, every cell should be visited, but not [%d,%d]", h, w)
 				}
 			}

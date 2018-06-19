@@ -3,7 +3,7 @@ package algos
 import (
 	"testing"
 
-	"github.com/wliao008/gaze/structs"
+	"github.com/wliao008/gaze"
 )
 
 func TestBackTrakcingAlgo_Generate_AllCellsVisited(t *testing.T) {
@@ -11,7 +11,7 @@ func TestBackTrakcingAlgo_Generate_AllCellsVisited(t *testing.T) {
 	k.Generate()
 	for i := uint16(0); i < k.Board.Width; i++ {
 		for j := uint16(0); j < k.Board.Height; j++ {
-			if !k.Board.Cells[i][j].IsSet(structs.VISITED) {
+			if !k.Board.Cells[i][j].IsSet(gaze.VISITED) {
 				t.Errorf("Every cell should be visited, but not [%d,%d]", i, j)
 			}
 		}

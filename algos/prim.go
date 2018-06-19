@@ -4,17 +4,16 @@ import (
 	"math/rand"
 	"time"
 
-	"github.com/wliao008/gaze/structs"
-	"github.com/wliao008/gaze/util"
+	"github.com/wliao008/gaze"
 )
 
 type Prim struct {
 	Name  string
-	Board structs.Board
+	Board gaze.Board
 }
 
 func NewPrim(height, width uint16) *Prim {
-	p := &Prim{Name: "prim algorithm", Board: structs.Board{height, width, nil}}
+	p := &Prim{Name: "prim algorithm", Board: gaze.Board{height, width, nil}}
 	p.Board.Init()
 	return p
 }
@@ -24,12 +23,12 @@ func init() {
 }
 
 func (p *Prim) Generate() error {
-	stack := util.Stack{}
+	stack := gaze.Stack{}
 	stack.Push(&p.Board.Cells[0][0])
-	p.Board.Cells[0][0].SetBit(structs.VISITED)
+	p.Board.Cells[0][0].SetBit(gaze.VISITED)
 	for !stack.IsEmpty() {
 		item := stack.Peek()
-		cell := item.(*structs.Cell)
+		cell := item.(*gaze.Cell)
 		neighbors := p.Board.Neighbors(cell)
 		if len(neighbors) > 0 {
 			var idx int = rand.Intn(len(neighbors))
@@ -46,14 +45,14 @@ func (p *Prim) Generate() error {
 }
 
 func (p *Prim) GenerateNew() error {
-	stack := util.Stack{}
+	stack := gaze.Stack{}
 	stack.Push(&p.Board.Cells[0][0])
-	p.Board.Cells[0][0].SetBit(structs.VISITED)
+	p.Board.Cells[0][0].SetBit(gaze.VISITED)
 	var item interface{}
-	cell := &structs.Cell{}
+	cell := &gaze.Cell{}
 	for !stack.IsEmpty() {
 		item = stack.Peek()
-		cell = item.(*structs.Cell)
+		cell = item.(*gaze.Cell)
 		neighbors := p.Board.Neighbors(cell)
 		if len(neighbors) > 0 {
 			var idx int = rand.Intn(len(neighbors))

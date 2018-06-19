@@ -1,24 +1,23 @@
 package algos
 
 import (
-	"github.com/wliao008/gaze/structs"
-	"github.com/wliao008/gaze/util"
+	"github.com/wliao008/gaze"
 )
 
 type BackTracking struct {
-	Board structs.Board
+	Board gaze.Board
 }
 
 var directions []interface{}
 
 func NewBackTracking(height, width uint16) *BackTracking {
-	bt := &BackTracking{Board: structs.Board{height, width, nil}}
+	bt := &BackTracking{Board: gaze.Board{height, width, nil}}
 	bt.Board.Init()
 	return bt
 }
 
 func init() {
-	directions = append(directions, structs.NORTH, structs.SOUTH, structs.EAST, structs.WEST)
+	directions = append(directions, gaze.NORTH, gaze.SOUTH, gaze.EAST, gaze.WEST)
 }
 
 func (bt *BackTracking) Generate() error {
@@ -29,15 +28,15 @@ func (bt *BackTracking) Generate() error {
 
 //doWork: the recrusive backtracking algorithm
 func (bt *BackTracking) doWork(x, y int) {
-	d := structs.Direction{}
-	util.Shuffle(directions)
+	d := gaze.Direction{}
+	gaze.Shuffle(directions)
 	for _, direction := range directions {
-		dir := direction.(structs.FlagPosition)
+		dir := direction.(gaze.FlagPosition)
 		var nextX int = x + d.XDirection(dir)
 		var nextY int = y + d.YDirection(dir)
 		if nextX >= 0 && nextX < int(bt.Board.Height) &&
 			nextY >= 0 && nextY < int(bt.Board.Width) &&
-			!bt.Board.Cells[nextX][nextY].IsSet(structs.VISITED) {
+			!bt.Board.Cells[nextX][nextY].IsSet(gaze.VISITED) {
 			bt.Board.BreakWall(&bt.Board.Cells[x][y], &bt.Board.Cells[nextX][nextY], dir)
 			bt.doWork(nextX, nextY)
 		}

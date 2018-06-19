@@ -5,29 +5,29 @@ import (
 	"math/rand"
 	"time"
 
-	"github.com/wliao008/gaze/structs"
+	"github.com/wliao008/gaze"
 	//"os"
 )
 
 type KruskalWeave struct {
 	Name  string
-	Board structs.Board
-	Set   *structs.DisjointSet
+	Board gaze.Board
+	Set   *gaze.DisjointSet
 	List  []*ListItem
 }
 
 func NewKruskalWeave(height, width uint16) *KruskalWeave {
-	k := &KruskalWeave{Board: structs.Board{height, width, nil}}
+	k := &KruskalWeave{Board: gaze.Board{height, width, nil}}
 	k.Name = "kruskal weave algorithm"
 	k.Board.Init()
-	k.Set = &structs.DisjointSet{}
-	k.Set.Items = make(map[string]*structs.Item)
+	k.Set = &gaze.DisjointSet{}
+	k.Set.Items = make(map[string]*gaze.Item)
 	// ~8ms, ~80k allocations, ~2mb
 	h := uint16(0)
 	w := uint16(0)
 	for h = uint16(0); h < height; h++ {
 		for w = uint16(0); w < width; w++ {
-			item := &structs.Item{&k.Board.Cells[h][w], nil}
+			item := &gaze.Item{&k.Board.Cells[h][w], nil}
 			k.Set.Items[fmt.Sprintf("%d_%d", h, w)] = item
 		}
 	}
@@ -36,15 +36,15 @@ func NewKruskalWeave(height, width uint16) *KruskalWeave {
 	for h = uint16(0); h < height; h++ {
 		for w = uint16(0); w < width; w++ {
 			c := &k.Board.Cells[h][w]
-			if c.IsSet(structs.CROSS) {
-				c.SetBit(structs.VISITED)
+			if c.IsSet(gaze.CROSS) {
+				c.SetBit(gaze.VISITED)
 				continue
 			}
 
 			_, fromItem := k.Set.FindItem(c)
 			cells := k.Board.Neighbors(c)
 			for _, cell := range cells {
-				if cell.IsSet(structs.CROSS) {
+				if cell.IsSet(gaze.CROSS) {
 					continue
 				}
 				_, toItem := k.Set.FindItem(cell)
@@ -58,7 +58,7 @@ func NewKruskalWeave(height, width uint16) *KruskalWeave {
 	return k
 }
 
-func (k *KruskalWeave) connectSets(c1, c2 *structs.Cell) {
+func (k *KruskalWeave) connectSets(c1, c2 *gaze.Cell) {
 	if c1.X == c2.X &&
 		c1.Y == c2.Y {
 		return
@@ -85,7 +85,7 @@ func (k *KruskalWeave) preprocess() {
 			neighbors := k.Board.Neighbors(c)
 			crossed := 0
 			for _, neighbor := range neighbors {
-				if neighbor.IsSet(structs.CROSS) {
+				if neighbor.IsSet(gaze.CROSS) {
 					crossed += 1
 				}
 			}
@@ -97,7 +97,7 @@ func (k *KruskalWeave) preprocess() {
 					continue
 				}
 
-				c.SetBit(structs.CROSS)
+				c.SetBit(gaze.CROSS)
 				var idx int = rand.Intn(2)
 				if idx == 0 {
 					left := &k.Board.Cells[c.X][c.Y-1]
@@ -145,8 +145,8 @@ func (k *KruskalWeave) Generate() error {
 		k.Board.BreakWall(item.From.Data, item.To.Data, dir)
 
 		_ = k.Set.Union(root1, root2)
-		item.From.Data.SetBit(structs.VISITED)
-		item.To.Data.SetBit(structs.VISITED)
+		item.From.Data.SetBit(gaze.VISITED)
+		item.To.Data.SetBit(gaze.VISITED)
 	}
 	//k.Board.Write(os.Stdout)
 	return nil

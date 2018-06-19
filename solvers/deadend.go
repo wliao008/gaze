@@ -1,12 +1,11 @@
 package solvers
 
 import (
-	"github.com/wliao008/gaze/structs"
-	"github.com/wliao008/gaze/util"
+	"github.com/wliao008/gaze"
 )
 
 type DeadEndFiller struct {
-	Board *structs.Board
+	Board *gaze.Board
 }
 
 func NewDeadEndFiller() *DeadEndFiller {
@@ -19,12 +18,12 @@ func (def *DeadEndFiller) Solve() {
 	// while there are more dead ends
 	//    mark current cell as a dead end
 	//    find dead neighbors of the current cell and add to list
-	stack := &util.Stack{}
+	stack := &gaze.Stack{}
 	def.Board.DeadEnds(stack)
 	c := stack.Pop()
 	for c != nil {
-		cell := c.(*structs.Cell)
-		cell.SetBit(structs.DEAD)
+		cell := c.(*gaze.Cell)
+		cell.SetBit(gaze.DEAD)
 		def.Board.DeadNeighbors(cell, stack)
 		c = stack.Pop()
 	}

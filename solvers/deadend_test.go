@@ -3,8 +3,8 @@ package solvers
 import (
 	"testing"
 
+	"github.com/wliao008/gaze"
 	"github.com/wliao008/gaze/algos"
-	"github.com/wliao008/gaze/util"
 )
 
 func BenchmarkDeadEnds_1000x500(b *testing.B) {
@@ -12,7 +12,7 @@ func BenchmarkDeadEnds_1000x500(b *testing.B) {
 	k.Generate()
 	def := DeadEndFiller{}
 	def.Board = &k.Board
-	stack := &util.Stack{}
+	stack := &gaze.Stack{}
 	for i := 0; i < b.N; i++ {
 		def.Board.DeadEnds(stack)
 	}
