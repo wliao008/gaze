@@ -1,8 +1,8 @@
 FROM alpine:3.5
 MAINTAINER Wei Liao <wliao008@gmail.com>
 
-ADD mazing /
+ADD gaze /
 RUN mkdir /web
 COPY web/ /web/
 
-ENTRYPOINT ["/mazing"]
+ENTRYPOINT ["/gaze"]
