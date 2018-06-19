@@ -1,8 +1,8 @@
 package solvers
 
 import (
-	"github.com/wliao008/mazing/structs"
-	"github.com/wliao008/mazing/util"
+	"github.com/wliao008/gaze/structs"
+	"github.com/wliao008/gaze/util"
 )
 
 type DeadEndFiller struct {
@@ -22,7 +22,7 @@ func (def *DeadEndFiller) Solve() {
 	stack := &util.Stack{}
 	def.Board.DeadEnds(stack)
 	c := stack.Pop()
-	for c != nil {	
+	for c != nil {
 		cell := c.(*structs.Cell)
 		cell.SetBit(structs.DEAD)
 		def.Board.DeadNeighbors(cell, stack)
