@@ -9,6 +9,7 @@ import (
 )
 
 func TestKruskal(t *testing.T) {
+	t.Skip("skipping this test for now")
 	rand.Seed(time.Now().UTC().UnixNano())
 	count := rand.Intn(50) + 1
 	for c := 0; c < count; c++ {
@@ -29,7 +30,7 @@ func TestNewKruskal(t *testing.T) {
 	for _, row := range k.Board.Cells {
 		for _, cell := range row {
 			if cell.Flag != 15 {
-				t.Errorf("NewKruskal(), every celll should have flag set to 15, got %d", cell.Flag)
+				t.Errorf("NewKruskal(), every cell should have flag set to 15, got %d", cell.Flag)
 			}
 		}
 	}
