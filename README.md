@@ -20,6 +20,22 @@ $ go run main.go
 |_ _ _|_ _ _|_ _ _ _|_ _ _ _|_ _ _ _ _ _ _|_ _ _ _ _ _|_ _  |
 ```
 
+
+## Benchmarks
+
+Benchmarks ran on the following hardware: 
+
+MacBook Pro 2014, OS X 10.9, 2.6 GHz Intel Core i5, 16 GB 1600 MHz DDR3.
+
+Algorithm | Size | Iterations | ns/ops | ms/op | allocs/op
+----------|-------|------|-----------|---------|-----------
+Backtracking | 1000x500 | 1 | 5309771223 | 5309.77 | 1002
+Prim | 1000x500 | 10 | 118249945 | 118.24 | 1055533
+DeadEndFiller | 1000x500 | 10 | 192385091 | 192.38 | 2004517
+
+While Prim is an order of magnitude faster, the memory allocations is still room for much improvement.
+
+
 ## Development
 
 ### Terminologies
