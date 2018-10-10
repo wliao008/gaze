@@ -7,7 +7,6 @@ import (
 )
 
 func TestBackTrakcingAlgo_Generate_AllCellsVisited(t *testing.T) {
-	t.Skip("skipping this test for now")
 	k := NewBackTracking(10, 10)
 	k.Generate()
 	for i := uint16(0); i < k.Board.Width; i++ {
