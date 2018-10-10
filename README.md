@@ -6,7 +6,7 @@ Maze generating library in GoLang
 ## Quickstart
 ```
 $ cd cmd/gaze
-$ go run main.go
+$ go run main.go [width height]
    _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 | |  _  |   |_ _ _ _     _ _  |_ _    | |  _   _ _ _ _ _|   |
 | | | |_ _|_ _ _ _  | |_  |  _ _ _ _| |_  | |_ _  |   |  _| |
