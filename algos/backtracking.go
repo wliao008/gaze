@@ -29,8 +29,8 @@ func (bt *BackTracking) Generate() error {
 //doWork: the recrusive backtracking algorithm
 func (bt *BackTracking) doWork(x, y int) {
 	d := gaze.Direction{}
-	gaze.Shuffle(directions)
-	for _, direction := range directions {
+	dirs := shuffledDirections()
+	for _, direction := range dirs {
 		dir := direction.(gaze.FlagPosition)
 		var nextX int = x + d.XDirection(dir)
 		var nextY int = y + d.YDirection(dir)
@@ -41,4 +41,11 @@ func (bt *BackTracking) doWork(x, y int) {
 			bt.doWork(nextX, nextY)
 		}
 	}
+}
+
+func shuffledDirections() []interface{} {
+	dirs := make([]interface{}, len(directions))
+	copy(dirs, directions)
+	gaze.Shuffle(dirs)
+	return dirs
 }
