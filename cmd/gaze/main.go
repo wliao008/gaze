@@ -32,11 +32,7 @@ func parseArguments() *argument {
 
 func main() {
 	arg := parseArguments()
-	k := algos.NewPrimTriangle(arg.height, arg.width)
+	k := algos.NewPrim(arg.height, arg.width)
 	k.Generate()
-	k.Board.Write3a(os.Stdout)
-	fmt.Printf("\n")
-	k.Board.WriteVisited(os.Stdout)
-	fmt.Printf("\n")
-	k.Board.Write3(os.Stdout)
+	k.Board.Write(os.Stdout)
 }
