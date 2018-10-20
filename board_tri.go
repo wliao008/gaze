@@ -60,31 +60,6 @@ func (b *BoardTri) Neighbors(c *Cell) []*Cell {
 	return result
 }
 
-/*
-// Neighbors find the neighboring cells of the current cell
-func (b *BoardTri) CornerNeighbors(c *Cell) []*Cell {
-	// this triangle should be pointed in opposite
-	// way of the neighbors.
-	result := []*Cell{}
-	if ok, cell := b.getNeighbor(c.X+1, c.Y+1); ok {
-		result = append(result, cell)
-	}
-
-	if ok, cell := b.getNeighbor(c.X+1, c.Y-1); ok {
-		result = append(result, cell)
-	}
-
-	if ok, cell := b.getNeighbor(c.X-1, c.Y+1); ok {
-		result = append(result, cell)
-	}
-
-	if ok, cell := b.getNeighbor(c.X-1, c.Y-1); ok {
-		result = append(result, cell)
-	}
-	return result
-}
-*/
-
 func (b *BoardTri) GetDirection(from, to *Cell) FlagPosition {
 	// X denotes row, Y denotes col
 	//
@@ -151,15 +126,11 @@ func (b *BoardTri) Break2Walls(c *Cell, idx int) {
 		right := &b.Cells[c.X][c.Y+1]
 		b.BreakWall2(left, c, EAST)
 		b.BreakWall2(c, right, EAST)
-		//fmt.Printf("\t%v - %v\n", left, c)
-		//fmt.Printf("\t%v - %v\n", c, right)
 	} else {
 		up := &b.Cells[c.X-1][c.Y]
 		down := &b.Cells[c.X+1][c.Y]
 		b.BreakWall2(up, c, SOUTH)
 		b.BreakWall2(c, down, SOUTH)
-		//fmt.Printf("\t%v - %v\n", up, c)
-		//fmt.Printf("\t%v - %v\n", c, down)
 	}
 }
 
