@@ -134,40 +134,122 @@ func (b *BoardTri) Break2Walls(c *Cell, idx int) {
 	}
 }
 
-func (b *BoardTri) Write(writer io.Writer) {
+func (b *BoardTri) Write3a(writer io.Writer) {
 	for h := uint16(0); h < b.Height; h++ {
-		//left border
-		c0 := b.Cells[h][0]
-		if c0.IsSet(TRIANGLE_UP) {
-			writer.Write([]byte("∕"))
-		} else {
-			writer.Write([]byte("∖"))
-		}
-
 		for w := uint16(0); w < b.Width; w++ {
 			c := b.Cells[h][w]
 			if c.IsSet(TRIANGLE_UP) {
-				if c.IsSet(SOUTH) {
-					writer.Write([]byte("⎯"))
+				writer.Write([]byte("∆"))
+			} else {
+				writer.Write([]byte("∇"))
+			}
+		}
+		writer.Write([]byte("\n"))
+	}
+}
+
+func (b *BoardTri) Write(writer io.Writer) {
+	for h := uint16(0); h < b.Height; h++ {
+		//left border
+		/*
+			c0 := b.Cells[h][0]
+			if c0.IsSet(TRIANGLE_UP) {
+				writer.Write([]byte("∕"))
+			} else {
+				writer.Write([]byte("∖"))
+			}
+		*/
+
+		//first pass
+		for w := uint16(0); w < b.Width; w++ {
+			c := b.Cells[h][w]
+
+			if c.IsSet(TRIANGLE_UP) {
+				if w == 0 {
+					if c.IsSet(WEST) {
+						writer.Write([]byte(" /"))
+					} else {
+						writer.Write([]byte("  "))
+					}
+				} else {
+					if c.IsSet(WEST) {
+						writer.Write([]byte("/"))
+					} else {
+						writer.Write([]byte(" "))
+					}
+				}
+
+				if c.IsSet(EAST) {
+					writer.Write([]byte("\\"))
 				} else {
 					writer.Write([]byte(" "))
 				}
 			} else {
+				//triangle pointing down
+				if c.IsSet(WEST) {
+					writer.Write([]byte("\\"))
+				} else {
+					writer.Write([]byte(" "))
+				}
+
 				if c.IsSet(NORTH) {
-					writer.Write([]byte("⎺"))
+					writer.Write([]byte("--"))
+				} else {
+					writer.Write([]byte("  "))
+				}
+
+				if c.IsSet(EAST) {
+					writer.Write([]byte("/"))
 				} else {
 					writer.Write([]byte(" "))
 				}
 			}
+		}
+		writer.Write([]byte("\n"))
 
-			if c.IsSet(EAST) {
-				if c.IsSet(TRIANGLE_UP) {
-					writer.Write([]byte("∖"))
+		//2nd pass
+		for w := uint16(0); w < b.Width; w++ {
+			c := b.Cells[h][w]
+
+			if c.IsSet(TRIANGLE_UP) {
+				if c.IsSet(WEST) {
+					writer.Write([]byte("/"))
 				} else {
-					writer.Write([]byte("∕"))
+					writer.Write([]byte(" "))
+				}
+
+				if c.IsSet(SOUTH) {
+					writer.Write([]byte("__"))
+				} else {
+					writer.Write([]byte("  "))
+				}
+
+				if c.IsSet(EAST) {
+					writer.Write([]byte("\\"))
+				} else {
+					writer.Write([]byte(" "))
 				}
 			} else {
-				writer.Write([]byte(" "))
+				//triangle pointing down
+				if w == 0 {
+					if c.IsSet(WEST) {
+						writer.Write([]byte(" \\"))
+					} else {
+						writer.Write([]byte("  "))
+					}
+				} else {
+					if c.IsSet(WEST) {
+						writer.Write([]byte("\\"))
+					} else {
+						writer.Write([]byte(" "))
+					}
+				}
+
+				if c.IsSet(EAST) {
+					writer.Write([]byte("/"))
+				} else {
+					writer.Write([]byte(" "))
+				}
 			}
 		}
 		writer.Write([]byte("\n"))
