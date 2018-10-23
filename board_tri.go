@@ -230,7 +230,11 @@ func (b *BoardTri) Write(writer io.Writer) {
 				if c.IsSet(WEST) {
 					writer.Write([]byte("/"))
 				} else {
-					writer.Write([]byte(" "))
+					if h == b.Height-1 {
+						writer.Write([]byte("_"))
+					} else {
+						writer.Write([]byte(" "))
+					}
 				}
 
 				if c.IsSet(SOUTH) {
@@ -242,7 +246,11 @@ func (b *BoardTri) Write(writer io.Writer) {
 				if c.IsSet(EAST) {
 					writer.Write([]byte("\\"))
 				} else {
-					writer.Write([]byte(" "))
+					if h == b.Height-1 {
+						writer.Write([]byte("_"))
+					} else {
+						writer.Write([]byte(" "))
+					}
 				}
 			} else {
 				//triangle pointing down
@@ -250,30 +258,37 @@ func (b *BoardTri) Write(writer io.Writer) {
 					if c.IsSet(WEST) {
 						writer.Write([]byte(" \\"))
 					} else {
-						writer.Write([]byte("  "))
+						if h == b.Height-1 {
+							writer.Write([]byte("__"))
+						} else {
+							writer.Write([]byte("  "))
+						}
 					}
 				} else {
 					if c.IsSet(WEST) {
 						writer.Write([]byte("\\"))
 					} else {
-						writer.Write([]byte(" "))
+						if h == b.Height-1 {
+							writer.Write([]byte("_"))
+						} else {
+							writer.Write([]byte(" "))
+						}
 					}
 				}
 
 				if c.IsSet(EAST) {
 					writer.Write([]byte("/"))
 				} else {
-					writer.Write([]byte(" "))
+					if h == b.Height-1 {
+						writer.Write([]byte("_"))
+					} else {
+						writer.Write([]byte(" "))
+					}
 				}
 			}
 		}
 		writer.Write([]byte("\n"))
 	}
-
-	for w := uint16(0); w < count; w++ {
-		writer.Write([]byte("-"))
-	}
-	writer.Write([]byte("\n"))
 }
 
 func (b *BoardTri) WriteVisited(writer io.Writer) {
