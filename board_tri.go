@@ -149,6 +149,21 @@ func (b *BoardTri) Write3a(writer io.Writer) {
 }
 
 func (b *BoardTri) Write(writer io.Writer) {
+	writer.Write([]byte(" "))
+	count := uint16(0)
+	for w := uint16(0); w < b.Width; w++ {
+		c := b.Cells[0][w]
+		if c.IsSet(TRIANGLE_UP) {
+			count += 2
+		} else {
+			count += 4
+		}
+	}
+	for w := uint16(0); w < count; w++ {
+		writer.Write([]byte("_"))
+	}
+	writer.Write([]byte("\n"))
+
 	for h := uint16(0); h < b.Height; h++ {
 		//left border
 		/*
@@ -254,6 +269,11 @@ func (b *BoardTri) Write(writer io.Writer) {
 		}
 		writer.Write([]byte("\n"))
 	}
+
+	for w := uint16(0); w < count; w++ {
+		writer.Write([]byte("-"))
+	}
+	writer.Write([]byte("\n"))
 }
 
 func (b *BoardTri) WriteVisited(writer io.Writer) {
