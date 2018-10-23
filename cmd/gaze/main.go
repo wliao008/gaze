@@ -34,13 +34,13 @@ func parseArguments() *argument {
 
 func main() {
 	arg := parseArguments()
-	if arg.help == true {
+	if arg.help {
 		fmt.Println(helpReturn())
-	} else {
-		k := algos.NewPrim(arg.height, arg.width)
-		k.Generate()
-		k.Board.Write(os.Stdout)
+		os.Exit(0)
 	}
+	k := algos.NewPrim(arg.height, arg.width)
+	k.Generate()
+	k.Board.Write(os.Stdout)
 }
 
 func helpReturn() string {
@@ -52,7 +52,6 @@ func helpReturn() string {
 	Example: 
 
 	$ go run main.go -h 12 -w 12
-
 	_ _ _ _ _ _ _ _ _ _ _
 	| |   |  _ _ _ _    |   |
 	| | | |_ _|  _ _ _|_ _| |
