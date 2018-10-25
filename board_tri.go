@@ -21,9 +21,9 @@ func (b *BoardTri) Init() {
 		start := h
 		for w := uint16(0); w < b.Width; w++ {
 			if start%2 == 0 {
-				b.Cells[h][w].Flag = 526 // triangle pointed up: 1000001110
+				b.Cells[h][w].Flag = 527 // triangle pointed up: 1000001110
 			} else {
-				b.Cells[h][w].Flag = 13 // triangle pointed down: 0000001101
+				b.Cells[h][w].Flag = 15 // triangle pointed down: 0000001101
 			}
 			start++
 
@@ -165,16 +165,6 @@ func (b *BoardTri) Write(writer io.Writer) {
 	writer.Write([]byte("\n"))
 
 	for h := uint16(0); h < b.Height; h++ {
-		//left border
-		/*
-			c0 := b.Cells[h][0]
-			if c0.IsSet(TRIANGLE_UP) {
-				writer.Write([]byte("∕"))
-			} else {
-				writer.Write([]byte("∖"))
-			}
-		*/
-
 		//first pass
 		for w := uint16(0); w < b.Width; w++ {
 			c := b.Cells[h][w]
