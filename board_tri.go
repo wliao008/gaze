@@ -27,7 +27,7 @@ func (b *BoardTri) Init() {
 		start := h
 
 		for w := uint16(0); w < b.Width; w++ {
-			if start%2 == uint16(idx) {
+			if start%2 == 0 {
 				b.Cells[h][w].Flag = 527 // triangle pointed up: 1000001110
 			} else {
 				b.Cells[h][w].Flag = 15 // triangle pointed down: 0000001101
