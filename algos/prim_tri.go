@@ -15,6 +15,29 @@ type PrimTriangle struct {
 func NewPrimTriangle(height, width uint16) *PrimTriangle {
 	p := &PrimTriangle{Name: "prim algorithm", Board: gaze.BoardTri{height, width, nil}}
 	p.Board.Init()
+
+	/*
+		for w := uint16(1); w < width; w++ {
+			//first row
+			c := &p.Board.Cells[0][w]
+			if c.IsSet(gaze.TRIANGLE_UP) {
+				c.ClearBit(gaze.SOUTH)
+			} else {
+				c.ClearBit(gaze.NORTH)
+				c.SetBit(gaze.VISITED)
+			}
+
+			//last row
+			c = &p.Board.Cells[height-1][w]
+			if c.IsSet(gaze.TRIANGLE_UP) {
+				c.ClearBit(gaze.EAST)
+				c.SetBit(gaze.VISITED)
+			} else {
+				c.ClearBit(gaze.WEST)
+				c.SetBit(gaze.VISITED)
+			}
+		}
+	*/
 	return p
 }
 

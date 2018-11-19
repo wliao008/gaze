@@ -28,9 +28,9 @@ func (b *BoardTri) Init() {
 
 		for w := uint16(0); w < b.Width; w++ {
 			if start%2 == uint16(idx) {
-				b.Cells[h][w].Flag = 526 // triangle pointed up: 1000001110
+				b.Cells[h][w].Flag = 527 // triangle pointed up: 1000001110
 			} else {
-				b.Cells[h][w].Flag = 13 // triangle pointed down: 0000001101
+				b.Cells[h][w].Flag = 15 // triangle pointed down: 0000001101
 			}
 			start++
 
@@ -156,17 +156,22 @@ func (b *BoardTri) Write3a(writer io.Writer) {
 }
 
 func (b *BoardTri) Write(writer io.Writer) {
-	for h := uint16(0); h < b.Height; h++ {
-		//left border
-		/*
-			c0 := b.Cells[h][0]
-			if c0.IsSet(TRIANGLE_UP) {
-				writer.Write([]byte("∕"))
-			} else {
-				writer.Write([]byte("∖"))
-			}
-		*/
+	writer.Write([]byte(" "))
+	count := uint16(0)
+	for w := uint16(0); w < b.Width; w++ {
+		c := b.Cells[0][w]
+		if c.IsSet(TRIANGLE_UP) {
+			count += 2
+		} else {
+			count += 4
+		}
+	}
+	for w := uint16(0); w < count; w++ {
+		writer.Write([]byte("_"))
+	}
+	writer.Write([]byte("\n"))
 
+	for h := uint16(0); h < b.Height; h++ {
 		//first pass
 		for w := uint16(0); w < b.Width; w++ {
 			c := b.Cells[h][w]
@@ -222,7 +227,11 @@ func (b *BoardTri) Write(writer io.Writer) {
 				if c.IsSet(WEST) {
 					writer.Write([]byte("/"))
 				} else {
-					writer.Write([]byte(" "))
+					if h == b.Height-1 {
+						writer.Write([]byte("_"))
+					} else {
+						writer.Write([]byte(" "))
+					}
 				}
 
 				if c.IsSet(SOUTH) {
@@ -234,7 +243,11 @@ func (b *BoardTri) Write(writer io.Writer) {
 				if c.IsSet(EAST) {
 					writer.Write([]byte("\\"))
 				} else {
-					writer.Write([]byte(" "))
+					if h == b.Height-1 {
+						writer.Write([]byte("_"))
+					} else {
+						writer.Write([]byte(" "))
+					}
 				}
 			} else {
 				//triangle pointing down
@@ -242,20 +255,32 @@ func (b *BoardTri) Write(writer io.Writer) {
 					if c.IsSet(WEST) {
 						writer.Write([]byte(" \\"))
 					} else {
-						writer.Write([]byte("  "))
+						if h == b.Height-1 {
+							writer.Write([]byte("__"))
+						} else {
+							writer.Write([]byte("  "))
+						}
 					}
 				} else {
 					if c.IsSet(WEST) {
 						writer.Write([]byte("\\"))
 					} else {
-						writer.Write([]byte(" "))
+						if h == b.Height-1 {
+							writer.Write([]byte("_"))
+						} else {
+							writer.Write([]byte(" "))
+						}
 					}
 				}
 
 				if c.IsSet(EAST) {
 					writer.Write([]byte("/"))
 				} else {
-					writer.Write([]byte(" "))
+					if h == b.Height-1 {
+						writer.Write([]byte("_"))
+					} else {
+						writer.Write([]byte(" "))
+					}
 				}
 			}
 		}
