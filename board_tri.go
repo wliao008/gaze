@@ -1,6 +1,9 @@
 package gaze
 
 import (
+	"fmt"
+	"math/rand"
+	"time"
 	//"fmt"
 	"io"
 )
@@ -12,15 +15,19 @@ type BoardTri struct {
 }
 
 func (b *BoardTri) Init() {
+	rand.Seed(time.Now().UTC().UnixNano())
 	b.Cells = make([][]Cell, b.Height)
 	for i := uint16(0); i < b.Height; i++ {
 		b.Cells[i] = make([]Cell, b.Width)
 	}
 
+	var idx int = rand.Intn(2)
+	fmt.Println(idx)
 	for h := uint16(0); h < b.Height; h++ {
 		start := h
+
 		for w := uint16(0); w < b.Width; w++ {
-			if start%2 == 0 {
+			if start%2 == uint16(idx) {
 				b.Cells[h][w].Flag = 526 // triangle pointed up: 1000001110
 			} else {
 				b.Cells[h][w].Flag = 13 // triangle pointed down: 0000001101
@@ -367,4 +374,42 @@ func (b *BoardTri) getNeighbor(x, y uint16) (bool, *Cell) {
 		return true, &b.Cells[x][y]
 	}
 	return false, nil
+}
+
+func (b *BoardTri) WriteSvg(writer io.Writer) {
+	startx := 10
+	starty := 10
+	for h := uint16(0); h < b.Height; h++ {
+		if h%2 == 0 {
+			startx = 10
+		} else {
+			startx = 0
+		}
+		for w := uint16(0); w < b.Width; w++ {
+			c := b.Cells[h][w]
+			if c.IsSet(TRIANGLE_UP) {
+				if c.IsSet(WEST) {
+					fmt.Printf("<path d=\"M%d %d l -10 10\" fill=\"none\" stroke=\"blue\" stroke-width=\"1\"/>\n", startx, starty)
+				}
+				if c.IsSet(EAST) {
+					fmt.Printf("<path d=\"M%d %d l 10 10\" fill=\"none\" stroke=\"blue\" stroke-width=\"1\"/>\n", startx, starty)
+				}
+				if c.IsSet(SOUTH) {
+					fmt.Printf("<path d=\"M%d %d h 20\" fill=\"none\" stroke=\"blue\" stroke-width=\"1\"/>\n", startx-10, starty+10)
+				}
+			} else {
+				if c.IsSet(NORTH) {
+					fmt.Printf("<path d=\"M%d %d h 20\" fill=\"none\" stroke=\"blue\" stroke-width=\"1\"/>\n", startx, starty)
+				}
+				if c.IsSet(WEST) {
+					fmt.Printf("<path d=\"M%d %d l 10 10\" fill=\"none\" stroke=\"blue\" stroke-width=\"1\"/>\n", startx, starty)
+				}
+				if c.IsSet(EAST) {
+					fmt.Printf("<path d=\"M%d %d l -10 10\" fill=\"none\" stroke=\"blue\" stroke-width=\"1\"/>\n", startx+20, starty)
+				}
+				startx += 20
+			}
+		}
+		starty += 10
+	}
 }
