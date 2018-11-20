@@ -38,9 +38,11 @@ func main() {
 		fmt.Println(helpReturn())
 		os.Exit(0)
 	}
-	k := algos.NewPrim(arg.height, arg.width)
+	k := algos.NewPrimTriangle(arg.height, arg.width)
 	k.Generate()
 	k.Board.Write(os.Stdout)
+	fmt.Println("")
+	k.Board.WriteSvg(os.Stdout)
 }
 
 func helpReturn() string {

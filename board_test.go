@@ -83,7 +83,7 @@ func TestBreakWall(t *testing.T) {
 	for _, test := range tests {
 		b.BreakWall(test.from, test.to, test.dir)
 		if test.from.Flag != test.want1 && test.to.Flag != test.want2 {
-			t.Error("BreakWall(%v, %v), flags should be %d, %d, got %d, %d",
+			t.Errorf("BreakWall(%v, %v), flags should be %d, got %d",
 				test.want1, test.want2, test.from.Flag, test.to.Flag)
 		}
 	}
@@ -113,7 +113,7 @@ func TestDeadEnds(t *testing.T) {
 		c = stack.Pop()
 	}
 	if count != 9 {
-		t.Error("DeadEnds(), want 9, got %d", count)
+		t.Errorf("DeadEnds(), want 9, got %d", count)
 	}
 }
 
@@ -135,7 +135,7 @@ func TestDeadEnds2(t *testing.T) {
 		c = stack.Pop()
 	}
 	if count != 0 {
-		t.Error("DeadEnds(), want 0, got %d", count)
+		t.Errorf("DeadEnds(), want 0, got %d", count)
 	}
 }
 
@@ -158,6 +158,6 @@ func TestDeadEnds3(t *testing.T) {
 		c = stack.Pop()
 	}
 	if count != 1 {
-		t.Error("DeadEnds(), want 1, got %d", count)
+		t.Errorf("DeadEnds(), want 1, got %d", count)
 	}
 }

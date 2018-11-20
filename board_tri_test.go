@@ -11,16 +11,18 @@ func TestBoardTriInit(t *testing.T) {
 	b := &BoardTri{10, 10, nil}
 	for _, row := range b.Cells {
 		for _, cell := range row {
-			if cell.Flag != 13 || cell.Flag != 526 {
-				t.Errorf("Init() should init all Flag to either 13 or 526, got %d for %+v", cell.Flag, cell)
+			if cell.Flag == 14 || cell.Flag == 527 {
+				continue
 			}
+
+			t.Errorf("Init() should init all Flag to either 14 or 527, got %d for %+v", cell.Flag, cell)
 		}
 	}
 }
 
 func TestBoardTriNeighbors(t *testing.T) {
 	b := &BoardTri{3, 3, nil}
-	b.Init()
+	b.Init(0)
 	var tests = []struct {
 		x    uint16
 		y    uint16
@@ -44,10 +46,36 @@ func TestBoardTriNeighbors(t *testing.T) {
 		}
 	}
 }
+func TestBoardTriNeighborsStartDown(t *testing.T) {
+	b := &BoardTri{3, 3, nil}
+	b.Init(1)
+	var tests = []struct {
+		x    uint16
+		y    uint16
+		want int
+	}{
+		{0, 0, 1},
+		{0, 1, 3},
+		{0, 2, 1},
+		{1, 0, 2},
+		{1, 1, 3},
+		{1, 2, 2},
+		{2, 0, 2},
+		{2, 1, 2},
+		{2, 2, 2},
+	}
+	for _, test := range tests {
+		c := &b.Cells[test.x][test.y]
+		got := b.Neighbors(c)
+		if len(got) != test.want {
+			t.Errorf("Neighbors(%+v) got %d, want %d", *c, len(got), test.want)
+		}
+	}
+}
 
 func TestBoardTriGetDirection(t *testing.T) {
 	b := &BoardTri{10, 10, nil}
-	b.Init()
+	b.Init(0)
 	var tests = []struct {
 		from *Cell
 		to   *Cell
@@ -68,7 +96,7 @@ func TestBoardTriGetDirection(t *testing.T) {
 
 func TestBoardTriBreakWall(t *testing.T) {
 	b := &BoardTri{10, 10, nil}
-	b.Init()
+	b.Init(0)
 	var tests = []struct {
 		from, to     *Cell
 		dir          FlagPosition
@@ -91,7 +119,7 @@ func TestBoardTriBreakWall(t *testing.T) {
 
 func TestBoardTriWrite(t *testing.T) {
 	b := &BoardTri{3, 3, nil}
-	b.Init()
+	b.Init(0)
 	var buf bytes.Buffer
 	b.Write(&buf)
 	got := strings.TrimRight(buf.String(), string(10)) // remove trailing line feed
@@ -103,7 +131,7 @@ func TestBoardTriWrite(t *testing.T) {
 
 func TestBoardTriDeadEnds(t *testing.T) {
 	b := &BoardTri{3, 3, nil}
-	b.Init()
+	b.Init(0)
 	stack := &Stack{}
 	b.DeadEnds(stack)
 	count := 0
@@ -113,13 +141,13 @@ func TestBoardTriDeadEnds(t *testing.T) {
 		c = stack.Pop()
 	}
 	if count != 9 {
-		t.Error("DeadEnds(), want 9, got %d", count)
+		t.Errorf("DeadEnds(), want 9, got %d", count)
 	}
 }
 
 func TestBoardTriDeadEnds2(t *testing.T) {
 	b := &BoardTri{1, 10, nil}
-	b.Init()
+	b.Init(0)
 	b.Cells[0][0].ClearBit(NORTH)
 	b.Cells[0][9].ClearBit(SOUTH)
 	for i := 0; i < 9; i++ {
@@ -135,6 +163,6 @@ func TestBoardTriDeadEnds2(t *testing.T) {
 		c = stack.Pop()
 	}
 	if count != 0 {
-		t.Error("DeadEnds(), want 0, got %d", count)
+		t.Errorf("DeadEnds(), want 0, got %d", count)
 	}
 }

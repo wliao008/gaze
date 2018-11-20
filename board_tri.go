@@ -14,20 +14,22 @@ type BoardTri struct {
 	Cells  [][]Cell
 }
 
-func (b *BoardTri) Init() {
-	rand.Seed(time.Now().UTC().UnixNano())
+//0 is up, 1 is down, -1 is undecided
+func (b *BoardTri) Init(up int) {
+	if up == -1 {
+		rand.Seed(time.Now().UTC().UnixNano())
+		up = rand.Intn(2)
+	}
 	b.Cells = make([][]Cell, b.Height)
 	for i := uint16(0); i < b.Height; i++ {
 		b.Cells[i] = make([]Cell, b.Width)
 	}
 
-	var idx int = rand.Intn(2)
-	fmt.Println(idx)
 	for h := uint16(0); h < b.Height; h++ {
 		start := h
 
 		for w := uint16(0); w < b.Width; w++ {
-			if start%2 == 0 {
+			if start%2 == uint16(up) {
 				b.Cells[h][w].Flag = 527 // triangle pointed up: 1000001110
 			} else {
 				b.Cells[h][w].Flag = 15 // triangle pointed down: 0000001101
