@@ -2,6 +2,7 @@ package gaze
 
 import (
 	//"fmt"
+	"fmt"
 	"io"
 )
 
@@ -31,6 +32,10 @@ func (b *Board) Init() {
 			// set the relative [x,y] position of the cell on the board
 			b.Cells[h][w].X = h
 			b.Cells[h][w].Y = w
+
+			b.Cells[h][w].Parent = nil
+			b.Cells[h][w].Left = nil
+			b.Cells[h][w].Right = nil
 		}
 	}
 }
@@ -311,4 +316,112 @@ func (b *Board) getNeighbor(x, y uint16) (bool, *Cell) {
 		return true, &b.Cells[x][y]
 	}
 	return false, nil
+}
+
+func (b *Board) GetCircleNeighbor(from, to *Cell, direction FlagPosition) (bool, []*Cell) {
+	var cells []*Cell
+	if direction == NORTH { //from south to north
+		flatCellsTo := b.FlattenCells(to)
+		for _, cell := range flatCellsTo {
+			fmt.Printf("**[%d,%d]: %f, %f\n", cell.X, cell.Y, cell.ThetaFrom, cell.ThetaTo)
+		}
+		for _, cell := range flatCellsTo {
+			if cell.ThetaFrom >= from.ThetaFrom &&
+				cell.ThetaTo <= from.ThetaTo {
+				cells = append(cells, cell)
+				fmt.Printf("....%f, %f added to cells\n", cell.ThetaFrom, cell.ThetaTo)
+			}
+		}
+	} else if direction == SOUTH {
+		flatCellsFrom := b.FlattenCells(from)
+		flatCellsTo := b.FlattenCells(to)
+		if len(flatCellsFrom) == len(flatCellsTo) {
+			cells = append(cells, flatCellsTo[0])
+		} else {
+			for _, cell := range flatCellsTo {
+				if from.ThetaFrom <= cell.ThetaFrom &&
+					from.ThetaTo <= cell.ThetaTo {
+					cells = append(cells, cell)
+				}
+			}
+		}
+	}
+
+	return false, cells
+}
+
+func (b *Board) GetCircleNeighborEW(cell *Cell, direction FlagPosition) *Cell {
+	if direction == EAST {
+		if cell.Parent == nil {
+			//this cell has no splits, so by definition the next cell
+			//has no splits as well.
+			col := cell.Y + 1
+			if cell.Y == b.Width-1 {
+				col = 0
+				fmt.Printf("cell.Y=%d, resetting to 0\n", cell.Y)
+			}
+			c := b.Cells[cell.X][col]
+			fmt.Printf("EAST: %+v\n", c)
+			return &c
+		}
+
+		if cell.Parent.Right != cell {
+			return cell.Parent.Right
+		}
+
+		return cell.Parent.Parent.Right.Left
+	} else if direction == WEST {
+		if cell.Parent == nil {
+			//this cell has no splits, so by definition the cell to the left
+			//has no splits as well.
+			col := cell.Y - 1
+			if cell.Y == 0 {
+				col = b.Width - 1
+				fmt.Printf("cell.Y=%d, resetting to %d\n", cell.Y, b.Width-1)
+			}
+			c := b.Cells[cell.X][col]
+			fmt.Printf("WEST: %+v\n", c)
+			return &c
+		}
+
+		if cell.Parent.Left != cell {
+			return cell.Parent.Left
+		} else {
+			c := b.Cells[cell.X][cell.Y-1]
+			rightmost := b.getRightMostCell(&c)
+			return rightmost
+		}
+
+		return cell.Parent.Parent.Left.Right
+	}
+	return nil
+}
+
+func (b *Board) getLeftMostCell(cell *Cell) *Cell {
+	if cell.Left == nil {
+		return cell
+	}
+
+	return b.getLeftMostCell(cell.Left)
+}
+
+func (b *Board) getRightMostCell(cell *Cell) *Cell {
+	if cell.Right == nil {
+		return cell
+	}
+
+	return b.getRightMostCell(cell.Right)
+}
+
+func (b *Board) FlattenCells(cell *Cell) []*Cell {
+	fmt.Printf("FlattenCells called\n")
+	var cells []*Cell
+	if cell.Left == nil {
+		cells = append(cells, cell)
+		return cells
+	}
+
+	cells = append(cells, b.FlattenCells(cell.Left)...)
+	cells = append(cells, b.FlattenCells(cell.Right)...)
+	return cells
 }

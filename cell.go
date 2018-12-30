@@ -33,9 +33,14 @@ type Cell struct {
 	 * 8: cross
 	 * 9: triangle up
 	 */
-	Flag uint16
-	X    uint16 // row
-	Y    uint16 // col
+	Flag      uint16
+	X         uint16 // row
+	Y         uint16 // col
+	Parent    *Cell
+	Left      *Cell
+	Right     *Cell
+	ThetaFrom float64
+	ThetaTo   float64
 }
 
 func (c *Cell) SetBit(pos FlagPosition) {

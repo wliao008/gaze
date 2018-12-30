@@ -8,8 +8,8 @@ import (
 func TestFind(t *testing.T) {
 	ds := &DisjointSet{}
 	ds.Items = make(map[string]*Item)
-	c1 := &Cell{15, 0, 0}
-	c2 := &Cell{15, 0, 1}
+	c1 := &Cell{15, 0, 0, nil, nil, nil, 0.0, 0.0}
+	c2 := &Cell{15, 0, 1, nil, nil, nil, 0.0, 0.0}
 	item1 := &Item{c1, nil}
 	item2 := &Item{c2, nil}
 	ds.Items["00"] = item1
@@ -23,8 +23,8 @@ func TestFind(t *testing.T) {
 func TestUnion(t *testing.T) {
 	ds := &DisjointSet{}
 	ds.Items = make(map[string]*Item)
-	c1 := &Cell{15, 0, 0}
-	c2 := &Cell{15, 0, 1}
+	c1 := &Cell{15, 0, 0, nil, nil, nil, 0.0, 0.0}
+	c2 := &Cell{15, 0, 1, nil, nil, nil, 0.0, 0.0}
 	item1 := &Item{c1, nil}
 	item2 := &Item{c2, nil}
 	ds.Items["00"] = item1
@@ -44,7 +44,7 @@ func BenchmarkDisjointSetFind(b *testing.B) {
 	ds := &DisjointSet{}
 	ds.Items = make(map[string]*Item)
 	for i := uint16(0); i < size; i++ {
-		cell := &Cell{15, 0, i}
+		cell := &Cell{15, 0, i, nil, nil, nil, 0.0, 0.0}
 		item := &Item{cell, nil}
 		ds.Items[fmt.Sprintf("%d", i)] = item
 	}
@@ -64,7 +64,7 @@ func BenchmarkDisjointSetUnion(b *testing.B) {
 		ds := &DisjointSet{}
 		ds.Items = make(map[string]*Item)
 		for i := uint16(0); i < size; i++ {
-			cell := &Cell{15, 0, i}
+			cell := &Cell{15, 0, i, nil, nil, nil, 0.0, 0.0}
 			item := &Item{cell, nil}
 			ds.Items[fmt.Sprintf("%d", i)] = item
 		}
