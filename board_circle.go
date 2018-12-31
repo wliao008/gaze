@@ -40,7 +40,11 @@ func (b *BoardCircle) Init() {
 	}
 
 	b.SplitCells(20)
-	//b.print()
+	// b.print()
+	// b.Cells[2][0].Right.ClearBit(NORTH)
+	// b.Cells[1][0].Right.Left.ClearBit(SOUTH)
+	// b.Cells[2][3].Left.ClearBit(SOUTH)
+	// b.Cells[3][3].ClearBit(NORTH)
 }
 
 func (b *BoardCircle) SplitCells(offset int) {
@@ -57,7 +61,7 @@ func (b *BoardCircle) SplitCells(offset int) {
 	}
 
 	// fmt.Printf("Testing Neighbors\n")
-	// f3 := b.Cells[0][0].Right.Left
+	// f3 := b.Cells[0][0].Left.Left
 	// neighbors := b.Neighbors(f3)
 	// for _, n := range neighbors {
 	// 	fmt.Printf("neightboard: [%d,%d]: [%d,%d] %f, %f\n", f3.X, f3.Y, n.X, n.Y, n.ThetaFrom, n.ThetaTo)
@@ -191,10 +195,16 @@ func (b *BoardCircle) GetDirection(from, to *Cell) FlagPosition {
 	if from.X > to.X {
 		return NORTH
 	}
-	if (from.Y == b.Width-1 && to.Y == 0) || from.Y < to.Y {
+	if from.Y == b.Width-1 && to.Y == 0 {
+		return EASTWESTWRAP
+	}
+	if from.Y == 0 && to.Y == b.Width-1 {
+		return WESTEASTWRAP
+	}
+	if from.Y < to.Y {
 		return EAST
 	}
-	if (from.Y == 0 && to.Y == b.Width-1) || from.Y > to.Y {
+	if from.Y > to.Y {
 		return WEST
 	}
 	if from.Y == to.Y {
@@ -208,7 +218,7 @@ func (b *BoardCircle) GetDirection(from, to *Cell) FlagPosition {
 		}
 		return EAST
 	}
-	//TODO: This is really an error case here
+	//TODO: This is reallBreakWally an error case here
 	return EAST
 }
 
@@ -229,7 +239,19 @@ func (b *BoardCircle) BreakWall(from, to *Cell, direction FlagPosition) {
 	case NORTH:
 		from.ClearBit(NORTH)
 		to.ClearBit(SOUTH)
+	case EASTWESTWRAP:
+		from.ClearBit(EAST)
+		to.ClearBit(WEST)
+	case WESTEASTWRAP:
+		from.ClearBit(WEST)
+		to.ClearBit(EAST)
 	}
+
+	// if from.X == 2 && to.X == 3 && direction == SOUTH {
+	// 	fmt.Printf("from %+v to to %+v\n", from, to)
+	// 	fmt.Printf("from south=%t\n", from.IsSet(SOUTH))
+	// 	fmt.Printf("to north=%t\n", to.IsSet(NORTH))
+	// }
 }
 
 func (b *BoardCircle) BreakWall2(from, to *Cell, direction FlagPosition) {

@@ -15,6 +15,8 @@ const (
 	DEAD  //a dead cell is not part of the solution path
 	CROSS //for weave maze
 	TRIANGLE_UP
+	WESTEASTWRAP
+	EASTWESTWRAP
 )
 
 type Cell struct {
@@ -32,6 +34,8 @@ type Cell struct {
 	 * 7: dead
 	 * 8: cross
 	 * 9: triangle up
+	 * 10: westeastwrap
+	 * 11: eastwestwrap
 	 */
 	Flag      uint16
 	X         uint16 // row
