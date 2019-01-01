@@ -39,17 +39,12 @@ func (b *BoardCircle) Init() {
 		}
 	}
 
-	b.SplitCells(20)
-	// b.print()
-	// b.Cells[2][0].Right.ClearBit(NORTH)
-	// b.Cells[1][0].Right.Left.ClearBit(SOUTH)
-	// b.Cells[2][3].Left.ClearBit(SOUTH)
-	// b.Cells[3][3].ClearBit(NORTH)
+	b.SplitCells(10)
 }
 
 func (b *BoardCircle) SplitCells(offset int) {
-	centerx := int(b.Width)*offset*2/2 + 20
-	centery := int(b.Height)*offset*2/2 + 20
+	centerx := int(b.Width)*offset*2/2 + offset
+	centery := int(b.Height)*offset*2/2 + offset
 	theta := math.Pi * 2 / float64(b.Width)
 	rowCount := 1
 	for row := int(b.Height); row > 0; row-- {
@@ -59,13 +54,6 @@ func (b *BoardCircle) SplitCells(offset int) {
 		}
 		rowCount = rowCount + 1
 	}
-
-	// fmt.Printf("Testing Neighbors\n")
-	// f3 := b.Cells[0][0].Left.Left
-	// neighbors := b.Neighbors(f3)
-	// for _, n := range neighbors {
-	// 	fmt.Printf("neightboard: [%d,%d]: [%d,%d] %f, %f\n", f3.X, f3.Y, n.X, n.Y, n.ThetaFrom, n.ThetaTo)
-	// }
 }
 
 func (b *BoardCircle) DoSplit(cell *Cell, offset, rowCount, i, centerx, centery int, theta float64, width int) {
