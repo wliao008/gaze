@@ -38,6 +38,11 @@ func (b *Board) Init() {
 			b.Cells[h][w].Right = nil
 		}
 	}
+
+	b.Cells[b.Height/2][b.Width/2].SetBit(DEAD)
+	b.Cells[b.Height/2][b.Width/2+1].SetBit(DEAD)
+	b.Cells[b.Height/2-1][b.Width/2].SetBit(DEAD)
+	b.Cells[b.Height/2-1][b.Width/2+1].SetBit(DEAD)
 }
 
 // Neighbors find the neighboring cells of the current cell
@@ -310,6 +315,12 @@ func (b *Board) getLiveNeighbor(x, y uint16) (bool, *Cell) {
 }
 
 func (b *Board) getNeighbor(x, y uint16) (bool, *Cell) {
+	if x >= 0 && x < b.Height &&
+		y >= 0 && y < b.Width &&
+		b.Cells[x][y].IsSet(DEAD) {
+		return false, nil
+	}
+
 	if x >= 0 && x < b.Height &&
 		y >= 0 && y < b.Width &&
 		!b.Cells[x][y].IsSet(VISITED) {

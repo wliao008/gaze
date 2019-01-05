@@ -2,7 +2,6 @@ package gaze
 
 import (
 	"fmt"
-	"io"
 	"math"
 )
 
@@ -39,7 +38,7 @@ func (b *BoardCircle) Init() {
 		}
 	}
 
-	b.SplitCells(10)
+	b.SplitCells(12)
 }
 
 func (b *BoardCircle) SplitCells(offset int) {
@@ -99,7 +98,6 @@ func (b *BoardCircle) print() {
 	for h := 0; h < int(b.Height); h++ {
 		for w := 0; w < int(b.Width); w++ {
 			c := &b.Cells[h][w]
-			//fmt.Printf("[%d,%d] %f, %f\n", h, w, c.ThetaFrom, c.ThetaTo)
 			b.doprint(c, 0)
 		}
 	}
@@ -136,7 +134,6 @@ func (b *BoardCircle) Neighbors(c *Cell) []*Cell {
 					result = append(result, cell)
 				}
 			}
-			//fmt.Println("got some cells from north")
 		}
 	}
 
@@ -206,7 +203,7 @@ func (b *BoardCircle) GetDirection(from, to *Cell) FlagPosition {
 		}
 		return EAST
 	}
-	//TODO: This is reallBreakWally an error case here
+	//TODO: This is really an error case here
 	return EAST
 }
 
@@ -234,14 +231,9 @@ func (b *BoardCircle) BreakWall(from, to *Cell, direction FlagPosition) {
 		from.ClearBit(WEST)
 		to.ClearBit(EAST)
 	}
-
-	// if from.X == 2 && to.X == 3 && direction == SOUTH {
-	// 	fmt.Printf("from %+v to to %+v\n", from, to)
-	// 	fmt.Printf("from south=%t\n", from.IsSet(SOUTH))
-	// 	fmt.Printf("to north=%t\n", to.IsSet(NORTH))
-	// }
 }
 
+/*
 func (b *BoardCircle) BreakWall2(from, to *Cell, direction FlagPosition) {
 	switch direction {
 	case EAST:
@@ -334,7 +326,7 @@ func (b *BoardCircle) WriteVisited(writer io.Writer) {
 		}
 		writer.Write([]byte("\n"))
 	}
-}
+}*/
 
 func (b *BoardCircle) DeadEnds(stack *Stack) {
 	//this function is a memory optimzation, declaring h, w etc outside of
@@ -438,21 +430,14 @@ func (b *BoardCircle) getNeighbor(x, y uint16) (bool, *Cell) {
 func (b *BoardCircle) GetCircleNeighbor(from, to *Cell, direction FlagPosition) (bool, []*Cell) {
 	var cells []*Cell
 	if direction == NORTH { //from south to north
-		//fmt.Println("Doing NORTH")
 		parentTo := b.getParentCell(to)
 		flatCellsTo := b.FlattenCells(parentTo)
-		// fmt.Printf("NORTH from: %+v\n", from)
-		// fmt.Printf("NORTH to: %+v\n", parentTo)
-		// fmt.Printf("NORTH len of flatCellsTo: %d\n", len(flatCellsTo))
-		// for _, cell := range flatCellsTo {
-		// 	fmt.Printf("**[%d,%d]: %f, %f\n", cell.X, cell.Y, cell.ThetaFrom, cell.ThetaTo)
-		// }
+
 		for _, cell := range flatCellsTo {
 			if cell.ThetaFrom >= from.ThetaFrom &&
 				cell.ThetaTo <= from.ThetaTo &&
 				!cell.IsSet(VISITED) {
 				cells = append(cells, cell)
-				// fmt.Printf("NORTH....%f, %f added to cells\n", cell.ThetaFrom, cell.ThetaTo)
 			}
 		}
 	} else if direction == SOUTH {
@@ -460,9 +445,7 @@ func (b *BoardCircle) GetCircleNeighbor(from, to *Cell, direction FlagPosition) 
 		flatCellsFrom := b.FlattenCells(parentFrom)
 		parentTo := b.getParentCell(to)
 		flatCellsTo := b.FlattenCells(parentTo)
-		// fmt.Printf("SOUTH from: %+v\n", parentFrom)
-		// fmt.Printf("SOUTH to: %+v\n", parentTo)
-		// fmt.Printf("SOUTH len of flatCellsTo: %d\n", len(flatCellsTo))
+
 		if len(flatCellsFrom) == len(flatCellsTo) {
 			idx := b.getIndex(from, flatCellsFrom)
 			cells = append(cells, flatCellsTo[idx])
@@ -493,11 +476,9 @@ func (b *BoardCircle) GetCircleNeighborEW(cell *Cell, direction FlagPosition) (b
 			col := cell.Y + 1
 			if cell.Y == b.Width-1 {
 				col = 0
-				//fmt.Printf("cell.Y=%d, resetting to 0\n", cell.Y)
 			}
 			c := b.Cells[cell.X][col]
 			if !c.IsSet(VISITED) {
-				//fmt.Printf("EAST: %+v\n", c)
 				return true, &c
 			}
 			return false, nil
@@ -509,7 +490,6 @@ func (b *BoardCircle) GetCircleNeighborEW(cell *Cell, direction FlagPosition) (b
 			col := cell.Y + 1
 			if cell.Y == b.Width-1 {
 				col = 0
-				//fmt.Printf("cell.Y=%d, resetting to 0\n", cell.Y)
 			}
 			c := b.Cells[cell.X][col]
 			nextCells := b.FlattenCells(&c)
@@ -529,11 +509,9 @@ func (b *BoardCircle) GetCircleNeighborEW(cell *Cell, direction FlagPosition) (b
 			col := cell.Y - 1
 			if cell.Y == 0 {
 				col = b.Width - 1
-				//fmt.Printf("cell.Y=%d, resetting to %d\n", cell.Y, b.Width-1)
 			}
 			c := b.Cells[cell.X][col]
 			if !c.IsSet(VISITED) {
-				//fmt.Printf("WEST: %+v\n", c)
 				return true, &c
 			}
 			return false, nil
@@ -545,7 +523,6 @@ func (b *BoardCircle) GetCircleNeighborEW(cell *Cell, direction FlagPosition) (b
 			col := cell.Y - 1
 			if cell.Y == 0 {
 				col = b.Width - 1
-				//fmt.Printf("cell.Y=%d, resetting to %d\n", cell.Y, b.Width-1)
 			}
 			c := b.Cells[cell.X][col]
 			nextCells := b.FlattenCells(&c)
@@ -573,71 +550,12 @@ func (b *BoardCircle) getIndex(cell *Cell, cells []*Cell) int {
 	return -1
 }
 
-func (b *BoardCircle) GetCircleNeighborEW_0(cell *Cell, direction FlagPosition) (bool, *Cell) {
-	if direction == EAST {
-		if cell.Parent == nil {
-			//this cell has no splits, so by definition the next cell
-			//has no splits as well.
-			col := cell.Y + 1
-			if cell.Y == b.Width-1 {
-				col = 0
-				// fmt.Printf("cell.Y=%d, resetting to 0\n", cell.Y)
-			}
-			c := b.Cells[cell.X][col]
-			if !c.IsSet(VISITED) {
-				// fmt.Printf("EAST: %+v\n", c)
-				return true, &c
-			}
-			return false, nil
-		}
-
-		if cell.Parent.Right != cell && !cell.Parent.Right.IsSet(VISITED) {
-			return true, cell.Parent.Right
-		}
-
-		if !cell.Parent.Parent.Right.Left.IsSet(VISITED) {
-			return true, cell.Parent.Parent.Right.Left
-		}
-		return false, nil
-	} else if direction == WEST {
-		if cell.Parent == nil {
-			//this cell has no splits, so by definition the cell to the left
-			//has no splits as well.
-			col := cell.Y - 1
-			if cell.Y == 0 {
-				col = b.Width - 1
-				// fmt.Printf("cell.Y=%d, resetting to %d\n", cell.Y, b.Width-1)
-			}
-			c := b.Cells[cell.X][col]
-			if !c.IsSet(VISITED) {
-				// fmt.Printf("WEST: %+v\n", c)
-				return true, &c
-			}
-			return false, nil
-		}
-
-		if cell.Parent.Left != cell && !cell.Parent.Left.IsSet(VISITED) {
-			return true, cell.Parent.Left
-		} else {
-			c := b.Cells[cell.X][cell.Y-1]
-			rightmost := b.getRightMostCell(&c)
-			return true, rightmost
-		}
-
-		if !cell.Parent.Parent.Left.Right.IsSet(VISITED) {
-			return true, cell.Parent.Parent.Left.Right
-		}
-		return false, nil
-	}
-	return false, nil
-}
-
-func (b *BoardCircle) getLeftMostCell(cell *Cell) *Cell {
+func (b *BoardCircle) GetLeftMostCell(cell *Cell) *Cell {
 	if cell.Left == nil {
 		return cell
 	}
 
-	return b.getLeftMostCell(cell.Left)
+	return b.GetLeftMostCell(cell.Left)
 }
 
 func (b *BoardCircle) getRightMostCell(cell *Cell) *Cell {
@@ -657,7 +575,6 @@ func (b *BoardCircle) getParentCell(cell *Cell) *Cell {
 }
 
 func (b *BoardCircle) FlattenCells(cell *Cell) []*Cell {
-	//fmt.Printf("FlattenCells called\n")
 	var cells []*Cell
 	if cell.Left == nil {
 		cells = append(cells, cell)
