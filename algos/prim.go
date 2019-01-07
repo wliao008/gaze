@@ -13,7 +13,7 @@ type Prim struct {
 }
 
 func NewPrim(height, width uint16) *Prim {
-	p := &Prim{Name: "prim algorithm", Board: gaze.Board{height, width, nil}}
+	p := &Prim{Name: "prim algorithm", Board: gaze.Board{height, width, nil, nil}}
 	p.Board.Init()
 	return p
 }

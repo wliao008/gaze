@@ -7,7 +7,7 @@ import (
 )
 
 func TestInit(t *testing.T) {
-	b := &Board{10, 10, nil}
+	b := &Board{10, 10, nil, nil}
 	for _, row := range b.Cells {
 		for _, cell := range row {
 			if cell.Flag != 15 {
@@ -18,7 +18,7 @@ func TestInit(t *testing.T) {
 }
 
 func TestNeighbors(t *testing.T) {
-	b := &Board{3, 3, nil}
+	b := &Board{3, 3, nil, nil}
 	b.Init()
 	var tests = []struct {
 		x    uint16
@@ -45,7 +45,7 @@ func TestNeighbors(t *testing.T) {
 }
 
 func TestGetDirection(t *testing.T) {
-	b := &Board{10, 10, nil}
+	b := &Board{10, 10, nil, nil}
 	b.Init()
 	var tests = []struct {
 		from *Cell
@@ -67,7 +67,7 @@ func TestGetDirection(t *testing.T) {
 }
 
 func TestBreakWall(t *testing.T) {
-	b := &Board{10, 10, nil}
+	b := &Board{10, 10, nil, nil}
 	b.Init()
 	var tests = []struct {
 		from, to     *Cell
@@ -90,7 +90,7 @@ func TestBreakWall(t *testing.T) {
 }
 
 func TestWrite(t *testing.T) {
-	b := &Board{3, 3, nil}
+	b := &Board{3, 3, nil, nil}
 	b.Init()
 	var buf bytes.Buffer
 	b.Write(&buf)
@@ -102,7 +102,7 @@ func TestWrite(t *testing.T) {
 }
 
 func TestDeadEnds(t *testing.T) {
-	b := &Board{3, 3, nil}
+	b := &Board{3, 3, nil, nil}
 	b.Init()
 	stack := &Stack{}
 	b.DeadEnds(stack)
@@ -118,7 +118,7 @@ func TestDeadEnds(t *testing.T) {
 }
 
 func TestDeadEnds2(t *testing.T) {
-	b := &Board{1, 10, nil}
+	b := &Board{1, 10, nil, nil}
 	b.Init()
 	b.Cells[0][0].ClearBit(NORTH)
 	b.Cells[0][9].ClearBit(SOUTH)
@@ -140,7 +140,7 @@ func TestDeadEnds2(t *testing.T) {
 }
 
 func TestDeadEnds3(t *testing.T) {
-	b := &Board{2, 2, nil}
+	b := &Board{2, 2, nil, nil}
 	b.Init()
 	b.Cells[0][0].ClearBit(NORTH)
 	b.Cells[0][0].ClearBit(EAST)

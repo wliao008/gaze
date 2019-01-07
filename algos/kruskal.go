@@ -27,7 +27,7 @@ func (li *ListItem) String() string {
 }
 
 func NewKruskal(height, width uint16) *Kruskal {
-	k := &Kruskal{Board: gaze.Board{height, width, nil}}
+	k := &Kruskal{Board: gaze.Board{height, width, nil, nil}}
 	k.Name = "kruskal algorithm"
 	k.Board.Init()
 	k.Set = &gaze.DisjointSet{}

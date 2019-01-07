@@ -17,7 +17,7 @@ type KruskalWeave struct {
 }
 
 func NewKruskalWeave(height, width uint16) *KruskalWeave {
-	k := &KruskalWeave{Board: gaze.Board{height, width, nil}}
+	k := &KruskalWeave{Board: gaze.Board{height, width, nil, nil}}
 	k.Name = "kruskal weave algorithm"
 	k.Board.Init()
 	k.Set = &gaze.DisjointSet{}

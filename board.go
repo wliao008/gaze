@@ -10,12 +10,15 @@ type Board struct {
 	Height uint16 // row
 	Width  uint16 // col
 	Cells  [][]Cell
+	Masks  [][]int
 }
 
 func (b *Board) Init() {
 	b.Cells = make([][]Cell, b.Height)
+	b.Masks = make([][]int, b.Height)
 	for i := uint16(0); i < b.Height; i++ {
 		b.Cells[i] = make([]Cell, b.Width)
+		b.Masks[i] = make([]int, b.Width)
 	}
 
 	for h := uint16(0); h < b.Height; h++ {
@@ -38,11 +41,16 @@ func (b *Board) Init() {
 			b.Cells[h][w].Right = nil
 		}
 	}
+}
 
-	b.Cells[b.Height/2][b.Width/2].SetBit(DEAD)
-	b.Cells[b.Height/2][b.Width/2+1].SetBit(DEAD)
-	b.Cells[b.Height/2-1][b.Width/2].SetBit(DEAD)
-	b.Cells[b.Height/2-1][b.Width/2+1].SetBit(DEAD)
+func (b *Board) ApplyMasks() {
+	for h := uint16(0); h < b.Height; h++ {
+		for w := uint16(0); w < b.Width; w++ {
+			if b.Masks[h][w] == 1 {
+				b.Cells[h][w].SetBit(DEAD)
+			}
+		}
+	}
 }
 
 // Neighbors find the neighboring cells of the current cell

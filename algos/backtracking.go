@@ -11,7 +11,7 @@ type BackTracking struct {
 var directions []interface{}
 
 func NewBackTracking(height, width uint16) *BackTracking {
-	bt := &BackTracking{Board: gaze.Board{height, width, nil}}
+	bt := &BackTracking{Board: gaze.Board{height, width, nil, nil}}
 	bt.Board.Init()
 	return bt
 }
